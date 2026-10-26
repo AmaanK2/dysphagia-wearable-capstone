@@ -1,0 +1,23 @@
+{
+  "seed": 42,
+  "torch_version": "2.8.0+cpu",
+  "fs": 6400,
+  "samples": 4000,
+  "classes": [
+    "cough",
+    "speak",
+    "swallow",
+    "throatclear"
+  ],
+  "epochs_max": 25,
+  "patience": 5,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "batch_size": 64,
+  "normalization": "per-clip mean removal and RMS scaling; no fitted test-set statistics",
+  "augmentation": "none in first benchmark",
+  "rf_trees": 300,
+  "rf_min_samples_leaf": 3,
+  "scope": "Presegmented four-activity classification; no quiet/background class, onset/offset detection or clinical risk labels",
+  "cnn_parameters": 30412
+}

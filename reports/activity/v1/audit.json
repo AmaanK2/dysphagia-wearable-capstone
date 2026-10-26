@@ -1,0 +1,255 @@
+{
+  "training_clips": 8208,
+  "test_clips": 792,
+  "samples_per_clip": 4000,
+  "sample_rate_hz": 6400,
+  "clip_duration_seconds": 0.625,
+  "classes": [
+    "cough",
+    "speak",
+    "swallow",
+    "throatclear"
+  ],
+  "training_counts": {
+    "cough": 1984,
+    "speak": 2107,
+    "swallow": 2028,
+    "throatclear": 2089
+  },
+  "test_counts": {
+    "cough": 150,
+    "speak": 333,
+    "swallow": 161,
+    "throatclear": 148
+  },
+  "exact_train_test_overlap": 0,
+  "conflicting_training_hashes": 10,
+  "excluded_ambiguous_training_ids": [
+    "Training dataset/speak.npy:615",
+    "Training dataset/speak.npy:616",
+    "Training dataset/speak.npy:617",
+    "Training dataset/speak.npy:618",
+    "Training dataset/speak.npy:619",
+    "Training dataset/swallow.npy:79",
+    "Training dataset/swallow.npy:80",
+    "Training dataset/swallow.npy:81",
+    "Training dataset/swallow.npy:82",
+    "Training dataset/swallow.npy:84",
+    "Training dataset/throatclear.npy:117",
+    "Training dataset/throatclear.npy:119",
+    "Training dataset/throatclear.npy:120",
+    "Training dataset/throatclear.npy:121",
+    "Training dataset/throatclear.npy:122",
+    "Training dataset/throatclear.npy:544",
+    "Training dataset/throatclear.npy:545",
+    "Training dataset/throatclear.npy:546",
+    "Training dataset/throatclear.npy:547",
+    "Training dataset/throatclear.npy:548"
+  ],
+  "conflict_policy": "Exclude all training rows sharing a hash with conflicting class labels; do not choose a replacement label",
+  "duplicate_training_clips": 45,
+  "duplicate_test_clips": 0,
+  "supplied_split_subject_counts_reported_by_authors": {
+    "training": 12,
+    "test": 20
+  },
+  "subject_ids_present_in_arrays": false,
+  "inner_validation": "20% waveform-hash-grouped, class-stratified clip split; NOT subject-disjoint",
+  "test_policy": "Supplied external test partition evaluated after model selection; participant separation follows authors documentation and cannot be independently reconstructed from arrays",
+  "training_files": [
+    {
+      "file": "Training dataset/cough.npy",
+      "shape": [
+        1984,
+        4000
+      ],
+      "class": "cough"
+    },
+    {
+      "file": "Training dataset/speak.npy",
+      "shape": [
+        2107,
+        4000
+      ],
+      "class": "speak"
+    },
+    {
+      "file": "Training dataset/swallow.npy",
+      "shape": [
+        2028,
+        4000
+      ],
+      "class": "swallow"
+    },
+    {
+      "file": "Training dataset/throatclear.npy",
+      "shape": [
+        2089,
+        4000
+      ],
+      "class": "throatclear"
+    }
+  ],
+  "test_files": [
+    {
+      "file": "Test dataset/English/cough.npy",
+      "shape": [
+        12,
+        4000
+      ],
+      "class": "cough"
+    },
+    {
+      "file": "Test dataset/English/speak.npy",
+      "shape": [
+        36,
+        4000
+      ],
+      "class": "speak"
+    },
+    {
+      "file": "Test dataset/English/swallow.npy",
+      "shape": [
+        11,
+        4000
+      ],
+      "class": "swallow"
+    },
+    {
+      "file": "Test dataset/English/throatclear.npy",
+      "shape": [
+        10,
+        4000
+      ],
+      "class": "throatclear"
+    },
+    {
+      "file": "Test dataset/French/cough.npy",
+      "shape": [
+        29,
+        4000
+      ],
+      "class": "cough"
+    },
+    {
+      "file": "Test dataset/French/speak.npy",
+      "shape": [
+        96,
+        4000
+      ],
+      "class": "speak"
+    },
+    {
+      "file": "Test dataset/French/swallow.npy",
+      "shape": [
+        31,
+        4000
+      ],
+      "class": "swallow"
+    },
+    {
+      "file": "Test dataset/French/throatclear.npy",
+      "shape": [
+        30,
+        4000
+      ],
+      "class": "throatclear"
+    },
+    {
+      "file": "Test dataset/German/cough.npy",
+      "shape": [
+        32,
+        4000
+      ],
+      "class": "cough"
+    },
+    {
+      "file": "Test dataset/German/speak.npy",
+      "shape": [
+        98,
+        4000
+      ],
+      "class": "speak"
+    },
+    {
+      "file": "Test dataset/German/swallow.npy",
+      "shape": [
+        43,
+        4000
+      ],
+      "class": "swallow"
+    },
+    {
+      "file": "Test dataset/German/throatclear.npy",
+      "shape": [
+        33,
+        4000
+      ],
+      "class": "throatclear"
+    },
+    {
+      "file": "Test dataset/Korean/cough.npy",
+      "shape": [
+        61,
+        4000
+      ],
+      "class": "cough"
+    },
+    {
+      "file": "Test dataset/Korean/speak.npy",
+      "shape": [
+        60,
+        4000
+      ],
+      "class": "speak"
+    },
+    {
+      "file": "Test dataset/Korean/swallow.npy",
+      "shape": [
+        60,
+        4000
+      ],
+      "class": "swallow"
+    },
+    {
+      "file": "Test dataset/Korean/throatclear.npy",
+      "shape": [
+        60,
+        4000
+      ],
+      "class": "throatclear"
+    },
+    {
+      "file": "Test dataset/Spanish/cough.npy",
+      "shape": [
+        16,
+        4000
+      ],
+      "class": "cough"
+    },
+    {
+      "file": "Test dataset/Spanish/speak.npy",
+      "shape": [
+        43,
+        4000
+      ],
+      "class": "speak"
+    },
+    {
+      "file": "Test dataset/Spanish/swallow.npy",
+      "shape": [
+        16,
+        4000
+      ],
+      "class": "swallow"
+    },
+    {
+      "file": "Test dataset/Spanish/throatclear.npy",
+      "shape": [
+        15,
+        4000
+      ],
+      "class": "throatclear"
+    }
+  ]
+}

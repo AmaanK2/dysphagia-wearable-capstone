@@ -1,0 +1,24 @@
+{
+  "recorded_after_run": true,
+  "note": "Captured before subsequent formatting and addition of automatic provenance logging; model and split settings were not changed.",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "packages": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "torch": "2.8.0+cpu",
+    "joblib": "1.5.3"
+  },
+  "dataset_source": "https://zenodo.org/records/12630148",
+  "archives_md5": {
+    "training": "73ea26bc7bde041ff0690094f7477421",
+    "test": "bc9aebdee8a00d21d1da968ab3bb8027"
+  },
+  "training_code_sha256": {
+    "src/dysphagia_wearable/activity/data.py": "511a3316145d249828cee34b7758fca3f2130fbc3420c796cd9a1ad83e4b78fc",
+    "src/dysphagia_wearable/activity/train.py": "0b6b5531d70adaef1df0dde33c71f629ca1d701b034471b4bdc6f732361a6767",
+    "src/dysphagia_wearable/activity/__init__.py": "bba285bf982562ce246653bd53c774676fd5a7bd4de57c14a44ed700591634f0",
+    "src/dysphagia_wearable/activity/models.py": "ac1cf668b9c153f2bbec6f1129b4fd01fcdd97c1dd81bf0263b91f10303a3588",
+    "src/dysphagia_wearable/activity/features.py": "f833cd1a0ace08f52b1f1f40211067d4c0c41d0b035cda7488824310d712b97d"
+  }
+}

@@ -1,5 +1,6 @@
 # Raw signals, derived caches, trained weights and environment files
-data/
+/data/*
+!/data/README.md
 _cache/
 *.zip
 *.npy
@@ -13,3 +14,7 @@ venv/
 .env
 .DS_Store
 output/
+
+*.egg-info/
+build/
+dist/
