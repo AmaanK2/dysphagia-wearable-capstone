@@ -1,0 +1,10 @@
+{
+  "unit_tests_passed": 9,
+  "checkpoint_weights_only_reload": "passed",
+  "standalone_inference_matches_saved_test_scores": "passed, rtol=1e-4 atol=1e-5",
+  "normalization_training_participants_only": "passed",
+  "participant_split_disjoint": "passed",
+  "raw_data_in_release": false,
+  "trained_checkpoint_epoch": 6,
+  "epochs_completed": 11
+}

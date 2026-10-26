@@ -1,0 +1,53 @@
+[
+  {
+    "review_id": 742,
+    "fold": "3",
+    "participant": "NS018",
+    "recording": "ns018a_1",
+    "type": "extra_detection",
+    "start_seconds": "3.5",
+    "end_seconds": "4.2",
+    "category": "no_annotation_overlap",
+    "unlabelled_region_location": "no_annotations_in_recording",
+    "max_model_score_in_interval": 0.9584183990955351,
+    "review_decision": "unknown",
+    "reference_type": "",
+    "reference_locator": "",
+    "reviewer": "",
+    "notes": ""
+  },
+  {
+    "review_id": 7,
+    "fold": "1",
+    "participant": "NS011",
+    "recording": "ns011b_1",
+    "type": "extra_detection",
+    "start_seconds": "4.3",
+    "end_seconds": "4.8",
+    "category": "no_annotation_overlap",
+    "unlabelled_region_location": "between_annotations",
+    "max_model_score_in_interval": 0.7252462208271027,
+    "review_decision": "unknown",
+    "reference_type": "",
+    "reference_locator": "",
+    "reviewer": "",
+    "notes": ""
+  },
+  {
+    "review_id": 4,
+    "fold": "1",
+    "participant": "NS011",
+    "recording": "ns011a_3",
+    "type": "extra_detection",
+    "start_seconds": "4.6000000000000005",
+    "end_seconds": "5.1",
+    "category": "overlaps_annotation_boundary_or_duplicate",
+    "unlabelled_region_location": "not_applicable",
+    "max_model_score_in_interval": 0.7524651885032654,
+    "review_decision": "unknown",
+    "reference_type": "",
+    "reference_locator": "",
+    "reviewer": "",
+    "notes": ""
+  }
+]

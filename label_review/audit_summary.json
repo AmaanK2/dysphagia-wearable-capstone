@@ -1,0 +1,16 @@
+{
+  "source_paper": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7251089/",
+  "dataset_record": "https://zenodo.org/records/4539695",
+  "source_finding": "Linked study describes imaging pauses while signals continued, unlabelled swallows, and manual video/log review. This does not identify which released files or intervals are affected.",
+  "review_rows": 1110,
+  "all_review_decisions": "unknown",
+  "verified_new_labels": 0,
+  "no_annotation_overlap_locations": {
+    "after_last_annotation": 144,
+    "between_annotations": 148,
+    "before_first_annotation": 170,
+    "no_annotations_in_recording": 218
+  },
+  "original_pilot_test_participants_in_review": 0,
+  "metric_status": "Existing numerical results remain unchanged and are relative to supplied annotations, not confirmed clinical truth."
+}

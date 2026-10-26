@@ -1,0 +1,12 @@
+{
+  "source_record": "https://zenodo.org/records/4539695",
+  "signals_md5": "ea0e725848c6092f946b06198f293f0d",
+  "labels_md5": "5af27a544839b404f359e3d72b5026e2",
+  "checks": "Signal checksum verified; all included arrays loaded with CRC checks; 5 unit tests passed; reloaded combined model reproduced held-out example scores.",
+  "code_sha256": {
+    "train.py": "15a76d0dcb9b13fa921b07e9e45061b7dd222105eca216c8234b0aef3fdba125",
+    "predict.py": "b619d68b1903226ddf23b7cf1c761c899e7637d3abf29fcce2f4661bd08c861b",
+    "test_pipeline.py": "f8aaf5ffb119ed813b9f7f8c13b89906abd553dd754a152e828bbe37c61e6d23",
+    "write_report.py": "9415a9ce08688d80582a53497965aee293586f8dec334a5d8759aba4a2ec883f"
+  }
+}

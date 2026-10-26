@@ -1,0 +1,62 @@
+{
+  "label_files": 1285,
+  "label_rows": 1876,
+  "included_recordings": 1276,
+  "header_only_label_files": 193,
+  "included_participants": 175,
+  "included_events": 1862,
+  "included_seconds": 11449.16275,
+  "windows": 108859,
+  "positive_windows": 16220,
+  "excluded": [
+    {
+      "id": "ns036a_4",
+      "reason": "Overlapping annotated intervals; requires review"
+    },
+    {
+      "id": "ns060b_4",
+      "reason": "Recording shorter than feature window"
+    },
+    {
+      "id": "ns081a_3",
+      "reason": "Recording shorter than feature window"
+    },
+    {
+      "id": "ns081c_3",
+      "reason": "Label outside recording bounds"
+    },
+    {
+      "id": "ns116b_2",
+      "reason": "Label outside recording bounds"
+    },
+    {
+      "id": "ns148f_2",
+      "reason": "Label outside recording bounds"
+    },
+    {
+      "id": "ns150a_2",
+      "reason": "Label outside recording bounds"
+    },
+    {
+      "id": "ns202b_3",
+      "reason": "Overlapping annotated intervals; requires review"
+    },
+    {
+      "id": "s037a_2",
+      "reason": "Label outside recording bounds"
+    }
+  ],
+  "duplicates": [],
+  "webpage_claim": {
+    "participants": 248,
+    "swallows": 3144
+  },
+  "label_units": "VFSS frames at 60 fps, converted to seconds by division by 60",
+  "channels": [
+    "microphone",
+    "acc_AP",
+    "acc_SI",
+    "acc_ML"
+  ],
+  "included_background_recordings": 191
+}

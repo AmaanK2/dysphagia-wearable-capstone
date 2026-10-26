@@ -1,0 +1,8 @@
+{
+  "unit_tests_passed": 11,
+  "original_pilot_metrics_and_checkpoint_unchanged": true,
+  "original_pilot_test_participants_excluded_from_cv": 27,
+  "development_participants_assessed_once": 148,
+  "waveform_cache_matches_frozen_manifest": true,
+  "error_review_counts_match_pooled_metrics": true
+}

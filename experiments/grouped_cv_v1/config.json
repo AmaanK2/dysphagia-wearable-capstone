@@ -1,0 +1,30 @@
+{
+  "seed": 2026,
+  "model_seeds": [
+    2027,
+    2028,
+    2029
+  ],
+  "inner_split_seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "outer_folds": 3,
+  "inner_validation_fraction": 0.2,
+  "cnn_max_epochs": 20,
+  "cnn_patience": 5,
+  "cnn_learning_rate": 0.001,
+  "cnn_weight_decay": 0.0001,
+  "cnn_batch_size": 8,
+  "cnn_threads": 4,
+  "rf_trees": 200,
+  "rf_max_depth": 14,
+  "rf_min_samples_leaf": 5,
+  "rf_class_weight": "balanced_subsample",
+  "iou_thresholds": [
+    0.3,
+    0.5
+  ],
+  "model_context": "CNN ~2.6s; RF 0.5s; not an isolated architecture ablation"
+}
