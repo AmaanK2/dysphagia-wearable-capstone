@@ -2,8 +2,6 @@
 
 [Home](../README.md)
 
-**Suggested short presentation: figures 1 → 2 → 3 → 4.** The remaining figures are useful backups. Click a preview or “Open full-size image” to open the original PNG; use GitHub’s download control to save it for slides.
-
 All figures below are existing saved experiment outputs. No training or scores were changed during the November 11 cleanup.
 
 ## Jump to a figure
@@ -27,9 +25,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../experiments/cnn_v1/rf_vs_cnn.png)
 
-**What to say:** On the same 27 pilot test participants, event F1 is 67.3% for the CNN versus 50.2% for the RF at IoU ≥ 0.30.
-
-**Keep in mind:** These are annotation-relative timing scores, not accuracy or dysphagia diagnosis. Context length changes along with architecture.
+On the same 27 held-out participants, the CNN scored 67.3% event F1 versus 50.2% for the random forest, using the supplied annotations and an overlap threshold of 0.30.
 
 <a id="figure-2"></a>
 ## 2. What a prediction looks like
@@ -38,9 +34,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../experiments/cnn_v1/example_rf_vs_cnn.png)
 
-**What to say:** Walk through the recorded signals, reference intervals and model detections on a common timeline.
-
-**Keep in mind:** One illustrative recording does not establish overall performance or confirm unlabelled swallows.
+This recording shows where each model detected swallows alongside the annotated intervals.
 
 <a id="figure-3"></a>
 ## 3. Does it hold across participants?
@@ -49,9 +43,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../experiments/grouped_cv_v1/grouped_validation.png)
 
-**What to say:** Three development folds give pooled event F1 of 68.0% for the CNN and 52.2% for the RF. The original 27 pilot test participants are excluded.
-
-**Keep in mind:** Internal validation on the same dataset, not an independent clinical or wearable evaluation.
+Across three development folds, pooled event F1 was 68.0% for the CNN and 52.2% for the random forest. The original 27 test participants were held out of this analysis.
 
 <a id="figure-4"></a>
 ## 4. Why the annotation issue matters
@@ -60,9 +52,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../label_review/unlabelled_regions.png)
 
-**What to say:** This locates detections that do not overlap a supplied annotation. Reference coverage needs clarification before treating all of them as false swallows.
-
-**Keep in mind:** No-overlap detections can be errors or unlabelled events. This plot cannot tell which.
+This plot shows where detections fell outside the supplied annotations. Some may be model errors, while others may be events that were never labelled.
 
 <a id="figure-5"></a>
 ## 5. Baseline methods and sensor channels
@@ -71,9 +61,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../results/model_comparison.png)
 
-**What to say:** Compare the energy baseline and the microphone, acceleration and combined random-forest models.
-
-**Keep in mind:** The combined RF was selected using validation data. Do not pick a model just because it looks best on test results.
+The baseline compares a simple energy threshold with random forests trained on microphone data, acceleration data, or both.
 
 <a id="figure-6"></a>
 ## 6. Original held-out recording
@@ -82,9 +70,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../results/held_out_example.png)
 
-**What to say:** Show the original baseline example if asked how event intervals are compared with annotations.
-
-**Keep in mind:** An illustrative plot, not a separately validated demonstration on our wearable.
+An example from the held-out set shows how the baseline detections line up with the annotated swallows.
 
 <a id="figure-7"></a>
 ## 7. CNN training and checkpoint selection
@@ -93,9 +79,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../experiments/cnn_v1/training_curves.png)
 
-**What to say:** Explain training loss, validation event F1 and the selected checkpoint.
-
-**Keep in mind:** Checkpoint and threshold selection use validation participants, not pilot-test performance.
+Training loss and validation F1 across epochs show how the CNN checkpoint was selected.
 
 <a id="figure-8"></a>
 ## 8. Training within each development fold
@@ -104,9 +88,7 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../experiments/grouped_cv_v1/inner_validation_curves.png)
 
-**What to say:** Each outer fold has a separate inner-validation set for model selection.
-
-**Keep in mind:** Inner-validation curves are not the outer-assessment results.
+Each fold used a separate validation set to select its checkpoint and threshold.
 
 <a id="figure-9"></a>
 ## 9. Examples requiring reference review
@@ -115,12 +97,5 @@ All figures below are existing saved experiment outputs. No training or scores w
 
 [Open full-size image](../label_review/review_examples.png)
 
-**What to say:** Use these cases to explain why synchronized reference evidence is needed to resolve errors.
-
-**Keep in mind:** Review decisions remain unknown. Waveforms and model predictions are not clinical ground truth.
-
-## A simple closing point
-
-“The public-data experiments show that swallow-timing detection is feasible. Our next step is to validate the recording hardware and evaluate independently labelled recordings from our actual sensors.”
-
+These examples show where synchronized reference recordings would help clarify what happened.
 
