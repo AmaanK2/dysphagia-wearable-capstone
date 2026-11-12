@@ -4,6 +4,14 @@
 
 All figures below are existing saved experiment outputs. No training or scores were changed during the November 11 cleanup.
 
+## How to read the metrics
+
+- **Precision:** Of the events the model flagged as swallows, what fraction matched a labelled swallow?
+- **Recall:** Of all labelled swallows, what fraction did the model find?
+- **F1:** A score that balances precision and recall. It drops when either is low.
+
+For example, if the model flags 5 events and 3 match out of 4 labelled swallows, precision is **3/5 = 60%**, recall is **3/4 = 75%**, and F1 is **about 67%**.
+
 ## Jump to a figure
 
 | Order | Figure | Use |
