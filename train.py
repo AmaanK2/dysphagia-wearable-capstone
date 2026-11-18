@@ -73,17 +73,17 @@ def features(x):
     return np.hstack(collected).astype(np.float32), (starts + width / 2) / FEATURE_FS
 
 
-def events(times, scores, threshold, duration):
+def events(times, scores, threshold, duration, merge_gap=.2, min_duration=.2):
     """Cover positive grid points, merge <=0.2s gaps, discard events <0.2s."""
     times = np.asarray(times)[np.asarray(scores) >= threshold]
     spans = []
     for t in times:
         a, b = max(0., t - HOP / 2), min(duration, t + HOP / 2)
-        if spans and a - spans[-1][1] <= 0.200001:
+        if spans and a - spans[-1][1] <= merge_gap + 1e-6:
             spans[-1][1] = b
         else:
             spans.append([a, b])
-    return [s for s in spans if s[1] - s[0] >= 0.199999]
+    return [s for s in spans if s[1] - s[0] >= min_duration - 1e-6]
 
 
 def match_events(pred, truth, iou_threshold=0.3):

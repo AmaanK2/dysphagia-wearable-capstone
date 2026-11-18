@@ -94,8 +94,9 @@ def fit_normalization(records, cache):
 
 
 class Records(Dataset):
-    def __init__(self, records, cache, mean, std):
+    def __init__(self, records, cache, mean, std, zero_microphone=False):
         self.records, self.cache, self.mean, self.std = records, cache, mean, std
+        self.zero_microphone = zero_microphone
 
     def __len__(self):
         return len(self.records)
@@ -104,6 +105,8 @@ class Records(Dataset):
         r = self.records[i]
         x = np.load(self.cache/(r['id']+'.npy'), allow_pickle=False)
         x = np.clip((x-self.mean)/self.std, -20, 20).T.copy()
+        if self.zero_microphone:
+            x[0] = 0
         t = np.arange((x.shape[1]+STRIDE-1)//STRIDE)/OUTPUT_FS
         y = np.zeros(len(t), dtype=np.float32)
         for a, b in r['intervals']:
@@ -139,12 +142,12 @@ def predict_records(model, loader, records, device):
     return result
 
 
-def evaluate(records, predictions, threshold, iou=.3):
+def evaluate(records, predictions, threshold, iou=.3, merge_gap=.2, min_duration=.2):
     """Efficient equivalent of baseline's evaluator, using its matching rules."""
     from train import events, match_events
     tp=fp=fn=0; seconds=0.; errors=[]; by_person={}
     for r in records:
-        p=events(r['times'], predictions[r['id']], threshold, r['duration'])
+        p=events(r['times'], predictions[r['id']], threshold, r['duration'], merge_gap, min_duration)
         a,b,c,err=match_events(p,r['intervals'],iou)
         tp+=a;fp+=b;fn+=c;seconds+=r['duration'];errors+=err
         row=by_person.setdefault(r['participant'],[0,0,0,0.])

@@ -37,12 +37,26 @@ def fold_plan(meta, original, folds=3, seed=2026):
     return records,plan
 
 
-def cnn_fold(train,validation,assessment,cache,out,seed,epochs,patience):
+def select_event_settings(records, predictions, threshold):
+    """Select event rules using only inner-validation recordings."""
+    candidates = []
+    for score_cutoff in sorted({threshold, *np.clip(threshold + np.array([-.1, -.05, .05, .1]), .05, .95)}):
+        for gap in (.1, .2, .35):
+            for minimum in (.15, .2, .35, .5):
+                result = evaluate(records, predictions, score_cutoff,
+                                  merge_gap=gap, min_duration=minimum)
+                candidates.append((result['f1'], -result['fp'], score_cutoff, gap, minimum))
+    f1, _, score_cutoff, gap, minimum = max(candidates)
+    return {'inner_validation_tuned_f1': f1, 'tuned_threshold': float(score_cutoff),
+            'merge_gap': gap, 'min_duration': minimum}
+
+
+def cnn_fold(train,validation,assessment,cache,out,seed,epochs,patience,tune_events=False,imu_only=False):
     random.seed(seed);np.random.seed(seed);torch.manual_seed(seed)
     mean,std=fit_normalization(train,cache)
-    dataset=Records(train,cache,mean,std)
+    dataset=Records(train,cache,mean,std,zero_microphone=imu_only)
     loader=DataLoader(dataset,batch_size=8,shuffle=True,collate_fn=collate,generator=torch.Generator().manual_seed(seed))
-    val_loader=DataLoader(Records(validation,cache,mean,std),batch_size=8,collate_fn=collate)
+    val_loader=DataLoader(Records(validation,cache,mean,std,zero_microphone=imu_only),batch_size=8,collate_fn=collate)
     positive=negative=0.
     for x,y,key in dataset:
         positive+=float(y.sum());negative+=len(y)-float(y.sum())
@@ -65,15 +79,16 @@ def cnn_fold(train,validation,assessment,cache,out,seed,epochs,patience):
             best=f1;best_epoch=epoch;threshold=t;checkpoint=copy.deepcopy(model.state_dict())
         if epoch-best_epoch>=patience:break
     model.load_state_dict(checkpoint)
-    torch.save({'state_dict':checkpoint,'mean':mean.tolist(),'std':std.tolist(),'threshold':threshold,
+    rules = select_event_settings(validation, predict_records(model, val_loader, validation, torch.device("cpu")), threshold) if tune_events else {}
+    torch.save({'imu_only':imu_only, 'event_settings':rules, 'state_dict':checkpoint,'mean':mean.tolist(),'std':std.tolist(),'threshold':threshold,
                 'epoch':best_epoch,'scope':'Grouped development CV; original pilot test excluded'},out/'cnn.pt')
-    assessment_loader=DataLoader(Records(assessment,cache,mean,std),batch_size=8,collate_fn=collate)
+    assessment_loader=DataLoader(Records(assessment,cache,mean,std,zero_microphone=imu_only),batch_size=8,collate_fn=collate)
     predictions=predict_records(model,assessment_loader,assessment,torch.device('cpu'))
     return predictions,threshold,{'best_epoch':best_epoch,'completed_epochs':len(history),
-                                 'inner_validation_f1':best,'normalization_participants':sorted({r['participant'] for r in train})}
+                                 'inner_validation_f1':best, **rules,'normalization_participants':sorted({r['participant'] for r in train})}
 
 
-def rf_fold(features,train,validation,assessment,out,seed):
+def rf_fold(features,train,validation,assessment,out,seed,tune_events=False):
     X,y,groups,ids=features
     train_people={r['participant'] for r in train}
     mask=np.isin(groups,list(train_people))
@@ -86,8 +101,9 @@ def rf_fold(features,train,validation,assessment,out,seed):
         selected_ids=ids[selected]
         predictions[role]={r['id']:score[selected_ids==r['id']] for r in records}
     f1,threshold=best_threshold(validation,predictions['validation'])
-    joblib.dump({'model':model,'threshold':threshold},out/'rf.joblib')
-    return predictions['assessment'],threshold,{'inner_validation_f1':f1}
+    rules = select_event_settings(validation, predictions['validation'], threshold) if tune_events else {}
+    joblib.dump({'model':model,'threshold':threshold,'event_settings':rules},out/'rf.joblib')
+    return predictions['assessment'],threshold,{'inner_validation_f1':f1, **rules}
 
 
 def paired_ci(cnn,rf):
@@ -112,6 +128,8 @@ def main():
     p.add_argument('--output',type=Path,default=Path('experiments/grouped_cv_v1'))
     p.add_argument('--epochs',type=int,default=20)
     p.add_argument('--patience',type=int,default=5)
+    p.add_argument("--tune-events", action="store_true", help="Fit event rules on inner validation only")
+    p.add_argument("--imu-only", action="store_true", help="Run only the CNN with its microphone channel zeroed")
     args=p.parse_args()
     if (args.output/'fold_plan.json').exists():raise ValueError('Use a fresh output directory to preserve experiments')
     torch.set_num_threads(4);torch.use_deterministic_algorithms(True)
@@ -122,7 +140,7 @@ def main():
     original=json.loads((args.baseline/'participant_splits.json').read_text())
     records,plan=fold_plan(meta,original)
     args.output.mkdir(parents=True,exist_ok=True)
-    (args.output/'config.json').write_text(json.dumps({'seed':2026,'outer_folds':3,'inner_validation_fraction':.2,
+    (args.output/'config.json').write_text(json.dumps({'tune_events':args.tune_events,'imu_only':args.imu_only,'seed':2026,'outer_folds':3,'inner_validation_fraction':.2,
         'cnn_max_epochs':args.epochs,'cnn_patience':args.patience,'torch_version':str(torch.__version__),
         'cnn_learning_rate':.001,'cnn_weight_decay':.0001,'cnn_batch_size':8,'cnn_threads':4,
         'rf_trees':200,'rf_max_depth':14,'rf_min_samples_leaf':5,'rf_class_weight':'balanced_subsample',
@@ -134,7 +152,8 @@ def main():
     keep=np.isin(data['groups'],list(development))
     features=tuple(data[k][keep] for k in ['X','y','groups','ids'])
     assert not set(features[2])&set(original['test'])
-    pooled={'cnn':{},'rf':{}};fold_results=[]
+    models = ('cnn',) if args.imu_only else ('rf', 'cnn')
+    pooled={name:{} for name in models};fold_results=[]
     # Never change preprocessing, model settings or event postprocessing after seeing outer assessments.
     for i,roles in enumerate(plan,1):
         out=args.output/f'fold_{i}';out.mkdir()
@@ -142,11 +161,19 @@ def main():
         train,val,assessment=[role_records[k] for k in ['train','validation','assessment']]
         print('Starting fold',i,{k:len(v) for k,v in roles.items()},flush=True)
         fold={'fold':i,'participant_counts':{k:len(v) for k,v in roles.items()},'models':{}}
-        for name in ['rf','cnn']:
-            if name=='rf':pred,t,info=rf_fold(features,train,val,assessment,out,2026+i)
-            else:pred,t,info=cnn_fold(train,val,assessment,args.cache,out,2026+i,args.epochs,args.patience)
+        for name in models:
+            if name=='rf':pred,t,info=rf_fold(features,train,val,assessment,out,2026+i,args.tune_events)
+            else:pred,t,info=cnn_fold(train,val,assessment,args.cache,out,2026+i,args.epochs,args.patience,args.tune_events,args.imu_only)
             result={'threshold':t,'training_details':info,'assessment_event':evaluate(assessment,pred,t),
                     'assessment_strict_event':evaluate(assessment,pred,t,.5)}
+            if args.tune_events:
+                rules = (info['merge_gap'], info['min_duration'])
+                result['default_assessment_event'] = result['assessment_event']
+                result['default_assessment_strict_event'] = result['assessment_strict_event']
+                t = info['tuned_threshold']
+                result['threshold'] = t
+                result['assessment_event'] = evaluate(assessment, pred, t, .3, *rules)
+                result['assessment_strict_event'] = evaluate(assessment, pred, t, .5, *rules)
             fold['models'][name]=result
             # Each outer fold has its own inner-validation-selected threshold.
             pooled[name].update({r['id']:{'score':pred[r['id']],'threshold':t} for r in assessment})
@@ -161,7 +188,7 @@ def main():
              'folds':fold_results,'models':{},
              'limits':['Same source dataset; not external clinical validation','CNN has longer context than RF',
                        'Participant bootstrap does not capture repeated-training uncertainty','No dysphagia or aspiration labels']}
-    for name in ['rf','cnn']:
+    for name in models:
         events=[f['models'][name]['assessment_event'] for f in fold_results]
         strict=[f['models'][name]['assessment_strict_event'] for f in fold_results]
         by_person={p:c for e in events for p,c in e['participant_counts'].items()}
@@ -171,7 +198,15 @@ def main():
             'tp':int(tp),'fp':int(fp),'fn':int(fn),'false_events_per_recording_minute':fp/(seconds/60),
             'strict_iou_0_5_f1':2*stp/(2*stp+sfp+sfn),'participant_counts':by_person,
             'bootstrap_95_ci':bootstrap_interval(by_person),'fold_f1':[e['f1'] for e in events]}
-    summary['paired_bootstrap_95_ci_f1_difference_cnn_minus_rf']=paired_ci(
+    if args.tune_events:
+        for name in models:
+            for key, field in [('default_assessment_event', 'default_f1'),
+                               ('default_assessment_strict_event', 'default_strict_iou_0_5_f1')]:
+                rows = [fold['models'][name][key] for fold in fold_results]
+                tp, fp, fn = (sum(row[count] for row in rows) for count in ('tp', 'fp', 'fn'))
+                summary['models'][name][field] = 2 * tp / max(2 * tp + fp + fn, 1)
+    if not args.imu_only:
+        summary['paired_bootstrap_95_ci_f1_difference_cnn_minus_rf']=paired_ci(
         summary['models']['cnn']['participant_counts'],summary['models']['rf']['participant_counts'])
     (args.output/'summary.json').write_text(json.dumps(summary,indent=2))
     print('POOLED DEVELOPMENT RESULTS',json.dumps({k:{a:b for a,b in v.items() if a not in ['participant_counts','bootstrap_95_ci']} for k,v in summary['models'].items()}),flush=True)
