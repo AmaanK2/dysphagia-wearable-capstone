@@ -89,6 +89,8 @@ Select an existing label to update its boundaries, activity or notes. Mark **Unc
 
 ## Filtering and accuracy
 
+The interface uses Hallmark's Cobalt design: light controls, graphite plots and a blue primary action. Live filtering and peak-preserving plot reduction run in the acquisition worker. The GUI pulls only the newest frame at 10 Hz, with at most 1800 points per plot, so a slow or minimized window cannot accumulate an event queue of old signal frames. This limit affects the live display only; every raw sample still goes to its CSV. Review loading and filtering also run outside the GUI thread.
+
 CSV values are never smoothed, resampled or replaced by filtered values. Live view uses stateful second-order Butterworth bandpass designs: microphone 20–2000 Hz; acceleration 0.5–100 Hz. This suppresses microphone DC/low-frequency movement and acceleration gravity/slow drift while retaining a broad vibration band. These are initial visualization settings, not validated optimal filters for this device or trained models. Turn off the filter checkbox to inspect raw signals.
 
 The live filter is causal and has frequency-dependent delay. Review uses forward/backward filtering to avoid that phase shift; edge transients remain possible. Inspect the raw view around uncertain boundaries. Plot downsampling preserves visible peaks and affects rendering only.
