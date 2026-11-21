@@ -15,7 +15,7 @@ import numpy as np
 from PySide6 import QtWidgets as W, QtGui, QtCore, QtTest
 
 from session import EVENT_FIELDS, Protocol, Session, next_session, safe_name, save_events
-from device import Acquisition, Demo
+from device import Acquisition, Demo, LivePreview, peak_envelope
 from app import MainWindow, Setup, STYLE
 
 
@@ -109,6 +109,56 @@ class ProtocolTests(unittest.TestCase):
             self.p.parse(b'I,1,999999,1,2,3')
 
 
+class PreviewTests(unittest.TestCase):
+    def test_envelope_is_bounded_and_preserves_each_axis_extrema(self):
+        values = np.zeros((44100, 4))
+        values[:, 0] = np.arange(len(values)) / 44100
+        for axis in range(1, 4):
+            values[100 * axis, axis] = 20 + axis
+            values[500 * axis, axis] = -30 - axis
+        reduced = peak_envelope(values)
+        self.assertLessEqual(len(reduced), 1800)
+        np.testing.assert_array_equal(reduced[:, 1:].max(axis=0), values[:, 1:].max(axis=0))
+        np.testing.assert_array_equal(reduced[:, 1:].min(axis=0), values[:, 1:].min(axis=0))
+        self.assertTrue(np.all(np.diff(reduced[:, 0]) > 0))
+
+    def test_preview_window_is_bounded_without_modifying_input(self):
+        preview = LivePreview()
+        audio = np.arange(44100) % 200
+        original = audio.copy()
+        for second in range(15):
+            frame = preview.update([('mic', second * 44100, second, audio),
+                                    ('imu', second, second, (1, 2, 9.81))], (44100, 833))
+        np.testing.assert_array_equal(audio, original)
+        for arrays in (frame['raw'], frame['filtered']):
+            for array in arrays:
+                self.assertLessEqual(len(array), 1800)
+                self.assertLessEqual(np.ptp(array[:, 0]), 10)
+        self.assertLessEqual(len(preview.buffers['mic']), 11)
+
+    def test_gui_stall_cannot_queue_old_preview_frames(self):
+        with tempfile.TemporaryDirectory() as root:
+            worker = Acquisition('DEMO', root, True)
+            worker.start()
+            try:
+                # Intentionally do not pump Qt events while acquisition runs.
+                deadline = time.perf_counter() + 2
+                while not worker.ready and time.perf_counter() < deadline:
+                    time.sleep(.01)
+                self.assertTrue(worker.ready)
+                time.sleep(.4)
+                first = worker.take_preview()
+                self.assertIsNotNone(first)
+                self.assertIsNone(worker.take_preview())
+                time.sleep(.4)
+                newest = worker.take_preview()
+                self.assertGreater(newest['raw'][0][-1, 0], first['raw'][0][-1, 0])
+                self.assertLessEqual(len(newest['raw'][0]), 1800)
+            finally:
+                worker.command('quit')
+                self.assertTrue(worker.wait(4000))
+
+
 class GuiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -153,6 +203,8 @@ class GuiTests(unittest.TestCase):
             window.review_last()
             self.wait_for(lambda: window.review.folder is not None)
             review = window.review
+            self.assertGreater(review.start.lineEdit().width(), 100)
+            self.assertGreater(review.end.lineEdit().width(), 100)
             review.table.setCurrentRow(0)
             review.start.setValue(.1)
             review.end.setValue(.7)
