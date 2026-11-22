@@ -55,4 +55,6 @@ ax=axs[2,2];ax.text(0,.86,'Read the colors',fontsize=13,weight='bold',transform=
 ax.text(0,.65,'Brighter regions show stronger vibrations\nat that time and frequency. Individual clips\ncan look different within the same class.',fontsize=11,transform=ax.transAxes,va='top')
 ax=axs[3,2];ax.text(0,.86,'What the dataset covers',fontsize=13,weight='bold',transform=ax.transAxes)
 ax.text(0,.65,'Song et al. throat-vibration training clips.\nEach example has median RMS for its class.\nNo labeled head-turn class in the release.',fontsize=11,transform=ax.transAxes,va='top')
-fig.savefig('../throat_activity_signals.png',dpi=140)
+figure_path = Path('output/throat_baseline/throat_activity_signals.png')
+figure_path.parent.mkdir(parents=True, exist_ok=True)
+fig.savefig(figure_path, dpi=140)

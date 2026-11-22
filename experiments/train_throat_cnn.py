@@ -23,6 +23,7 @@ def transform(x):
     _,_,s=stft(x,fs=6400,nperseg=256,noverlap=192)
     return np.log10(abs(s)**2+1e-12).astype('float32')[:,None]
 if __name__=='__main__':
+    out.mkdir(parents=True, exist_ok=True)
     torch.manual_seed(2026)
     torch.set_num_threads(3)
     x,y=load('train'); train,val=train_test_split(np.arange(len(y)),test_size=.15,stratify=y,random_state=2026)

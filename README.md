@@ -4,6 +4,21 @@ Research code for detecting **when annotated swallows occur** in neck microphone
 
 This project does **not** diagnose dysphagia or predict aspiration. The second throat-activity dataset has been inspected but has not been used to train these models.
 
+## Find your way around
+
+| Location | Purpose |
+| --- | --- |
+| [data_collection/](data_collection/README.md) | Swallow Studio acquisition app, live plots, event review and its firmware |
+| [record_teensy.py](record_teensy.py) | Earlier standalone recorder with interval markers |
+| Root Python scripts | Training, prediction and evaluation commands documented below |
+| [experiments/](experiments/) | Versioned model comparisons, scores and experiment scripts |
+| [results/](results/) | Original baseline results and participant split |
+| [docs/](docs/README.md) | Setup, baseline methods, results and validation guide |
+| [label_review/](label_review/README.md) | Annotation coverage and interpretation |
+| [presentation/](presentation/) | Presentation figures and captions |
+
+Swallow Studio uses the V1 USB protocol documented in its README. Check the firmware protocol before switching from the standalone recorder. Recorder values and public-model inputs require conversion and calibration before wearable inference.
+
 ## Annotation interpretation update
 
 The linked study reports unlabelled events during imaging pauses. Our scores compare predictions with supplied annotations; unannotated time is not verified negative ground truth. See [the annotation audit](label_review/README.md) before interpreting accuracy or extra detections.
@@ -28,7 +43,7 @@ See [the CNN summary](experiments/cnn_v1/SUMMARY.md), [training curves](experime
 
 We also compare both methods in three outer participant folds across the 148 development participants, excluding all 27 original pilot test participants. Each fold uses separate inner validation for checkpoint/threshold selection. The original models and pilot results remain unchanged.
 
-See [VALIDATION.md](VALIDATION.md) for the design and reproduction commands, and [the grouped-validation results](experiments/grouped_cv_v1/SUMMARY.md) for pooled metrics, fold results and error review. This is an internal robustness check on the same dataset, not external clinical validation.
+See [VALIDATION.md](docs/VALIDATION.md) for the design and reproduction commands, and [the grouped-validation results](experiments/grouped_cv_v1/SUMMARY.md) for pooled metrics, fold results and error review. This is an internal robustness check on the same dataset, not external clinical validation.
 
 ## Setup
 
@@ -163,7 +178,7 @@ These checks cover one-to-one event matching, zero-signal feature handling, outp
 - validate.py / plot_validation.py: grouped development validation and error review.
 - results/: frozen baseline audit, split, metrics, predictions and figures.
 - experiments/cnn_v1/: CNN config, history, checkpoint, scores, metrics and figures.
-- BASELINE_METHODS.md: detailed first-baseline methodology and assumptions.
+- docs/BASELINE_METHODS.md: detailed first-baseline methodology and assumptions.
 
 ## Interpretation limits and next steps
 
