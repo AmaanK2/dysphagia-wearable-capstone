@@ -1,0 +1,23 @@
+{
+  "activity": "dry_swallow",
+  "requested_duration_s": 60.0,
+  "device_origin_s": 22.95351308300013,
+  "mic_rate_hz": 44100.0,
+  "imu_rate_hz": 833.0,
+  "port": "/dev/cu.usbmodem216097801",
+  "simulated": false,
+  "status": "complete",
+  "protocol": "V1",
+  "time_note": "Common device clock; observer markers include USB and human reaction delay.",
+  "display_filter": "Mic 20\u20132000 Hz; acceleration 0.5\u2013100 Hz; raw CSV unchanged.",
+  "note": "",
+  "samples": {
+    "mic": 2646000,
+    "imu": 54256
+  },
+  "saved_duration_s": 59.999977867113245,
+  "stream_end_s": {
+    "mic": 59.999977867113245,
+    "imu": 59.99981391699987
+  }
+}
