@@ -12,6 +12,19 @@ import record_teensy as recorder
 
 
 class IntervalMarkerTests(unittest.TestCase):
+    def test_v1_packets_parse_without_dropping_sensor_samples(self):
+        with TemporaryDirectory() as temp:
+            raw = Path(temp) / "recording.txt"
+            raw.write_text(
+                "S,1000000,44100.000,833.000,m/s2,V1\n"
+                + "A,0,1000100," + ",".join(str(i) for i in range(128)) + "\n"
+                + "I,0,1000200,1.25,2.5,3.75\n")
+            mic, imu, rate, imu_times = recorder.parse_recording(raw)
+            self.assertEqual(mic, list(range(128)))
+            self.assertEqual(imu, [(1.25, 2.5, 3.75)])
+            self.assertEqual(rate, 44100)
+            self.assertAlmostEqual(imu_times[0], 0.0002)
+
     def test_port_detection_accepts_teensy_on_windows(self):
         ports = [SimpleNamespace(device="COM7", vid=0x16C0,
                                  description="USB Serial", manufacturer="PJRC")]

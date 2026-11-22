@@ -121,11 +121,14 @@ def parse_recording(raw_path):
                 if row[0] == "S" and len(row) >= 4:
                     device_start_us = int(row[1])
                     mic_fs = float(row[2])
-                elif row[0] == "A" and len(row) == 130:
-                    mic.extend([int(value) for value in row[2:]])
-                elif row[0] == "I" and len(row) == 5:
-                    imu.append(tuple(float(value) for value in row[2:]))
-                    imu_times.append(((int(row[1]) - device_start_us) % (2 ** 32)) / 1e6
+                elif row[0] == "A" and len(row) in (130, 131):
+                    # V1 adds the first-sample device timestamp after the index.
+                    mic.extend(int(value) for value in row[3 if len(row) == 131 else 2:])
+                elif row[0] == "I" and len(row) in (5, 6):
+                    # V1 adds the sample index before the device timestamp.
+                    timestamp_column = 2 if len(row) == 6 else 1
+                    imu.append(tuple(float(value) for value in row[timestamp_column + 1:]))
+                    imu_times.append(((int(row[timestamp_column]) - device_start_us) % (2 ** 32)) / 1e6
                                      if device_start_us is not None else None)
             except ValueError:
                 continue

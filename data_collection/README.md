@@ -40,7 +40,7 @@ Use the microphone manufacturer's pinout, not guessed wire colours. The audio sh
 3. Open `firmware/SwallowRecorder/SwallowRecorder.ino`. Select **Teensy 4.1**, **USB Type: Serial**, and **600 MHz**. Upload it.
 4. Close Arduino Serial Monitor so the GUI can open the port. Launch the GUI and click **Connect device**. USB ports refresh automatically; Teensy ports are listed first.
 
-This app requires the included **V1 firmware**. The older repository recorder's packets do not include enough documented timing information to assume compatibility. Uploading this sketch replaces the Teensy's previous program; keep a copy of that program if you need it later.
+This app requires the included **V1 firmware**. The standalone `record_teensy.py` accepts both V1 and older packet layouts, but older firmware does not provide the documented timing information required here. Uploading this sketch replaces the Teensy's previous program; keep a copy of that program if you need it later.
 
 Firmware defaults: microphone signed 16-bit PCM at 44.1 kHz; acceleration at nominal 833 Hz, ±2 g, reported in m/s². Axes are the sensor's native X/Y/Z; use the same placement and orientation every session. Gyroscope data is not collected. `MIC_CHANNEL` selects left/right input, `IMU_ADDRESS` selects 0x6A/0x6B, and `lineInLevel(5)` sets fixed input gain. Change these only when matching the actual wiring or after a bench gain check.
 

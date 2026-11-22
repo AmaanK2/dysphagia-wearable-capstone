@@ -17,7 +17,7 @@ This project does **not** diagnose dysphagia or predict aspiration. The second t
 | [label_review/](label_review/README.md) | Annotation coverage and interpretation |
 | [presentation/](presentation/) | Presentation figures and captions |
 
-Swallow Studio uses the V1 USB protocol documented in its README. Check the firmware protocol before switching from the standalone recorder. Recorder values and public-model inputs require conversion and calibration before wearable inference.
+Swallow Studio requires the V1 USB protocol documented in its README. The standalone `record_teensy.py` accepts both V1 and older packet layouts. Recorder values and public-model inputs require conversion and calibration before wearable inference.
 
 ## Annotation interpretation update
 
