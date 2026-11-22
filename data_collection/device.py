@@ -8,7 +8,10 @@ from pathlib import Path
 import serial
 import numpy as np
 from scipy.signal import butter, sosfilt, sosfilt_zi
-from PySide6.QtCore import QThread, Signal
+try:
+    from PyQt6.QtCore import QThread, pyqtSignal as Signal
+except ImportError:
+    from PySide6.QtCore import QThread, Signal
 from serial.tools import list_ports
 
 from session import Protocol, Session, next_session
@@ -210,6 +213,7 @@ class Acquisition(QThread):
                 port.reset_input_buffer()
                 port.write(b'X')
                 port.flush()
+                time.sleep(.15)  # Let the Teensy process stop before starting a new stream.
                 port.reset_input_buffer()
                 port.write(b'S')
             while self.handle_commands():

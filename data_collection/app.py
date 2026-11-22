@@ -9,9 +9,14 @@ from pathlib import Path
 from string import Template
 
 import numpy as np
-import pyqtgraph as pg
 from scipy.signal import sosfiltfilt
-from PySide6 import QtCore, QtGui, QtWidgets as W
+try:
+    from PyQt6 import QtCore, QtGui, QtWidgets as W
+    Signal = QtCore.pyqtSignal
+except ImportError:
+    from PySide6 import QtCore, QtGui, QtWidgets as W
+    Signal = QtCore.Signal
+import pyqtgraph as pg
 
 from device import Acquisition, ports, filter_sos
 from session import EVENT_FIELDS, safe_name, save_events
@@ -180,8 +185,8 @@ class Setup(W.QDialog):
 
 
 class ReviewLoader(QtCore.QThread):
-    loaded = QtCore.Signal(object)
-    failed = QtCore.Signal(str)
+    loaded = Signal(object)
+    failed = Signal(str)
 
     def __init__(self, folder):
         super().__init__()
