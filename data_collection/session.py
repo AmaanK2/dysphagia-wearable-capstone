@@ -175,12 +175,14 @@ class Session:
         self.event_file.flush()
         self.events.append(row)
 
-    def enable_detection(self):
+    def enable_detection(self, label='wearable', model_file=None):
         file = (self.folder / 'Detections.csv').open('x', newline='', encoding='utf-8')
         self.files['detections'] = file
         self.detection_writer = csv.writer(file)
         self.detection_writer.writerow(['time_s', 'event', 'model_score'])
-        self.metadata['live_detector'] = 'wearable'
+        self.metadata['live_detector'] = label
+        if model_file:
+            self.metadata['live_detector_file'] = model_file
         self.write_metadata()
 
     def detection(self, seconds, score):

@@ -1,0 +1,155 @@
+{
+  "design": "Each model is a weighted mix: ``public_share`` is the fraction of the total training\nloss that comes from adapted public windows; the rest comes from wearable windows.\nInside each dataset the swallow and background classes are balanced, so a 50/50 model\ngives the 85 wearable swallows the same total influence as the ~1,600 public swallows.",
+  "participants": [
+    "P01",
+    "P02",
+    "P03"
+  ],
+  "model": "trees",
+  "base_settings": {
+    "learning_rate": 0.05,
+    "max_leaf_nodes": 15,
+    "max_iter": 300,
+    "l2_regularization": 1.0,
+    "min_samples_leaf": 40
+  },
+  "shares": [
+    0.0,
+    0.2,
+    0.35,
+    0.5,
+    0.65,
+    0.8
+  ],
+  "result": {
+    "pooled": {
+      "tp": 68,
+      "fp": 24,
+      "fn": 17,
+      "matched_during_interval": 61,
+      "correct_windows": 10144,
+      "positive_correct": 389,
+      "windows": 10760,
+      "positive_windows": 717,
+      "seconds": 1079.996,
+      "gated_seconds": 97.6,
+      "precision": 0.7391304347826086,
+      "recall": 0.8,
+      "f1": 0.768361581920904,
+      "extra_per_minute": 1.333338271623228,
+      "median_detection_delay_s": 0.5283500000000001,
+      "window_accuracy": 0.9427509293680297,
+      "background_window_accuracy": 0.933364312267658,
+      "window_balanced_accuracy": 0.7569308320109165,
+      "confounder_alerts": {
+        "cough": 1
+      }
+    },
+    "by_participant": {
+      "P01": {
+        "tp": 9,
+        "fp": 7,
+        "fn": 5,
+        "matched_during_interval": 4,
+        "correct_windows": 2288,
+        "positive_correct": 31,
+        "windows": 2385,
+        "positive_windows": 92,
+        "seconds": 239.998,
+        "gated_seconds": 96.6,
+        "precision": 0.5625,
+        "recall": 0.6428571428571429,
+        "f1": 0.6,
+        "extra_per_minute": 1.750011485055583,
+        "median_detection_delay_s": 0.6038,
+        "window_accuracy": 0.959329140461216,
+        "background_window_accuracy": 0.9614255765199161,
+        "window_balanced_accuracy": 0.6606282826750602,
+        "confounder_alerts": {
+          "cough": 1
+        },
+        "settings": {
+          "threshold": 0.75,
+          "refractory": 1.6
+        },
+        "selected_share": 0.5,
+        "inner_f1": {
+          "0.00": 0.6,
+          "0.20": 0.8531,
+          "0.35": 0.8714,
+          "0.50": 0.875,
+          "0.65": 0.8592,
+          "0.80": 0.8511
+        }
+      },
+      "P02": {
+        "tp": 26,
+        "fp": 8,
+        "fn": 6,
+        "matched_during_interval": 24,
+        "correct_windows": 4494,
+        "positive_correct": 127,
+        "windows": 4785,
+        "positive_windows": 369,
+        "seconds": 479.999,
+        "gated_seconds": 1.0,
+        "precision": 0.7647058823529411,
+        "recall": 0.8125,
+        "f1": 0.7878787878787878,
+        "extra_per_minute": 1.0000027965349039,
+        "median_detection_delay_s": 0.6173,
+        "window_accuracy": 0.9391849529780564,
+        "background_window_accuracy": 0.922884012539185,
+        "window_balanced_accuracy": 0.6665387136208318,
+        "confounder_alerts": {},
+        "settings": {
+          "threshold": 0.75,
+          "refractory": 1.2
+        },
+        "selected_share": 0.5,
+        "inner_f1": {
+          "0.00": 0.7344,
+          "0.20": 0.8829,
+          "0.35": 0.8868,
+          "0.50": 0.8889,
+          "0.65": 0.8846,
+          "0.80": 0.8704
+        }
+      },
+      "P03": {
+        "tp": 33,
+        "fp": 9,
+        "fn": 6,
+        "matched_during_interval": 33,
+        "correct_windows": 3362,
+        "positive_correct": 231,
+        "windows": 3590,
+        "positive_windows": 256,
+        "seconds": 359.999,
+        "gated_seconds": 0.0,
+        "precision": 0.7857142857142857,
+        "recall": 0.8461538461538461,
+        "f1": 0.8148148148148148,
+        "extra_per_minute": 1.5000032064276876,
+        "median_detection_delay_s": 0.3131,
+        "window_accuracy": 0.9364902506963788,
+        "background_window_accuracy": 0.9286908077994429,
+        "window_balanced_accuracy": 0.9207279637822435,
+        "confounder_alerts": {},
+        "settings": {
+          "threshold": 0.7,
+          "refractory": 1.6
+        },
+        "selected_share": 0.5,
+        "inner_f1": {
+          "0.00": 0.6379,
+          "0.20": 0.6923,
+          "0.35": 0.6729,
+          "0.50": 0.7156,
+          "0.65": 0.68,
+          "0.80": 0.7009
+        }
+      }
+    }
+  }
+}

@@ -20,7 +20,7 @@ except ImportError:
 from session import EVENT_FIELDS, Protocol, Session, next_session, safe_name, save_events
 from device import Acquisition, Demo, LivePreview, peak_envelope
 from app import MainWindow, Setup, STYLE
-from live_detection import FEATURE_COUNT, FEATURE_VERSION, AgreementModel, Model, Trigger
+from live_detection import FEATURE_COUNT, FEATURE_VERSION, AgreementModel, Model, Trigger, available_models
 from train_live import make_record
 
 
@@ -363,6 +363,57 @@ class GuiTests(unittest.TestCase):
             finally:
                 window.close()
                 self.app.processEvents()
+
+    def test_live_session_detector_can_be_selected_and_is_locked_while_recording(self):
+        source = Demo()
+        model = Model(dict(feature_version=FEATURE_VERSION, columns=[0], mean=[0.], scale=[1.],
+                           weights=[0.], bias=4.))
+        loaded = []
+
+        def load(path=None):
+            loaded.append(Path(path).name)
+            return model
+
+        with tempfile.TemporaryDirectory() as root:
+            models = Path(root) / 'models'
+            (models / 'mixed').mkdir(parents=True)
+            for name, share in (('wearable.json', None), ('mixed/mixed_optimal_35_65.json', .35),
+                                ('mixed/mixed_80_20.json', .8)):
+                training = {} if share is None else dict(training=dict(public_share=share, model='boosted trees'))
+                (models / name).write_text(json.dumps(training))
+            listed = available_models(models)
+            with (patch('device.serial.Serial') as serial, patch('device.load_model', side_effect=load),
+                  patch('app.available_models', return_value=listed),
+                  patch('app.ports', return_value=[('TEST', 'Test USB', True)])):
+                port = serial.return_value
+                port.in_waiting = 1000
+                port.read.side_effect = lambda count: source.read()
+                window = MainWindow()
+                window.show()
+                try:
+                    labels = [window.model_choice.itemText(i) for i in range(window.model_choice.count())]
+                    self.assertEqual(labels, ['Wearable only (current)',
+                                              'Mixed 35/65 public/wearable · trees (recommended)',
+                                              'Mixed 80/20 public/wearable · trees'])
+                    self.assertEqual(window.model_choice.currentIndex(), 0)
+                    window.connect_device()
+                    window.worker.root = Path(root) / 'sessions'
+                    self.wait_for(lambda: window.ready and loaded)
+                    self.assertEqual(loaded[-1], 'wearable.json')
+                    window.model_choice.setCurrentIndex(1)
+                    self.wait_for(lambda: loaded[-1] == 'mixed_optimal_35_65.json')
+                    self.wait_for(lambda: 'Mixed 35/65' in window.live_status.text())
+                    window.worker.command('start', ('P01', 'mixed', 1.3))
+                    self.wait_for(lambda: window.recording)
+                    self.assertFalse(window.model_choice.isEnabled())
+                    self.wait_for(lambda: window.latest_session is not None)
+                    metadata = json.loads((window.latest_session / 'Session.json').read_text())
+                    self.assertEqual(metadata['live_detector_file'], 'mixed_optimal_35_65.json')
+                    self.assertIn('Mixed 35/65', metadata['live_detector'])
+                    self.assertTrue(window.model_choice.isEnabled())
+                finally:
+                    window.close()
+                    self.app.processEvents()
 
     def test_fragmented_usb_and_disconnect_preserve_partial_session(self):
         class FakeSerial:

@@ -1,0 +1,443 @@
+{
+  "mixed_50_50.json": {
+    "model": "boosted trees",
+    "public_share": 0.5,
+    "wearable_share": 0.5,
+    "settings": {},
+    "chosen": {
+      "threshold": 0.75,
+      "refractory": 1.6
+    },
+    "sensor_gate": {
+      "mic": 0.4,
+      "imu": 0.4
+    },
+    "wearable_sessions": [
+      "P01/S02_dry_swallow",
+      "P01/S03_mixed",
+      "P01/S04_mixed",
+      "P02/S01_mixed",
+      "P02/S02_dry_swallow",
+      "P02/S03_dry_swallow",
+      "P02/S04_dry_swallow",
+      "P03/S01_dry_swallow",
+      "P03/S02_dry_swallow"
+    ],
+    "public_recordings": 1044,
+    "leave_one_participant_out": {
+      "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
+      "pooled": {
+        "tp": 73,
+        "fp": 14,
+        "fn": 12,
+        "precision": 0.8391,
+        "recall": 0.8588,
+        "f1": 0.8488,
+        "extra_per_minute": 0.7778,
+        "median_detection_delay_s": 0.5184
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 8,
+          "fp": 4,
+          "fn": 6,
+          "precision": 0.6667,
+          "recall": 0.5714,
+          "f1": 0.6154,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.5611
+        },
+        "P02": {
+          "tp": 26,
+          "fp": 8,
+          "fn": 6,
+          "precision": 0.7647,
+          "recall": 0.8125,
+          "f1": 0.7879,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.6293
+        },
+        "P03": {
+          "tp": 39,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.9512,
+          "recall": 1.0,
+          "f1": 0.975,
+          "extra_per_minute": 0.3333,
+          "median_detection_delay_s": 0.3664
+        }
+      }
+    }
+  },
+  "mixed_50_50_logistic.json": {
+    "model": "quadratic logistic",
+    "public_share": 0.5,
+    "wearable_share": 0.5,
+    "settings": {
+      "quadratic": true,
+      "penalty": 0.015,
+      "background_weight": 4.0,
+      "reviewed_weight": 4.0
+    },
+    "chosen": {
+      "threshold": 0.6,
+      "refractory": 1.2
+    },
+    "sensor_gate": {
+      "mic": 0.4,
+      "imu": 0.4
+    },
+    "wearable_sessions": [
+      "P01/S02_dry_swallow",
+      "P01/S03_mixed",
+      "P01/S04_mixed",
+      "P02/S01_mixed",
+      "P02/S02_dry_swallow",
+      "P02/S03_dry_swallow",
+      "P02/S04_dry_swallow",
+      "P03/S01_dry_swallow",
+      "P03/S02_dry_swallow"
+    ],
+    "public_recordings": 1044,
+    "leave_one_participant_out": {
+      "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
+      "pooled": {
+        "tp": 69,
+        "fp": 14,
+        "fn": 16,
+        "precision": 0.8313,
+        "recall": 0.8118,
+        "f1": 0.8214,
+        "extra_per_minute": 0.7778,
+        "median_detection_delay_s": 0.4838
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 2,
+          "fp": 4,
+          "fn": 12,
+          "precision": 0.3333,
+          "recall": 0.1429,
+          "f1": 0.2,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.8038
+        },
+        "P02": {
+          "tp": 28,
+          "fp": 8,
+          "fn": 4,
+          "precision": 0.7778,
+          "recall": 0.875,
+          "f1": 0.8235,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.6001
+        },
+        "P03": {
+          "tp": 39,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.9512,
+          "recall": 1.0,
+          "f1": 0.975,
+          "extra_per_minute": 0.3333,
+          "median_detection_delay_s": 0.3965
+        }
+      }
+    }
+  },
+  "mixed_80_20.json": {
+    "model": "boosted trees",
+    "public_share": 0.8,
+    "wearable_share": 0.2,
+    "settings": {},
+    "chosen": {
+      "threshold": 0.75,
+      "refractory": 1.2
+    },
+    "sensor_gate": {
+      "mic": 0.4,
+      "imu": 0.4
+    },
+    "wearable_sessions": [
+      "P01/S02_dry_swallow",
+      "P01/S03_mixed",
+      "P01/S04_mixed",
+      "P02/S01_mixed",
+      "P02/S02_dry_swallow",
+      "P02/S03_dry_swallow",
+      "P02/S04_dry_swallow",
+      "P03/S01_dry_swallow",
+      "P03/S02_dry_swallow"
+    ],
+    "public_recordings": 1044,
+    "leave_one_participant_out": {
+      "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
+      "pooled": {
+        "tp": 73,
+        "fp": 16,
+        "fn": 12,
+        "precision": 0.8202,
+        "recall": 0.8588,
+        "f1": 0.8391,
+        "extra_per_minute": 0.8889,
+        "median_detection_delay_s": 0.5319
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 9,
+          "fp": 4,
+          "fn": 5,
+          "precision": 0.6923,
+          "recall": 0.6429,
+          "f1": 0.6667,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.537
+        },
+        "P02": {
+          "tp": 26,
+          "fp": 9,
+          "fn": 6,
+          "precision": 0.7429,
+          "recall": 0.8125,
+          "f1": 0.7761,
+          "extra_per_minute": 1.125,
+          "median_detection_delay_s": 0.6585
+        },
+        "P03": {
+          "tp": 38,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.9268,
+          "recall": 0.9744,
+          "f1": 0.95,
+          "extra_per_minute": 0.5,
+          "median_detection_delay_s": 0.4123
+        }
+      }
+    }
+  },
+  "mixed_80_20_logistic.json": {
+    "model": "quadratic logistic",
+    "public_share": 0.8,
+    "wearable_share": 0.2,
+    "settings": {
+      "quadratic": true,
+      "penalty": 0.015,
+      "background_weight": 4.0,
+      "reviewed_weight": 4.0
+    },
+    "chosen": {
+      "threshold": 0.6,
+      "refractory": 0.8
+    },
+    "sensor_gate": {
+      "mic": 0.4,
+      "imu": 0.4
+    },
+    "wearable_sessions": [
+      "P01/S02_dry_swallow",
+      "P01/S03_mixed",
+      "P01/S04_mixed",
+      "P02/S01_mixed",
+      "P02/S02_dry_swallow",
+      "P02/S03_dry_swallow",
+      "P02/S04_dry_swallow",
+      "P03/S01_dry_swallow",
+      "P03/S02_dry_swallow"
+    ],
+    "public_recordings": 1044,
+    "leave_one_participant_out": {
+      "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
+      "pooled": {
+        "tp": 65,
+        "fp": 10,
+        "fn": 20,
+        "precision": 0.8667,
+        "recall": 0.7647,
+        "f1": 0.8125,
+        "extra_per_minute": 0.5556,
+        "median_detection_delay_s": 0.5381
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 12,
+          "precision": 0.5,
+          "recall": 0.1429,
+          "f1": 0.2222,
+          "extra_per_minute": 0.5,
+          "median_detection_delay_s": 0.8038
+        },
+        "P02": {
+          "tp": 25,
+          "fp": 4,
+          "fn": 7,
+          "precision": 0.8621,
+          "recall": 0.7812,
+          "f1": 0.8197,
+          "extra_per_minute": 0.5,
+          "median_detection_delay_s": 0.7367
+        },
+        "P03": {
+          "tp": 38,
+          "fp": 4,
+          "fn": 1,
+          "precision": 0.9048,
+          "recall": 0.9744,
+          "f1": 0.9383,
+          "extra_per_minute": 0.6667,
+          "median_detection_delay_s": 0.4493
+        }
+      }
+    }
+  },
+  "mixed_optimal_35_65.json": {
+    "model": "boosted trees",
+    "public_share": 0.35,
+    "wearable_share": 0.65,
+    "settings": {},
+    "chosen": {
+      "threshold": 0.75,
+      "refractory": 1.2
+    },
+    "sensor_gate": {
+      "mic": 0.4,
+      "imu": 0.4
+    },
+    "wearable_sessions": [
+      "P01/S02_dry_swallow",
+      "P01/S03_mixed",
+      "P01/S04_mixed",
+      "P02/S01_mixed",
+      "P02/S02_dry_swallow",
+      "P02/S03_dry_swallow",
+      "P02/S04_dry_swallow",
+      "P03/S01_dry_swallow",
+      "P03/S02_dry_swallow"
+    ],
+    "public_recordings": 1044,
+    "leave_one_participant_out": {
+      "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
+      "pooled": {
+        "tp": 76,
+        "fp": 13,
+        "fn": 9,
+        "precision": 0.8539,
+        "recall": 0.8941,
+        "f1": 0.8736,
+        "extra_per_minute": 0.7222,
+        "median_detection_delay_s": 0.5323
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 9,
+          "fp": 4,
+          "fn": 5,
+          "precision": 0.6923,
+          "recall": 0.6429,
+          "f1": 0.6667,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.6038
+        },
+        "P02": {
+          "tp": 28,
+          "fp": 7,
+          "fn": 4,
+          "precision": 0.8,
+          "recall": 0.875,
+          "f1": 0.8358,
+          "extra_per_minute": 0.875,
+          "median_detection_delay_s": 0.6128
+        },
+        "P03": {
+          "tp": 39,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.9512,
+          "recall": 1.0,
+          "f1": 0.975,
+          "extra_per_minute": 0.3333,
+          "median_detection_delay_s": 0.3821
+        }
+      }
+    }
+  },
+  "mixed_optimal_35_65_logistic.json": {
+    "model": "quadratic logistic",
+    "public_share": 0.35,
+    "wearable_share": 0.65,
+    "settings": {
+      "quadratic": true,
+      "penalty": 0.015,
+      "background_weight": 4.0,
+      "reviewed_weight": 4.0
+    },
+    "chosen": {
+      "threshold": 0.6,
+      "refractory": 1.2
+    },
+    "sensor_gate": {
+      "mic": 0.4,
+      "imu": 0.4
+    },
+    "wearable_sessions": [
+      "P01/S02_dry_swallow",
+      "P01/S03_mixed",
+      "P01/S04_mixed",
+      "P02/S01_mixed",
+      "P02/S02_dry_swallow",
+      "P02/S03_dry_swallow",
+      "P02/S04_dry_swallow",
+      "P03/S01_dry_swallow",
+      "P03/S02_dry_swallow"
+    ],
+    "public_recordings": 1044,
+    "leave_one_participant_out": {
+      "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
+      "pooled": {
+        "tp": 72,
+        "fp": 15,
+        "fn": 13,
+        "precision": 0.8276,
+        "recall": 0.8471,
+        "f1": 0.8372,
+        "extra_per_minute": 0.8333,
+        "median_detection_delay_s": 0.4851
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 3,
+          "fp": 4,
+          "fn": 11,
+          "precision": 0.4286,
+          "recall": 0.2143,
+          "f1": 0.2857,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.8038
+        },
+        "P02": {
+          "tp": 30,
+          "fp": 8,
+          "fn": 2,
+          "precision": 0.7895,
+          "recall": 0.9375,
+          "f1": 0.8571,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.575
+        },
+        "P03": {
+          "tp": 39,
+          "fp": 3,
+          "fn": 0,
+          "precision": 0.9286,
+          "recall": 1.0,
+          "f1": 0.963,
+          "extra_per_minute": 0.5,
+          "median_detection_delay_s": 0.365
+        }
+      }
+    }
+  }
+}

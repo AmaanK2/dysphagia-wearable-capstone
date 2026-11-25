@@ -1,0 +1,545 @@
+{
+  "design": "Each model is a weighted mix: ``public_share`` is the fraction of the total training\nloss that comes from adapted public windows; the rest comes from wearable windows.\nInside each dataset the swallow and background classes are balanced, so a 50/50 model\ngives the 85 wearable swallows the same total influence as the ~1,600 public swallows.",
+  "participants": [
+    "P01",
+    "P02",
+    "P03"
+  ],
+  "base_settings": {
+    "quadratic": true,
+    "penalty": 0.015,
+    "background_weight": 4.0,
+    "reviewed_weight": 4.0
+  },
+  "note": "Public signals used without adaptation (raw units, 4 kHz, no EQ).",
+  "shares": {
+    "0.20": {
+      "pooled": {
+        "tp": 71,
+        "fp": 65,
+        "fn": 14,
+        "matched_during_interval": 67,
+        "correct_windows": 9991,
+        "positive_correct": 490,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.5220588235294118,
+        "recall": 0.8352941176470589,
+        "f1": 0.6425339366515838,
+        "extra_per_minute": 3.611124485646243,
+        "median_detection_delay_s": 0.4429,
+        "window_accuracy": 0.9285315985130111,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.8147175652365679,
+        "confounder_alerts": {
+          "cough": 5,
+          "talking": 1
+        }
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 3,
+          "fp": 3,
+          "fn": 11,
+          "matched_during_interval": 1,
+          "correct_windows": 2277,
+          "positive_correct": 16,
+          "windows": 2385,
+          "positive_windows": 92,
+          "seconds": 239.998,
+          "gated_seconds": 96.6,
+          "precision": 0.5,
+          "recall": 0.21428571428571427,
+          "f1": 0.3,
+          "extra_per_minute": 0.7500049221666785,
+          "median_detection_delay_s": 0.7184,
+          "window_accuracy": 0.9547169811320755,
+          "background_window_accuracy": 0.9614255765199161,
+          "window_balanced_accuracy": 0.5799787633440149,
+          "confounder_alerts": {
+            "cough": 1
+          },
+          "settings": {
+            "threshold": 0.6,
+            "refractory": 1.6
+          }
+        },
+        "P02": {
+          "tp": 32,
+          "fp": 31,
+          "fn": 0,
+          "matched_during_interval": 32,
+          "correct_windows": 4464,
+          "positive_correct": 240,
+          "windows": 4785,
+          "positive_windows": 369,
+          "seconds": 479.999,
+          "gated_seconds": 1.0,
+          "precision": 0.5079365079365079,
+          "recall": 1.0,
+          "f1": 0.6736842105263158,
+          "extra_per_minute": 3.875010836572753,
+          "median_detection_delay_s": 0.50015,
+          "window_accuracy": 0.9329153605015674,
+          "background_window_accuracy": 0.922884012539185,
+          "window_balanced_accuracy": 0.8034641215977377,
+          "confounder_alerts": {
+            "talking": 1,
+            "cough": 4
+          },
+          "settings": {
+            "threshold": 0.65,
+            "refractory": 1.2
+          }
+        },
+        "P03": {
+          "tp": 36,
+          "fp": 31,
+          "fn": 3,
+          "matched_during_interval": 34,
+          "correct_windows": 3250,
+          "positive_correct": 234,
+          "windows": 3590,
+          "positive_windows": 256,
+          "seconds": 359.999,
+          "gated_seconds": 0.0,
+          "precision": 0.5373134328358209,
+          "recall": 0.9230769230769231,
+          "f1": 0.6792452830188679,
+          "extra_per_minute": 5.166677711028702,
+          "median_detection_delay_s": 0.36260000000000003,
+          "window_accuracy": 0.9052924791086351,
+          "background_window_accuracy": 0.9286908077994429,
+          "window_balanced_accuracy": 0.9093407880923815,
+          "confounder_alerts": {},
+          "settings": {
+            "threshold": 0.5,
+            "refractory": 1.6
+          }
+        }
+      },
+      "oracle_fixed_settings": {
+        "tp": 67,
+        "fp": 28,
+        "fn": 18,
+        "matched_during_interval": 64,
+        "correct_windows": 10199,
+        "positive_correct": 375,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.7052631578947368,
+        "recall": 0.788235294117647,
+        "f1": 0.7444444444444445,
+        "extra_per_minute": 1.5555608660055777,
+        "median_detection_delay_s": 0.4746,
+        "window_accuracy": 0.9478624535315985,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.7506031595520017,
+        "confounder_alerts": {
+          "cough": 4
+        },
+        "settings": {
+          "threshold": 0.75,
+          "refractory": 1.6
+        }
+      }
+    },
+    "0.35": {
+      "pooled": {
+        "tp": 70,
+        "fp": 55,
+        "fn": 15,
+        "matched_during_interval": 67,
+        "correct_windows": 10069,
+        "positive_correct": 459,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.56,
+        "recall": 0.8235294117647058,
+        "f1": 0.6666666666666666,
+        "extra_per_minute": 3.055566872469898,
+        "median_detection_delay_s": 0.45235000000000003,
+        "window_accuracy": 0.9357806691449814,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.7985263784138248,
+        "confounder_alerts": {
+          "cough": 4
+        }
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 12,
+          "matched_during_interval": 0,
+          "correct_windows": 2286,
+          "positive_correct": 8,
+          "windows": 2385,
+          "positive_windows": 92,
+          "seconds": 239.998,
+          "gated_seconds": 96.6,
+          "precision": 0.5,
+          "recall": 0.14285714285714285,
+          "f1": 0.2222222222222222,
+          "extra_per_minute": 0.5000032814444523,
+          "median_detection_delay_s": 0.80385,
+          "window_accuracy": 0.9584905660377359,
+          "background_window_accuracy": 0.9614255765199161,
+          "window_balanced_accuracy": 0.5402074366218548,
+          "confounder_alerts": {},
+          "settings": {
+            "threshold": 0.65,
+            "refractory": 1.6
+          }
+        },
+        "P02": {
+          "tp": 32,
+          "fp": 29,
+          "fn": 0,
+          "matched_during_interval": 32,
+          "correct_windows": 4457,
+          "positive_correct": 226,
+          "windows": 4785,
+          "positive_windows": 369,
+          "seconds": 479.999,
+          "gated_seconds": 1.0,
+          "precision": 0.5245901639344263,
+          "recall": 1.0,
+          "f1": 0.6881720430107527,
+          "extra_per_minute": 3.625010137439027,
+          "median_detection_delay_s": 0.50905,
+          "window_accuracy": 0.9314524555903866,
+          "background_window_accuracy": 0.922884012539185,
+          "window_balanced_accuracy": 0.7852865043596089,
+          "confounder_alerts": {
+            "cough": 4
+          },
+          "settings": {
+            "threshold": 0.7,
+            "refractory": 1.2
+          }
+        },
+        "P03": {
+          "tp": 36,
+          "fp": 24,
+          "fn": 3,
+          "matched_during_interval": 35,
+          "correct_windows": 3326,
+          "positive_correct": 225,
+          "windows": 3590,
+          "positive_windows": 256,
+          "seconds": 359.999,
+          "gated_seconds": 0.0,
+          "precision": 0.6,
+          "recall": 0.9230769230769231,
+          "f1": 0.7272727272727273,
+          "extra_per_minute": 4.000008550473833,
+          "median_detection_delay_s": 0.3302,
+          "window_accuracy": 0.9264623955431754,
+          "background_window_accuracy": 0.9286908077994429,
+          "window_balanced_accuracy": 0.9045101136022795,
+          "confounder_alerts": {},
+          "settings": {
+            "threshold": 0.55,
+            "refractory": 1.6
+          }
+        }
+      },
+      "oracle_fixed_settings": {
+        "tp": 71,
+        "fp": 29,
+        "fn": 14,
+        "matched_during_interval": 69,
+        "correct_windows": 10189,
+        "positive_correct": 400,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.71,
+        "recall": 0.8352941176470589,
+        "f1": 0.7675675675675676,
+        "extra_per_minute": 1.6111166112200628,
+        "median_detection_delay_s": 0.4738,
+        "window_accuracy": 0.9469330855018587,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.7662944040764184,
+        "confounder_alerts": {
+          "cough": 4
+        },
+        "settings": {
+          "threshold": 0.7,
+          "refractory": 1.6
+        }
+      }
+    },
+    "0.50": {
+      "pooled": {
+        "tp": 71,
+        "fp": 43,
+        "fn": 14,
+        "matched_during_interval": 69,
+        "correct_windows": 10144,
+        "positive_correct": 431,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.6228070175438597,
+        "recall": 0.8352941176470589,
+        "f1": 0.7135678391959799,
+        "extra_per_minute": 2.3888977366582838,
+        "median_detection_delay_s": 0.4596,
+        "window_accuracy": 0.9427509293680297,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.7841285262770366,
+        "confounder_alerts": {
+          "cough": 4
+        }
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 13,
+          "matched_during_interval": 0,
+          "correct_windows": 2291,
+          "positive_correct": 5,
+          "windows": 2385,
+          "positive_windows": 92,
+          "seconds": 239.998,
+          "gated_seconds": 96.6,
+          "precision": 0.3333333333333333,
+          "recall": 0.07142857142857142,
+          "f1": 0.11764705882352941,
+          "extra_per_minute": 0.5000032814444523,
+          "median_detection_delay_s": 0.8039,
+          "window_accuracy": 0.9605870020964361,
+          "background_window_accuracy": 0.9614255765199161,
+          "window_balanced_accuracy": 0.5256475283945468,
+          "confounder_alerts": {},
+          "settings": {
+            "threshold": 0.7,
+            "refractory": 1.6
+          }
+        },
+        "P02": {
+          "tp": 32,
+          "fp": 29,
+          "fn": 0,
+          "matched_during_interval": 32,
+          "correct_windows": 4453,
+          "positive_correct": 226,
+          "windows": 4785,
+          "positive_windows": 369,
+          "seconds": 479.999,
+          "gated_seconds": 1.0,
+          "precision": 0.5245901639344263,
+          "recall": 1.0,
+          "f1": 0.6881720430107527,
+          "extra_per_minute": 3.625010137439027,
+          "median_detection_delay_s": 0.51095,
+          "window_accuracy": 0.9306165099268547,
+          "background_window_accuracy": 0.922884012539185,
+          "window_balanced_accuracy": 0.7848336058088842,
+          "confounder_alerts": {
+            "cough": 4
+          },
+          "settings": {
+            "threshold": 0.7,
+            "refractory": 1.2
+          }
+        },
+        "P03": {
+          "tp": 38,
+          "fp": 12,
+          "fn": 1,
+          "matched_during_interval": 37,
+          "correct_windows": 3400,
+          "positive_correct": 200,
+          "windows": 3590,
+          "positive_windows": 256,
+          "seconds": 359.999,
+          "gated_seconds": 0.0,
+          "precision": 0.76,
+          "recall": 0.9743589743589743,
+          "f1": 0.8539325842696629,
+          "extra_per_minute": 2.0000042752369165,
+          "median_detection_delay_s": 0.3408,
+          "window_accuracy": 0.947075208913649,
+          "background_window_accuracy": 0.9286908077994429,
+          "window_balanced_accuracy": 0.8705290191961608,
+          "confounder_alerts": {},
+          "settings": {
+            "threshold": 0.6,
+            "refractory": 1.6
+          }
+        }
+      },
+      "oracle_fixed_settings": {
+        "tp": 67,
+        "fp": 23,
+        "fn": 18,
+        "matched_during_interval": 66,
+        "correct_windows": 10226,
+        "positive_correct": 358,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.7444444444444445,
+        "recall": 0.788235294117647,
+        "f1": 0.7657142857142857,
+        "extra_per_minute": 1.2777821399331533,
+        "median_detection_delay_s": 0.4744,
+        "window_accuracy": 0.9503717472118959,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.7409387888703401,
+        "confounder_alerts": {
+          "cough": 4
+        },
+        "settings": {
+          "threshold": 0.75,
+          "refractory": 1.6
+        }
+      }
+    },
+    "0.80": {
+      "pooled": {
+        "tp": 69,
+        "fp": 34,
+        "fn": 16,
+        "matched_during_interval": 68,
+        "correct_windows": 10197,
+        "positive_correct": 373,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.6699029126213593,
+        "recall": 0.8117647058823529,
+        "f1": 0.7340425531914894,
+        "extra_per_minute": 1.8888958847995732,
+        "median_detection_delay_s": 0.453,
+        "window_accuracy": 0.9476765799256506,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.7492084594125317,
+        "confounder_alerts": {
+          "cough": 4
+        }
+      },
+      "by_participant": {
+        "P01": {
+          "tp": 2,
+          "fp": 4,
+          "fn": 12,
+          "matched_during_interval": 1,
+          "correct_windows": 2286,
+          "positive_correct": 6,
+          "windows": 2385,
+          "positive_windows": 92,
+          "seconds": 239.998,
+          "gated_seconds": 96.6,
+          "precision": 0.3333333333333333,
+          "recall": 0.14285714285714285,
+          "f1": 0.2,
+          "extra_per_minute": 1.0000065628889045,
+          "median_detection_delay_s": 0.61115,
+          "window_accuracy": 0.9584905660377359,
+          "background_window_accuracy": 0.9614255765199161,
+          "window_balanced_accuracy": 0.5297739813041582,
+          "confounder_alerts": {},
+          "settings": {
+            "threshold": 0.65,
+            "refractory": 0.8
+          }
+        },
+        "P02": {
+          "tp": 32,
+          "fp": 20,
+          "fn": 0,
+          "matched_during_interval": 32,
+          "correct_windows": 4478,
+          "positive_correct": 197,
+          "windows": 4785,
+          "positive_windows": 369,
+          "seconds": 479.999,
+          "gated_seconds": 1.0,
+          "precision": 0.6153846153846154,
+          "recall": 1.0,
+          "f1": 0.7619047619047619,
+          "extra_per_minute": 2.50000699133726,
+          "median_detection_delay_s": 0.5581499999999999,
+          "window_accuracy": 0.935841170323929,
+          "background_window_accuracy": 0.922884012539185,
+          "window_balanced_accuracy": 0.7516523432897373,
+          "confounder_alerts": {
+            "cough": 4
+          },
+          "settings": {
+            "threshold": 0.7,
+            "refractory": 1.6
+          }
+        },
+        "P03": {
+          "tp": 35,
+          "fp": 10,
+          "fn": 4,
+          "matched_during_interval": 35,
+          "correct_windows": 3433,
+          "positive_correct": 170,
+          "windows": 3590,
+          "positive_windows": 256,
+          "seconds": 359.999,
+          "gated_seconds": 0.0,
+          "precision": 0.7777777777777778,
+          "recall": 0.8974358974358975,
+          "f1": 0.8333333333333334,
+          "extra_per_minute": 1.6666702293640971,
+          "median_detection_delay_s": 0.336,
+          "window_accuracy": 0.9562674094707521,
+          "background_window_accuracy": 0.9286908077994429,
+          "window_balanced_accuracy": 0.8213833795740852,
+          "confounder_alerts": {},
+          "settings": {
+            "threshold": 0.65,
+            "refractory": 1.6
+          }
+        }
+      },
+      "oracle_fixed_settings": {
+        "tp": 70,
+        "fp": 21,
+        "fn": 15,
+        "matched_during_interval": 68,
+        "correct_windows": 10226,
+        "positive_correct": 354,
+        "windows": 10760,
+        "positive_windows": 717,
+        "seconds": 1079.996,
+        "gated_seconds": 97.6,
+        "precision": 0.7692307692307693,
+        "recall": 0.8235294117647058,
+        "f1": 0.7954545454545454,
+        "extra_per_minute": 1.1666706495041834,
+        "median_detection_delay_s": 0.47450000000000003,
+        "window_accuracy": 0.9503717472118959,
+        "background_window_accuracy": 0.933364312267658,
+        "window_balanced_accuracy": 0.7383485322735668,
+        "confounder_alerts": {
+          "cough": 4
+        },
+        "settings": {
+          "threshold": 0.7,
+          "refractory": 1.6
+        }
+      }
+    }
+  }
+}

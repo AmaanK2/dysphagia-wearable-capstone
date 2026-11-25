@@ -3,4 +3,8 @@ __pycache__/
 recordings/
 *.tmp
 
-models/
+models/*
+# Share the mixed public/wearable detectors so every Swallow Studio install can select them.
+!models/mixed/
+models/mixed/*
+!models/mixed/mixed_*.json

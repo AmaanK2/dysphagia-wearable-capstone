@@ -113,6 +113,56 @@ class Model:
         return expit(inputs @ self.weights + self.bias)
 
 
+class TreeModel:
+    """Gradient-boosted tree ensemble exported from scikit-learn, scored with NumPy only.
+
+    All trees share one flat node table; ``roots`` holds each tree's first node. The
+    score is expit(baseline + sum of reached leaf values), like the logistic ``Model``.
+    """
+
+    def __init__(self, data):
+        self.feature_version = data['feature_version']
+        if self.feature_version != FEATURE_VERSION:
+            raise ValueError('Incompatible detector model. Retrain the wearable model.')
+        self.columns = np.asarray(data['columns'], dtype=int)
+        self.threshold = float(data.get('threshold', THRESHOLD))
+        self.refractory = float(data.get('refractory', REFRACTORY))
+        trees = data['trees']
+        self.feature = np.asarray(trees['feature'], dtype=int)
+        self.split = np.asarray(trees['split'], dtype=float)
+        self.left = np.asarray(trees['left'], dtype=int)
+        self.right = np.asarray(trees['right'], dtype=int)
+        self.leaf = np.asarray(trees['leaf'], dtype=bool)
+        self.value = np.asarray(trees['value'], dtype=float)
+        self.roots = np.asarray(trees['roots'], dtype=int)
+        self.depth = int(trees['depth'])
+        self.baseline = float(trees['baseline'])
+        nodes = len(self.feature)
+        if (self.columns.ndim != 1 or not len(self.columns)
+                or np.any((self.columns < 0) | (self.columns >= FEATURE_COUNT))
+                or any(len(a) != nodes for a in (self.split, self.left, self.right, self.leaf, self.value))
+                or np.any((self.feature < 0) | (self.feature >= len(self.columns)))
+                or np.any(~self.leaf & ((self.left < 0) | (self.left >= nodes) | (self.right < 0) | (self.right >= nodes)))
+                or np.any((self.roots < 0) | (self.roots >= nodes)) or self.depth < 0
+                or not 0. < self.threshold < 1. or not np.isfinite(self.refractory) or self.refractory < 0.
+                or not np.isfinite(np.r_[self.value, self.baseline]).all()):
+            raise ValueError('Invalid detector trees.')
+
+    def score(self, features):
+        x = np.atleast_2d(features[..., self.columns])
+        rows = np.arange(len(x))[:, None]
+        node = np.broadcast_to(self.roots, (len(x), len(self.roots))).copy()
+        for _ in range(self.depth):
+            go_left = x[rows, self.feature[node]] <= self.split[node]
+            node = np.where(self.leaf[node], node, np.where(go_left, self.left[node], self.right[node]))
+        scores = expit(self.baseline + self.value[node].sum(axis=1))
+        return scores if np.ndim(features) > 1 else scores[0]
+
+
+def build_model(data):
+    return TreeModel(data) if 'trees' in data else Model(data)
+
+
 @lru_cache(maxsize=4)
 def interaction_indexes(count):
     return np.triu_indices(count)
@@ -126,7 +176,7 @@ def quadratic_terms(inputs):
 
 class AgreementModel:
     def __init__(self, data):
-        self.joint = Model(data['joint'])
+        self.joint = build_model(data['joint'])
         self.mic = Model(data['mic'])
         self.imu = Model(data['imu'])
         self.feature_version = self.joint.feature_version
@@ -145,11 +195,44 @@ def agreement_scores(joint, mic, imu, mic_threshold, imu_threshold):
     return np.where((mic >= mic_threshold) & (imu >= imu_threshold), joint, 0.)
 
 
-def load_model():
-    data = json.loads(MODEL_PATH.read_text(encoding='utf-8'))
+def load_model(path=None):
+    data = json.loads(Path(path or MODEL_PATH).read_text(encoding='utf-8'))
     if 'joint' not in data:
         raise ValueError('Retrain the wearable model to enable microphone and IMU agreement.')
     return AgreementModel(data)
+
+
+RECOMMENDED_MODEL = 'mixed_optimal_35_65.json'
+
+
+def model_label(path):
+    """Short, human-readable detector name for the GUI and session metadata."""
+    path = Path(path)
+    if path.name == MODEL_PATH.name:
+        return 'Wearable only (current)'
+    try:
+        training = json.loads(path.read_text(encoding='utf-8')).get('training', {})
+    except (OSError, ValueError):
+        training = {}
+    if 'public_share' in training:
+        public = round(100 * training['public_share'])
+        kind = 'trees' if 'tree' in training.get('model', '') else 'logistic'
+        label = f'Mixed {public}/{100 - public} public/wearable · {kind}'
+        return label + (' (recommended)' if path.name == RECOMMENDED_MODEL else '')
+    return path.stem.replace('_', ' ')
+
+
+def available_models(folder=None):
+    """[(label, path)] for every detector file: the current wearable model first, then mixed models."""
+    folder = Path(folder or MODEL_PATH.parent)
+    found = []
+    if (folder / MODEL_PATH.name).is_file():
+        found.append(folder / MODEL_PATH.name)
+    mixed = sorted((folder / 'mixed').glob('mixed_*.json'),
+                   key=lambda p: ('logistic' in p.stem, 'optimal' not in p.stem, p.stem))
+    found += mixed
+    found += sorted(p for p in folder.glob('*.json') if p.name not in (MODEL_PATH.name, 'evaluation.json'))
+    return [(model_label(p), p) for p in found]
 
 
 class Trigger:

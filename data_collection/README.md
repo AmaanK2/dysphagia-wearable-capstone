@@ -36,6 +36,8 @@ Train or rebuild the local model from inside `data_collection`:
 
 Use `.venv\Scripts\python` on Windows. The command uses non-simulated sessions with reviewed labels or observer markers in `recordings/participants/`. It tunes settings using participant-separated replay, then trains on usable windows throughout each recording and gives extra weight to reviewed non-swallow intervals and background windows that score like swallows. It reads `Mic.csv` or `Mic.csv.gz`, and writes `models/wearable.json` and `models/evaluation.json`. Swallow Studio loads the model when the device connects and at the start of each recording. See [the pilot accuracy report](LIVE_DETECTION_RESULTS.md).
 
+`train_mixed.py` trains on these recordings plus the public Pittsburgh dataset after `adapt_public.py` converts it to the wearable's rates, units, axes and spectral shape. It writes weighted models (e.g. 50/50, 80/20, 35/65 public/wearable) to `models/mixed/`. Choose the detector from the **Detector** list in **Live Session**: your current `models/wearable.json` appears first, followed by the mixed models (35/65 trees is recommended). The choice applies to live preview straight away. It is locked while recording, and `Session.json` saves which detector produced `Detections.csv`. Training these models needs `pandas`, `scikit-learn` and `matplotlib` in addition to `requirements.txt`; running them in the app does not. Results and reproduction commands: [mixed-data summary](../experiments/mixed_public_wearable/SUMMARY.md).
+
 ## Prepare the Teensy once
 
 The included firmware targets the supplied parts list:

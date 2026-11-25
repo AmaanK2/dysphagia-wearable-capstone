@@ -19,6 +19,7 @@ except ImportError:
 import pyqtgraph as pg
 
 from device import Acquisition, ports, filter_sos
+from live_detection import RECOMMENDED_MODEL, available_models
 from session import EVENT_FIELDS, safe_name, save_events
 
 HOME = Path(__file__).resolve().parent
@@ -577,6 +578,23 @@ class MainWindow(W.QMainWindow):
         for widget in (self.live_time, self.live_start, self.live_mark, self.live_stop):
             live_top.addWidget(widget)
         live_layout.addLayout(live_top)
+        model_row = W.QHBoxLayout()
+        detector_label = W.QLabel('Detector')
+        detector_label.setObjectName('muted')
+        self.model_choice = W.QComboBox()
+        self.model_choice.setAccessibleName('Swallow detector model')
+        self.model_choice.setToolTip('Which trained model raises live swallow alerts. '
+                                     'Locked while recording; saved in Session.json.')
+        self.model_choice.setMinimumWidth(340)
+        detector_label.setBuddy(self.model_choice)
+        self.model_refresh = button('Refresh list', self.populate_models)
+        model_row.addWidget(detector_label)
+        model_row.addWidget(self.model_choice)
+        model_row.addWidget(self.model_refresh)
+        model_row.addStretch()
+        live_layout.addLayout(model_row)
+        self.populate_models()
+        self.model_choice.currentIndexChanged.connect(self.choose_model)
         live_body = W.QHBoxLayout()
         self.live_graph = SignalPlots()
         live_body.addWidget(self.live_graph, 1)
@@ -616,6 +634,33 @@ class MainWindow(W.QMainWindow):
         if demo:
             QtCore.QTimer.singleShot(0, self.connect_device)
 
+    def populate_models(self):
+        current = self.model_choice.currentData()
+        self.model_choice.blockSignals(True)
+        self.model_choice.clear()
+        for label, path in available_models():
+            self.model_choice.addItem(label, str(path))
+        if not self.model_choice.count():
+            self.model_choice.addItem('No detector models found', None)
+        index = self.model_choice.findData(current)
+        if index < 0:
+            # Default to the current wearable model when present, then the recommended mixed model.
+            index = next((i for i in range(self.model_choice.count())
+                          if str(self.model_choice.itemData(i) or '').endswith(('wearable.json', RECOMMENDED_MODEL))), 0)
+        self.model_choice.setCurrentIndex(index)
+        self.model_choice.blockSignals(False)
+        if self.model_choice.currentData() != current:
+            self.choose_model()
+
+    def choose_model(self):
+        path = self.model_choice.currentData()
+        if path and self.worker and self.worker.isRunning() and not self.recording and not self.pending:
+            self.worker.command('model', path)
+
+    def lock_model_choice(self, locked):
+        self.model_choice.setEnabled(not locked)
+        self.model_refresh.setEnabled(not locked)
+
     def show_source(self):
         self.port.setVisible(not self.demo.isChecked())
 
@@ -654,7 +699,7 @@ class MainWindow(W.QMainWindow):
         self.graph.clear_overlays()
         self.graph.draw(np.empty((0, 2)), np.empty((0, 4)))
         self.data_root = HOME / 'recordings' / ('demo' if demo else 'participants')
-        self.worker = Acquisition('DEMO' if demo else port, self.data_root, demo)
+        self.worker = Acquisition('DEMO' if demo else port, self.data_root, demo, self.model_choice.currentData())
         self.worker.status.connect(self.device_status)
         self.worker.begun.connect(self.begun)
         self.worker.saved.connect(self.saved)
@@ -690,6 +735,7 @@ class MainWindow(W.QMainWindow):
         self.connect_button.setEnabled(True)
         self.port.setEnabled(True)
         self.demo.setEnabled(True)
+        self.lock_model_choice(False)
 
     def setup(self):
         dialog = Setup(self)
@@ -703,6 +749,7 @@ class MainWindow(W.QMainWindow):
         self.start_button.setEnabled(False)
         self.live_start.setEnabled(False)
         self.connect_button.setEnabled(False)
+        self.lock_model_choice(True)
         self.worker.command('start', (dialog.code, dialog.task, dialog.seconds.value()))
 
     def reset_live_view(self, title):
@@ -731,6 +778,7 @@ class MainWindow(W.QMainWindow):
         self.status.setText('Recording. Press Space when you observe an event.')
         self.reset_live_view(self.session_name.text())
         self.live_start.setEnabled(False)
+        self.lock_model_choice(True)
         self.live_status.setText('Starting detector…')
         self.live_mark.setEnabled(True)
         self.live_stop.setEnabled(True)
@@ -852,9 +900,11 @@ class MainWindow(W.QMainWindow):
         self.reset_live_view('Live preview · Not recording')
         self.live_start.setEnabled(self.ready)
         self.live_status.setText(self.status.text())
+        self.lock_model_choice(False)
 
     def failed(self, error):
         self.pending = False
+        self.lock_model_choice(self.recording)
         self.connect_button.setEnabled(True)
         self.start_button.setEnabled(self.ready and not self.recording)
         self.live_start.setEnabled(self.ready and not self.recording)
