@@ -5,7 +5,7 @@
     "wearable_share": 0.5,
     "settings": {},
     "chosen": {
-      "threshold": 0.75,
+      "threshold": 0.8,
       "refractory": 1.6
     },
     "sensor_gate": {
@@ -16,56 +16,61 @@
       "P01/S02_dry_swallow",
       "P01/S03_mixed",
       "P01/S04_mixed",
+      "P01/S05_dry_swallow",
+      "P01/S06_dry_swallow",
       "P02/S01_mixed",
       "P02/S02_dry_swallow",
       "P02/S03_dry_swallow",
       "P02/S04_dry_swallow",
       "P03/S01_dry_swallow",
-      "P03/S02_dry_swallow"
+      "P03/S02_dry_swallow",
+      "P03/S03_dry_swallow",
+      "P03/S04_mixed",
+      "P03/S05_dry_swallow"
     ],
     "public_recordings": 1044,
     "leave_one_participant_out": {
       "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
       "pooled": {
-        "tp": 73,
-        "fp": 14,
-        "fn": 12,
-        "precision": 0.8391,
-        "recall": 0.8588,
-        "f1": 0.8488,
-        "extra_per_minute": 0.7778,
-        "median_detection_delay_s": 0.5184
+        "tp": 137,
+        "fp": 26,
+        "fn": 17,
+        "precision": 0.8405,
+        "recall": 0.8896,
+        "f1": 0.8644,
+        "extra_per_minute": 0.9286,
+        "median_detection_delay_s": 0.453
       },
       "by_participant": {
         "P01": {
-          "tp": 8,
-          "fp": 4,
-          "fn": 6,
-          "precision": 0.6667,
-          "recall": 0.5714,
-          "f1": 0.6154,
+          "tp": 42,
+          "fp": 8,
+          "fn": 10,
+          "precision": 0.84,
+          "recall": 0.8077,
+          "f1": 0.8235,
           "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.5611
+          "median_detection_delay_s": 0.4062
         },
         "P02": {
-          "tp": 26,
+          "tp": 32,
           "fp": 8,
-          "fn": 6,
-          "precision": 0.7647,
-          "recall": 0.8125,
-          "f1": 0.7879,
+          "fn": 0,
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.8889,
           "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.6293
+          "median_detection_delay_s": 0.5486
         },
         "P03": {
-          "tp": 39,
-          "fp": 2,
-          "fn": 0,
-          "precision": 0.9512,
-          "recall": 1.0,
-          "f1": 0.975,
-          "extra_per_minute": 0.3333,
-          "median_detection_delay_s": 0.3664
+          "tp": 63,
+          "fp": 10,
+          "fn": 7,
+          "precision": 0.863,
+          "recall": 0.9,
+          "f1": 0.8811,
+          "extra_per_minute": 0.8333,
+          "median_detection_delay_s": 0.402
         }
       }
     }
@@ -81,8 +86,8 @@
       "reviewed_weight": 4.0
     },
     "chosen": {
-      "threshold": 0.6,
-      "refractory": 1.2
+      "threshold": 0.55,
+      "refractory": 0.8
     },
     "sensor_gate": {
       "mic": 0.4,
@@ -92,56 +97,61 @@
       "P01/S02_dry_swallow",
       "P01/S03_mixed",
       "P01/S04_mixed",
+      "P01/S05_dry_swallow",
+      "P01/S06_dry_swallow",
       "P02/S01_mixed",
       "P02/S02_dry_swallow",
       "P02/S03_dry_swallow",
       "P02/S04_dry_swallow",
       "P03/S01_dry_swallow",
-      "P03/S02_dry_swallow"
+      "P03/S02_dry_swallow",
+      "P03/S03_dry_swallow",
+      "P03/S04_mixed",
+      "P03/S05_dry_swallow"
     ],
     "public_recordings": 1044,
     "leave_one_participant_out": {
       "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
       "pooled": {
-        "tp": 69,
-        "fp": 14,
-        "fn": 16,
-        "precision": 0.8313,
-        "recall": 0.8118,
-        "f1": 0.8214,
-        "extra_per_minute": 0.7778,
-        "median_detection_delay_s": 0.4838
+        "tp": 136,
+        "fp": 65,
+        "fn": 18,
+        "precision": 0.6766,
+        "recall": 0.8831,
+        "f1": 0.7662,
+        "extra_per_minute": 2.3214,
+        "median_detection_delay_s": 0.4493
       },
       "by_participant": {
         "P01": {
-          "tp": 2,
-          "fp": 4,
+          "tp": 40,
+          "fp": 17,
           "fn": 12,
-          "precision": 0.3333,
-          "recall": 0.1429,
-          "f1": 0.2,
-          "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.8038
+          "precision": 0.7018,
+          "recall": 0.7692,
+          "f1": 0.7339,
+          "extra_per_minute": 2.125,
+          "median_detection_delay_s": 0.4191
         },
         "P02": {
-          "tp": 28,
-          "fp": 8,
-          "fn": 4,
-          "precision": 0.7778,
-          "recall": 0.875,
-          "f1": 0.8235,
-          "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.6001
+          "tp": 32,
+          "fp": 20,
+          "fn": 0,
+          "precision": 0.6154,
+          "recall": 1.0,
+          "f1": 0.7619,
+          "extra_per_minute": 2.5,
+          "median_detection_delay_s": 0.5491
         },
         "P03": {
-          "tp": 39,
-          "fp": 2,
-          "fn": 0,
-          "precision": 0.9512,
-          "recall": 1.0,
-          "f1": 0.975,
-          "extra_per_minute": 0.3333,
-          "median_detection_delay_s": 0.3965
+          "tp": 64,
+          "fp": 28,
+          "fn": 6,
+          "precision": 0.6957,
+          "recall": 0.9143,
+          "f1": 0.7901,
+          "extra_per_minute": 2.3333,
+          "median_detection_delay_s": 0.3626
         }
       }
     }
@@ -152,8 +162,8 @@
     "wearable_share": 0.2,
     "settings": {},
     "chosen": {
-      "threshold": 0.75,
-      "refractory": 1.2
+      "threshold": 0.8,
+      "refractory": 0.8
     },
     "sensor_gate": {
       "mic": 0.4,
@@ -163,56 +173,61 @@
       "P01/S02_dry_swallow",
       "P01/S03_mixed",
       "P01/S04_mixed",
+      "P01/S05_dry_swallow",
+      "P01/S06_dry_swallow",
       "P02/S01_mixed",
       "P02/S02_dry_swallow",
       "P02/S03_dry_swallow",
       "P02/S04_dry_swallow",
       "P03/S01_dry_swallow",
-      "P03/S02_dry_swallow"
+      "P03/S02_dry_swallow",
+      "P03/S03_dry_swallow",
+      "P03/S04_mixed",
+      "P03/S05_dry_swallow"
     ],
     "public_recordings": 1044,
     "leave_one_participant_out": {
       "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
       "pooled": {
-        "tp": 73,
-        "fp": 16,
-        "fn": 12,
-        "precision": 0.8202,
-        "recall": 0.8588,
-        "f1": 0.8391,
-        "extra_per_minute": 0.8889,
-        "median_detection_delay_s": 0.5319
+        "tp": 136,
+        "fp": 31,
+        "fn": 18,
+        "precision": 0.8144,
+        "recall": 0.8831,
+        "f1": 0.8474,
+        "extra_per_minute": 1.1071,
+        "median_detection_delay_s": 0.4707
       },
       "by_participant": {
         "P01": {
-          "tp": 9,
-          "fp": 4,
-          "fn": 5,
-          "precision": 0.6923,
-          "recall": 0.6429,
-          "f1": 0.6667,
-          "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.537
+          "tp": 41,
+          "fp": 6,
+          "fn": 11,
+          "precision": 0.8723,
+          "recall": 0.7885,
+          "f1": 0.8283,
+          "extra_per_minute": 0.75,
+          "median_detection_delay_s": 0.455
         },
         "P02": {
-          "tp": 26,
-          "fp": 9,
-          "fn": 6,
-          "precision": 0.7429,
-          "recall": 0.8125,
-          "f1": 0.7761,
-          "extra_per_minute": 1.125,
-          "median_detection_delay_s": 0.6585
+          "tp": 31,
+          "fp": 12,
+          "fn": 1,
+          "precision": 0.7209,
+          "recall": 0.9688,
+          "f1": 0.8267,
+          "extra_per_minute": 1.5,
+          "median_detection_delay_s": 0.5561
         },
         "P03": {
-          "tp": 38,
-          "fp": 3,
-          "fn": 1,
-          "precision": 0.9268,
-          "recall": 0.9744,
-          "f1": 0.95,
-          "extra_per_minute": 0.5,
-          "median_detection_delay_s": 0.4123
+          "tp": 64,
+          "fp": 13,
+          "fn": 6,
+          "precision": 0.8312,
+          "recall": 0.9143,
+          "f1": 0.8707,
+          "extra_per_minute": 1.0833,
+          "median_detection_delay_s": 0.4296
         }
       }
     }
@@ -239,56 +254,61 @@
       "P01/S02_dry_swallow",
       "P01/S03_mixed",
       "P01/S04_mixed",
+      "P01/S05_dry_swallow",
+      "P01/S06_dry_swallow",
       "P02/S01_mixed",
       "P02/S02_dry_swallow",
       "P02/S03_dry_swallow",
       "P02/S04_dry_swallow",
       "P03/S01_dry_swallow",
-      "P03/S02_dry_swallow"
+      "P03/S02_dry_swallow",
+      "P03/S03_dry_swallow",
+      "P03/S04_mixed",
+      "P03/S05_dry_swallow"
     ],
     "public_recordings": 1044,
     "leave_one_participant_out": {
       "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
       "pooled": {
-        "tp": 65,
-        "fp": 10,
-        "fn": 20,
-        "precision": 0.8667,
-        "recall": 0.7647,
-        "f1": 0.8125,
-        "extra_per_minute": 0.5556,
-        "median_detection_delay_s": 0.5381
+        "tp": 109,
+        "fp": 35,
+        "fn": 45,
+        "precision": 0.7569,
+        "recall": 0.7078,
+        "f1": 0.7315,
+        "extra_per_minute": 1.25,
+        "median_detection_delay_s": 0.5383
       },
       "by_participant": {
         "P01": {
-          "tp": 2,
-          "fp": 2,
-          "fn": 12,
-          "precision": 0.5,
-          "recall": 0.1429,
-          "f1": 0.2222,
-          "extra_per_minute": 0.5,
-          "median_detection_delay_s": 0.8038
+          "tp": 18,
+          "fp": 6,
+          "fn": 34,
+          "precision": 0.75,
+          "recall": 0.3462,
+          "f1": 0.4737,
+          "extra_per_minute": 0.75,
+          "median_detection_delay_s": 0.4955
         },
         "P02": {
-          "tp": 25,
-          "fp": 4,
-          "fn": 7,
-          "precision": 0.8621,
-          "recall": 0.7812,
-          "f1": 0.8197,
-          "extra_per_minute": 0.5,
-          "median_detection_delay_s": 0.7367
+          "tp": 32,
+          "fp": 11,
+          "fn": 0,
+          "precision": 0.7442,
+          "recall": 1.0,
+          "f1": 0.8533,
+          "extra_per_minute": 1.375,
+          "median_detection_delay_s": 0.6303
         },
         "P03": {
-          "tp": 38,
-          "fp": 4,
-          "fn": 1,
-          "precision": 0.9048,
-          "recall": 0.9744,
-          "f1": 0.9383,
-          "extra_per_minute": 0.6667,
-          "median_detection_delay_s": 0.4493
+          "tp": 59,
+          "fp": 18,
+          "fn": 11,
+          "precision": 0.7662,
+          "recall": 0.8429,
+          "f1": 0.8027,
+          "extra_per_minute": 1.5,
+          "median_detection_delay_s": 0.4915
         }
       }
     }
@@ -299,8 +319,8 @@
     "wearable_share": 0.65,
     "settings": {},
     "chosen": {
-      "threshold": 0.75,
-      "refractory": 1.2
+      "threshold": 0.8,
+      "refractory": 0.8
     },
     "sensor_gate": {
       "mic": 0.4,
@@ -310,56 +330,61 @@
       "P01/S02_dry_swallow",
       "P01/S03_mixed",
       "P01/S04_mixed",
+      "P01/S05_dry_swallow",
+      "P01/S06_dry_swallow",
       "P02/S01_mixed",
       "P02/S02_dry_swallow",
       "P02/S03_dry_swallow",
       "P02/S04_dry_swallow",
       "P03/S01_dry_swallow",
-      "P03/S02_dry_swallow"
+      "P03/S02_dry_swallow",
+      "P03/S03_dry_swallow",
+      "P03/S04_mixed",
+      "P03/S05_dry_swallow"
     ],
     "public_recordings": 1044,
     "leave_one_participant_out": {
       "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
       "pooled": {
-        "tp": 76,
-        "fp": 13,
-        "fn": 9,
-        "precision": 0.8539,
-        "recall": 0.8941,
-        "f1": 0.8736,
-        "extra_per_minute": 0.7222,
-        "median_detection_delay_s": 0.5323
+        "tp": 144,
+        "fp": 23,
+        "fn": 10,
+        "precision": 0.8623,
+        "recall": 0.9351,
+        "f1": 0.8972,
+        "extra_per_minute": 0.8214,
+        "median_detection_delay_s": 0.4349
       },
       "by_participant": {
         "P01": {
-          "tp": 9,
-          "fp": 4,
-          "fn": 5,
-          "precision": 0.6923,
-          "recall": 0.6429,
-          "f1": 0.6667,
-          "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.6038
+          "tp": 46,
+          "fp": 10,
+          "fn": 6,
+          "precision": 0.8214,
+          "recall": 0.8846,
+          "f1": 0.8519,
+          "extra_per_minute": 1.25,
+          "median_detection_delay_s": 0.4027
         },
         "P02": {
-          "tp": 28,
+          "tp": 32,
           "fp": 7,
-          "fn": 4,
-          "precision": 0.8,
-          "recall": 0.875,
-          "f1": 0.8358,
+          "fn": 0,
+          "precision": 0.8205,
+          "recall": 1.0,
+          "f1": 0.9014,
           "extra_per_minute": 0.875,
-          "median_detection_delay_s": 0.6128
+          "median_detection_delay_s": 0.5436
         },
         "P03": {
-          "tp": 39,
-          "fp": 2,
-          "fn": 0,
-          "precision": 0.9512,
-          "recall": 1.0,
-          "f1": 0.975,
-          "extra_per_minute": 0.3333,
-          "median_detection_delay_s": 0.3821
+          "tp": 66,
+          "fp": 6,
+          "fn": 4,
+          "precision": 0.9167,
+          "recall": 0.9429,
+          "f1": 0.9296,
+          "extra_per_minute": 0.5,
+          "median_detection_delay_s": 0.3689
         }
       }
     }
@@ -376,7 +401,7 @@
     },
     "chosen": {
       "threshold": 0.6,
-      "refractory": 1.2
+      "refractory": 1.6
     },
     "sensor_gate": {
       "mic": 0.4,
@@ -386,56 +411,61 @@
       "P01/S02_dry_swallow",
       "P01/S03_mixed",
       "P01/S04_mixed",
+      "P01/S05_dry_swallow",
+      "P01/S06_dry_swallow",
       "P02/S01_mixed",
       "P02/S02_dry_swallow",
       "P02/S03_dry_swallow",
       "P02/S04_dry_swallow",
       "P03/S01_dry_swallow",
-      "P03/S02_dry_swallow"
+      "P03/S02_dry_swallow",
+      "P03/S03_dry_swallow",
+      "P03/S04_mixed",
+      "P03/S05_dry_swallow"
     ],
     "public_recordings": 1044,
     "leave_one_participant_out": {
       "note": "Threshold/cooldown chosen on these same pooled folds; see evaluation*.json for nested estimates.",
       "pooled": {
-        "tp": 72,
-        "fp": 15,
-        "fn": 13,
-        "precision": 0.8276,
-        "recall": 0.8471,
-        "f1": 0.8372,
-        "extra_per_minute": 0.8333,
-        "median_detection_delay_s": 0.4851
+        "tp": 126,
+        "fp": 41,
+        "fn": 28,
+        "precision": 0.7545,
+        "recall": 0.8182,
+        "f1": 0.785,
+        "extra_per_minute": 1.4643,
+        "median_detection_delay_s": 0.469
       },
       "by_participant": {
         "P01": {
-          "tp": 3,
-          "fp": 4,
-          "fn": 11,
-          "precision": 0.4286,
-          "recall": 0.2143,
-          "f1": 0.2857,
-          "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.8038
+          "tp": 32,
+          "fp": 15,
+          "fn": 20,
+          "precision": 0.6809,
+          "recall": 0.6154,
+          "f1": 0.6465,
+          "extra_per_minute": 1.875,
+          "median_detection_delay_s": 0.4528
         },
         "P02": {
-          "tp": 30,
-          "fp": 8,
-          "fn": 2,
-          "precision": 0.7895,
-          "recall": 0.9375,
-          "f1": 0.8571,
-          "extra_per_minute": 1.0,
-          "median_detection_delay_s": 0.575
+          "tp": 32,
+          "fp": 14,
+          "fn": 0,
+          "precision": 0.6957,
+          "recall": 1.0,
+          "f1": 0.8205,
+          "extra_per_minute": 1.75,
+          "median_detection_delay_s": 0.5546
         },
         "P03": {
-          "tp": 39,
-          "fp": 3,
-          "fn": 0,
-          "precision": 0.9286,
-          "recall": 1.0,
-          "f1": 0.963,
-          "extra_per_minute": 0.5,
-          "median_detection_delay_s": 0.365
+          "tp": 62,
+          "fp": 12,
+          "fn": 8,
+          "precision": 0.8378,
+          "recall": 0.8857,
+          "f1": 0.8611,
+          "extra_per_minute": 1.0,
+          "median_detection_delay_s": 0.4024
         }
       }
     }

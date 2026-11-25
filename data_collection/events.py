@@ -123,13 +123,15 @@ class EventTrigger:
     """Turn per-window class probabilities into alerts.
 
     Brief events (cough, throat clear) alert on two consecutive windows above their
-    threshold. Talking alerts once per bout when most of the last eight windows (0.8 s)
-    are talking, and re-arms after 2 s without talking.
+    threshold, but not during talking, where they are mostly confusions. Talking alerts
+    once per bout when most of the last eight windows (0.8 s) are talking, and a new
+    bout needs ``talk_gap`` seconds without talking.
     """
 
-    def __init__(self, thresholds, refractory=1.):
+    def __init__(self, thresholds, refractory=1., talk_gap=3.):
         self.thresholds = thresholds
         self.refractory = refractory
+        self.talk_gap = talk_gap
         self.streak = {k: 0 for k in ('cough', 'throat_clear')}
         self.last = {k: -np.inf for k in ('cough', 'throat_clear')}
         self.talk_history = []
@@ -138,15 +140,6 @@ class EventTrigger:
 
     def update(self, seconds, probs):
         alerts = []
-        for name in ('cough', 'throat_clear'):
-            p = probs[CLASSES.index(name)]
-            if p >= self.thresholds[name] and p == probs.max():
-                self.streak[name] += 1
-                if self.streak[name] == 2 and seconds - self.last[name] >= self.refractory:
-                    self.last[name] = seconds
-                    alerts.append((name, float(p)))
-            else:
-                self.streak[name] = 0
         p = probs[CLASSES.index('talking')]
         self.talk_history = (self.talk_history + [p >= self.thresholds['talking']])[-8:]
         if p >= self.thresholds['talking']:
@@ -154,8 +147,18 @@ class EventTrigger:
         if not self.talking and sum(self.talk_history) >= 5:
             self.talking = True
             alerts.append(('talking', float(p)))
-        elif self.talking and seconds - self.last_talk >= 2.:
+        elif self.talking and seconds - self.last_talk >= self.talk_gap:
             self.talking = False
+        speaking = self.talking or sum(self.talk_history) >= 3
+        for name in ('cough', 'throat_clear'):
+            p = probs[CLASSES.index(name)]
+            if p >= self.thresholds[name] and p == probs.max() and not speaking:
+                self.streak[name] += 1
+                if self.streak[name] == 2 and seconds - self.last[name] >= self.refractory:
+                    self.last[name] = seconds
+                    alerts.append((name, float(p)))
+            else:
+                self.streak[name] = 0
         return alerts
 
 

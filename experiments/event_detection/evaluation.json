@@ -19,20 +19,20 @@
     "min_samples_leaf": 20
   },
   "wearable_labels": {
-    "swallow": 85,
+    "swallow": 154,
     "cough": 5,
-    "talking": 5,
+    "talking": 14,
     "throat_clear": 0
   },
   "throat_test_speakers": {
-    "accuracy": 0.8093,
+    "accuracy": 0.8131,
     "recall": {
-      "swallow": 0.9317,
+      "swallow": 0.9255,
       "cough": 0.7467,
-      "talking": 0.8589,
-      "throat_clear": 0.6284
+      "talking": 0.8859,
+      "throat_clear": 0.5946
     },
-    "balanced_accuracy": 0.7914,
+    "balanced_accuracy": 0.7882,
     "matrix": [
       [
         0,
@@ -43,57 +43,55 @@
       ],
       [
         3,
-        150,
-        7,
+        149,
+        9,
         0,
-        1
+        0
       ],
       [
-        5,
-        20,
+        6,
+        19,
         112,
         9,
         4
       ],
       [
-        4,
-        11,
-        13,
-        286,
-        19
+        2,
+        14,
+        9,
+        295,
+        13
       ],
       [
-        4,
+        5,
         1,
-        18,
-        32,
-        93
+        16,
+        38,
+        88
       ]
     ],
     "windows": 792
   },
   "throat_test_by_language": {
-    "English": 0.913,
-    "French": 0.828,
-    "German": 0.8107,
-    "Korean": 0.7842,
-    "Spanish": 0.7556
+    "English": 0.8551,
+    "French": 0.8548,
+    "German": 0.7816,
+    "Korean": 0.805,
+    "Spanish": 0.7889
   },
   "wearable_lopo_throat_plus_wearable": {
     "pooled": {
       "found": {
         "cough": {
           "labelled": 5,
-          "matched": 5,
-          "alerted_as": {
-            "throat_clear": 1
-          }
+          "matched": 3,
+          "alerted_as": {}
         },
         "talking": {
-          "labelled": 5,
-          "matched": 4,
+          "labelled": 14,
+          "matched": 9,
           "alerted_as": {
-            "throat_clear": 1
+            "throat_clear": 4
           }
         },
         "throat_clear": {
@@ -103,16 +101,16 @@
         }
       },
       "false_alerts": {
-        "cough": 15,
-        "talking": 12,
-        "throat_clear": 5
+        "cough": 13,
+        "talking": 15,
+        "throat_clear": 4
       },
-      "false_alerts_during_swallows": 0,
-      "minutes": 18.0,
+      "false_alerts_during_swallows": 2,
+      "minutes": 28.0,
       "false_alerts_per_minute": {
-        "cough": 0.833,
-        "talking": 0.667,
-        "throat_clear": 0.278
+        "cough": 0.464,
+        "talking": 0.536,
+        "throat_clear": 0.143
       }
     },
     "by_participant": {
@@ -120,12 +118,12 @@
         "found": {
           "cough": {
             "labelled": 4,
-            "matched": 4,
+            "matched": 2,
             "alerted_as": {}
           },
           "talking": {
             "labelled": 4,
-            "matched": 3,
+            "matched": 2,
             "alerted_as": {}
           },
           "throat_clear": {
@@ -135,51 +133,51 @@
           }
         },
         "false_alerts": {
-          "cough": 7,
-          "talking": 6
+          "cough": 8,
+          "talking": 5
         },
         "false_alerts_during_swallows": 0,
-        "minutes": 4.0,
+        "minutes": 8.0,
         "false_alerts_per_minute": {
-          "cough": 1.75,
-          "talking": 1.5
+          "cough": 1.0,
+          "talking": 0.625
         },
         "windows": {
-          "accuracy": 0.651,
+          "accuracy": 0.7816,
           "recall": {
-            "none": 0.6478,
-            "swallow": 0.4891,
-            "cough": 0.6786,
-            "talking": 0.8636
+            "none": 0.8404,
+            "swallow": 0.4749,
+            "cough": 0.6429,
+            "talking": 0.2727
           },
-          "balanced_accuracy": 0.6698,
+          "balanced_accuracy": 0.5577,
           "matrix": [
             [
-              916,
-              238,
-              58,
-              200,
+              2443,
+              253,
+              79,
+              130,
               2
             ],
             [
-              46,
-              45,
-              1,
+              207,
+              189,
               0,
+              2,
               0
             ],
             [
               6,
-              3,
-              19,
+              4,
+              18,
               0,
               0
             ],
             [
-              11,
+              63,
               1,
               0,
-              76,
+              24,
               0
             ],
             [
@@ -190,7 +188,7 @@
               0
             ]
           ],
-          "windows": 1622
+          "windows": 3421
         }
       },
       "P02": {
@@ -198,16 +196,12 @@
           "cough": {
             "labelled": 1,
             "matched": 1,
-            "alerted_as": {
-              "throat_clear": 1
-            }
+            "alerted_as": {}
           },
           "talking": {
             "labelled": 1,
             "matched": 1,
-            "alerted_as": {
-              "throat_clear": 1
-            }
+            "alerted_as": {}
           },
           "throat_clear": {
             "labelled": 0,
@@ -216,54 +210,54 @@
           }
         },
         "false_alerts": {
-          "cough": 7,
-          "throat_clear": 5,
-          "talking": 6
+          "throat_clear": 4,
+          "cough": 4,
+          "talking": 2
         },
         "false_alerts_during_swallows": 0,
         "minutes": 8.0,
         "false_alerts_per_minute": {
-          "cough": 0.875,
-          "throat_clear": 0.625,
-          "talking": 0.75
+          "throat_clear": 0.5,
+          "cough": 0.5,
+          "talking": 0.25
         },
         "windows": {
-          "accuracy": 0.847,
+          "accuracy": 0.8717,
           "recall": {
-            "none": 0.9171,
-            "swallow": 0.5312,
+            "none": 0.9451,
+            "swallow": 0.5637,
             "cough": 0.1412,
-            "talking": 0.3571
+            "talking": 0.2929
           },
-          "balanced_accuracy": 0.4867,
+          "balanced_accuracy": 0.4857,
           "matrix": [
             [
-              3208,
-              89,
-              45,
-              124,
-              32
+              3306,
+              47,
+              32,
+              91,
+              22
             ],
             [
-              173,
-              196,
+              161,
+              208,
               0,
               0,
               0
             ],
             [
-              55,
-              14,
+              65,
+              6,
               12,
               1,
-              3
+              1
             ],
             [
-              76,
+              99,
               0,
               0,
-              50,
-              14
+              41,
+              0
             ],
             [
               0,
@@ -284,9 +278,11 @@
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 0,
-            "matched": 0,
-            "alerted_as": {}
+            "labelled": 9,
+            "matched": 6,
+            "alerted_as": {
+              "throat_clear": 4
+            }
           },
           "throat_clear": {
             "labelled": 0,
@@ -295,36 +291,39 @@
           }
         },
         "false_alerts": {
+          "talking": 8,
           "cough": 1
         },
-        "false_alerts_during_swallows": 0,
-        "minutes": 6.0,
+        "false_alerts_during_swallows": 2,
+        "minutes": 12.0,
         "false_alerts_per_minute": {
-          "cough": 0.167
+          "talking": 0.667,
+          "cough": 0.083
         },
         "windows": {
-          "accuracy": 0.9204,
+          "accuracy": 0.8728,
           "recall": {
-            "none": 0.9218,
-            "swallow": 0.9062
+            "none": 0.8876,
+            "swallow": 0.8585,
+            "talking": 0.4188
           },
-          "balanced_accuracy": 0.914,
+          "balanced_accuracy": 0.7216,
           "matrix": [
             [
-              2498,
-              203,
-              2,
-              6,
+              4706,
+              414,
+              9,
+              155,
+              18
+            ],
+            [
+              43,
+              358,
+              1,
+              14,
               1
             ],
             [
-              24,
-              232,
-              0,
-              0,
-              0
-            ],
-            [
               0,
               0,
               0,
@@ -332,11 +331,11 @@
               0
             ],
             [
+              12,
+              1,
               0,
-              0,
-              0,
-              0,
-              0
+              67,
+              80
             ],
             [
               0,
@@ -346,7 +345,7 @@
               0
             ]
           ],
-          "windows": 2966
+          "windows": 5879
         }
       }
     },
@@ -355,16 +354,14 @@
         "found": {
           "cough": {
             "labelled": 5,
-            "matched": 5,
-            "alerted_as": {
-              "throat_clear": 1
-            }
+            "matched": 3,
+            "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
-            "matched": 4,
+            "labelled": 14,
+            "matched": 9,
             "alerted_as": {
-              "throat_clear": 1
+              "throat_clear": 4
             }
           },
           "throat_clear": {
@@ -374,30 +371,30 @@
           }
         },
         "false_alerts": {
-          "cough": 15,
-          "talking": 12,
-          "throat_clear": 5
+          "cough": 13,
+          "talking": 15,
+          "throat_clear": 4
         },
-        "false_alerts_during_swallows": 0,
-        "minutes": 18.0,
+        "false_alerts_during_swallows": 2,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.833,
-          "talking": 0.667,
-          "throat_clear": 0.278
+          "cough": 0.464,
+          "talking": 0.536,
+          "throat_clear": 0.143
         }
       },
       "0.6": {
         "found": {
           "cough": {
             "labelled": 5,
-            "matched": 4,
+            "matched": 3,
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
-            "matched": 4,
+            "labelled": 14,
+            "matched": 7,
             "alerted_as": {
-              "throat_clear": 1
+              "throat_clear": 5
             }
           },
           "throat_clear": {
@@ -408,29 +405,29 @@
         },
         "false_alerts": {
           "cough": 12,
-          "talking": 10,
+          "talking": 12,
           "throat_clear": 4
         },
-        "false_alerts_during_swallows": 0,
-        "minutes": 18.0,
+        "false_alerts_during_swallows": 1,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.667,
-          "talking": 0.556,
-          "throat_clear": 0.222
+          "cough": 0.429,
+          "talking": 0.429,
+          "throat_clear": 0.143
         }
       },
       "0.7": {
         "found": {
           "cough": {
             "labelled": 5,
-            "matched": 4,
+            "matched": 3,
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
-            "matched": 3,
+            "labelled": 14,
+            "matched": 4,
             "alerted_as": {
-              "throat_clear": 1
+              "throat_clear": 5
             }
           },
           "throat_clear": {
@@ -440,29 +437,31 @@
           }
         },
         "false_alerts": {
-          "cough": 12,
-          "talking": 10,
-          "throat_clear": 4
+          "cough": 10,
+          "talking": 11,
+          "throat_clear": 3
         },
-        "false_alerts_during_swallows": 0,
-        "minutes": 18.0,
+        "false_alerts_during_swallows": 1,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.667,
-          "talking": 0.556,
-          "throat_clear": 0.222
+          "cough": 0.357,
+          "talking": 0.393,
+          "throat_clear": 0.107
         }
       },
       "0.8": {
         "found": {
           "cough": {
             "labelled": 5,
-            "matched": 4,
+            "matched": 3,
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
-            "matched": 3,
-            "alerted_as": {}
+            "labelled": 14,
+            "matched": 4,
+            "alerted_as": {
+              "throat_clear": 5
+            }
           },
           "throat_clear": {
             "labelled": 0,
@@ -471,16 +470,16 @@
           }
         },
         "false_alerts": {
-          "cough": 11,
-          "talking": 7,
+          "cough": 8,
+          "talking": 8,
           "throat_clear": 3
         },
         "false_alerts_during_swallows": 0,
-        "minutes": 18.0,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.611,
-          "talking": 0.389,
-          "throat_clear": 0.167
+          "cough": 0.286,
+          "talking": 0.286,
+          "throat_clear": 0.107
         }
       }
     }
@@ -491,14 +490,14 @@
         "cough": {
           "labelled": 5,
           "matched": 4,
-          "alerted_as": {
-            "throat_clear": 1
-          }
+          "alerted_as": {}
         },
         "talking": {
-          "labelled": 5,
-          "matched": 2,
-          "alerted_as": {}
+          "labelled": 14,
+          "matched": 3,
+          "alerted_as": {
+            "throat_clear": 7
+          }
         },
         "throat_clear": {
           "labelled": 0,
@@ -507,16 +506,16 @@
         }
       },
       "false_alerts": {
-        "cough": 12,
-        "talking": 6,
-        "throat_clear": 6
+        "cough": 9,
+        "talking": 5,
+        "throat_clear": 9
       },
-      "false_alerts_during_swallows": 1,
-      "minutes": 18.0,
+      "false_alerts_during_swallows": 3,
+      "minutes": 28.0,
       "false_alerts_per_minute": {
-        "cough": 0.667,
-        "talking": 0.333,
-        "throat_clear": 0.333
+        "cough": 0.321,
+        "talking": 0.179,
+        "throat_clear": 0.321
       }
     },
     "by_participant": {
@@ -539,48 +538,127 @@
           }
         },
         "false_alerts": {
-          "cough": 7,
-          "talking": 4
+          "cough": 5,
+          "talking": 2
         },
         "false_alerts_during_swallows": 0,
-        "minutes": 4.0,
+        "minutes": 8.0,
         "false_alerts_per_minute": {
-          "cough": 1.75,
-          "talking": 1.0
+          "cough": 0.625,
+          "talking": 0.25
         },
         "windows": {
-          "accuracy": 0.7349,
+          "accuracy": 0.7945,
           "recall": {
-            "none": 0.8098,
-            "swallow": 0.087,
-            "cough": 0.4286,
-            "talking": 0.3068
+            "none": 0.9274,
+            "swallow": 0.0226,
+            "cough": 0.3214,
+            "talking": 0.0455
           },
-          "balanced_accuracy": 0.408,
+          "balanced_accuracy": 0.3292,
           "matrix": [
             [
-              1145,
-              102,
-              40,
-              126,
-              1
+              2696,
+              98,
+              49,
+              59,
+              5
             ],
             [
-              82,
-              8,
+              384,
+              9,
               0,
-              2,
+              5,
               0
             ],
             [
-              12,
+              15,
+              3,
+              9,
+              1,
+              0
+            ],
+            [
+              84,
+              0,
+              0,
               4,
-              12,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "windows": 3421
+        }
+      },
+      "P02": {
+        "found": {
+          "cough": {
+            "labelled": 1,
+            "matched": 1,
+            "alerted_as": {}
+          },
+          "talking": {
+            "labelled": 1,
+            "matched": 1,
+            "alerted_as": {}
+          },
+          "throat_clear": {
+            "labelled": 0,
+            "matched": 0,
+            "alerted_as": {}
+          }
+        },
+        "false_alerts": {
+          "throat_clear": 4,
+          "cough": 4,
+          "talking": 1
+        },
+        "false_alerts_during_swallows": 0,
+        "minutes": 8.0,
+        "false_alerts_per_minute": {
+          "throat_clear": 0.5,
+          "cough": 0.5,
+          "talking": 0.125
+        },
+        "windows": {
+          "accuracy": 0.8409,
+          "recall": {
+            "none": 0.9731,
+            "swallow": 0.0027,
+            "cough": 0.1059,
+            "talking": 0.1929
+          },
+          "balanced_accuracy": 0.3187,
+          "matrix": [
+            [
+              3404,
+              6,
+              22,
+              43,
+              23
+            ],
+            [
+              368,
+              1,
+              0,
               0,
               0
             ],
             [
-              60,
+              74,
+              1,
+              9,
+              1,
+              0
+            ],
+            [
+              112,
               0,
               0,
               27,
@@ -594,87 +672,6 @@
               0
             ]
           ],
-          "windows": 1622
-        }
-      },
-      "P02": {
-        "found": {
-          "cough": {
-            "labelled": 1,
-            "matched": 1,
-            "alerted_as": {
-              "throat_clear": 1
-            }
-          },
-          "talking": {
-            "labelled": 1,
-            "matched": 1,
-            "alerted_as": {}
-          },
-          "throat_clear": {
-            "labelled": 0,
-            "matched": 0,
-            "alerted_as": {}
-          }
-        },
-        "false_alerts": {
-          "throat_clear": 5,
-          "cough": 5,
-          "talking": 2
-        },
-        "false_alerts_during_swallows": 0,
-        "minutes": 8.0,
-        "false_alerts_per_minute": {
-          "throat_clear": 0.625,
-          "cough": 0.625,
-          "talking": 0.25
-        },
-        "windows": {
-          "accuracy": 0.8226,
-          "recall": {
-            "none": 0.9491,
-            "swallow": 0.0,
-            "cough": 0.1294,
-            "talking": 0.25
-          },
-          "balanced_accuracy": 0.3321,
-          "matrix": [
-            [
-              3320,
-              9,
-              41,
-              95,
-              33
-            ],
-            [
-              369,
-              0,
-              0,
-              0,
-              0
-            ],
-            [
-              65,
-              3,
-              11,
-              1,
-              5
-            ],
-            [
-              95,
-              0,
-              0,
-              35,
-              10
-            ],
-            [
-              0,
-              0,
-              0,
-              0,
-              0
-            ]
-          ],
           "windows": 4092
         }
       },
@@ -686,9 +683,11 @@
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 0,
-            "matched": 0,
-            "alerted_as": {}
+            "labelled": 9,
+            "matched": 1,
+            "alerted_as": {
+              "throat_clear": 7
+            }
           },
           "throat_clear": {
             "labelled": 0,
@@ -697,34 +696,37 @@
           }
         },
         "false_alerts": {
-          "throat_clear": 1
+          "throat_clear": 5,
+          "talking": 2
         },
-        "false_alerts_during_swallows": 1,
-        "minutes": 6.0,
+        "false_alerts_during_swallows": 3,
+        "minutes": 12.0,
         "false_alerts_per_minute": {
-          "throat_clear": 0.167
+          "throat_clear": 0.417,
+          "talking": 0.167
         },
         "windows": {
-          "accuracy": 0.9167,
+          "accuracy": 0.8968,
           "recall": {
-            "none": 0.9974,
-            "swallow": 0.0625
+            "none": 0.9811,
+            "swallow": 0.0863,
+            "talking": 0.2125
           },
-          "balanced_accuracy": 0.5299,
+          "balanced_accuracy": 0.4266,
           "matrix": [
             [
-              2703,
-              3,
-              0,
-              3,
-              1
-            ],
-            [
-              239,
-              16,
+              5202,
+              15,
               1,
-              0,
-              0
+              70,
+              14
+            ],
+            [
+              367,
+              36,
+              2,
+              6,
+              6
             ],
             [
               0,
@@ -734,11 +736,11 @@
               0
             ],
             [
+              34,
               0,
               0,
-              0,
-              0,
-              0
+              34,
+              92
             ],
             [
               0,
@@ -748,7 +750,7 @@
               0
             ]
           ],
-          "windows": 2966
+          "windows": 5879
         }
       }
     },
@@ -758,14 +760,14 @@
           "cough": {
             "labelled": 5,
             "matched": 4,
-            "alerted_as": {
-              "throat_clear": 1
-            }
+            "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
-            "matched": 2,
-            "alerted_as": {}
+            "labelled": 14,
+            "matched": 3,
+            "alerted_as": {
+              "throat_clear": 7
+            }
           },
           "throat_clear": {
             "labelled": 0,
@@ -774,16 +776,16 @@
           }
         },
         "false_alerts": {
-          "cough": 12,
-          "talking": 6,
-          "throat_clear": 6
+          "cough": 9,
+          "talking": 5,
+          "throat_clear": 9
         },
-        "false_alerts_during_swallows": 1,
-        "minutes": 18.0,
+        "false_alerts_during_swallows": 3,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.667,
-          "talking": 0.333,
-          "throat_clear": 0.333
+          "cough": 0.321,
+          "talking": 0.179,
+          "throat_clear": 0.321
         }
       },
       "0.6": {
@@ -794,9 +796,11 @@
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
-            "matched": 2,
-            "alerted_as": {}
+            "labelled": 14,
+            "matched": 3,
+            "alerted_as": {
+              "throat_clear": 6
+            }
           },
           "throat_clear": {
             "labelled": 0,
@@ -805,29 +809,31 @@
           }
         },
         "false_alerts": {
-          "cough": 12,
-          "talking": 7,
-          "throat_clear": 6
+          "cough": 11,
+          "throat_clear": 8,
+          "talking": 3
         },
-        "false_alerts_during_swallows": 1,
-        "minutes": 18.0,
+        "false_alerts_during_swallows": 2,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.667,
-          "talking": 0.389,
-          "throat_clear": 0.333
+          "cough": 0.393,
+          "throat_clear": 0.286,
+          "talking": 0.107
         }
       },
       "0.7": {
         "found": {
           "cough": {
             "labelled": 5,
-            "matched": 4,
+            "matched": 3,
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
+            "labelled": 14,
             "matched": 2,
-            "alerted_as": {}
+            "alerted_as": {
+              "throat_clear": 6
+            }
           },
           "throat_clear": {
             "labelled": 0,
@@ -837,28 +843,30 @@
         },
         "false_alerts": {
           "cough": 11,
-          "talking": 6,
-          "throat_clear": 5
+          "throat_clear": 7,
+          "talking": 3
         },
         "false_alerts_during_swallows": 1,
-        "minutes": 18.0,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.611,
-          "talking": 0.333,
-          "throat_clear": 0.278
+          "cough": 0.393,
+          "throat_clear": 0.25,
+          "talking": 0.107
         }
       },
       "0.8": {
         "found": {
           "cough": {
             "labelled": 5,
-            "matched": 4,
+            "matched": 2,
             "alerted_as": {}
           },
           "talking": {
-            "labelled": 5,
-            "matched": 1,
-            "alerted_as": {}
+            "labelled": 14,
+            "matched": 2,
+            "alerted_as": {
+              "throat_clear": 6
+            }
           },
           "throat_clear": {
             "labelled": 0,
@@ -867,31 +875,31 @@
           }
         },
         "false_alerts": {
-          "cough": 11,
-          "talking": 6,
-          "throat_clear": 5
+          "cough": 9,
+          "throat_clear": 3,
+          "talking": 2
         },
-        "false_alerts_during_swallows": 1,
-        "minutes": 18.0,
+        "false_alerts_during_swallows": 0,
+        "minutes": 28.0,
         "false_alerts_per_minute": {
-          "cough": 0.611,
-          "talking": 0.333,
-          "throat_clear": 0.278
+          "cough": 0.321,
+          "throat_clear": 0.107,
+          "talking": 0.071
         }
       }
     }
   },
   "adaptation": {
-    "imu_rate": 904.5328089987371,
-    "gain": 0.06837622790257661,
+    "imu_rate": 904.594733575973,
+    "gain": 0.06999085305828927,
     "band_db": [
-      10.670103769705502,
-      8.395994632500441,
-      5.934502080425775,
-      -2.423934697139255,
-      3.712855840756956,
-      -5.374790291377089,
-      -5.30396655108268,
+      12.0,
+      9.861777997426378,
+      6.364392943803107,
+      -1.8867704948118005,
+      5.195535963129023,
+      -5.478773901508286,
+      -5.559971505555439,
       -12.0
     ],
     "calibrated_on": [

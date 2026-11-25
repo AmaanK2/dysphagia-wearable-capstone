@@ -22,15 +22,16 @@ python -m venv .venv && .venv/bin/python -m pip install -r requirements.txt
 
 ## Current results
 
-Every score below is measured on a wearable participant the model never trained on (3 participants: 85 reviewed swallows, 5 coughs, 5 talking intervals).
+Every score below is measured on a wearable participant the model never trained on (3 participants, 14 sessions: 154 reviewed swallows, 5 coughs, 14 talking intervals).
 
 | Detector | Result |
 | --- | --- |
-| Swallows, wearable data only | 64–69% event F1, ~3 false alerts/min |
-| **Swallows, wearable + adapted public data (35/65, recommended)** | **~77–80% event F1 (up to 87% with a tuned threshold), ~0.7 false alerts/min** |
-| Cough / talking / throat clear | 5/5 coughs and 4/5 talking bouts caught; ~0.2 false alerts/min in quiet sessions, more in mixed ones. 81% accuracy on public test speakers. [Details](experiments/event_detection/README.md) |
+| Swallows, wearable data only | 76% event F1, ~1.6 false alerts/min |
+| **Swallows, wearable + adapted public data (35/65, recommended)** | **86% event F1 (90% with the exported model's tuned threshold), ~0.8 false alerts/min** |
+| Swallows, live in the app on new sessions | 37 of 38 swallows caught, 5 false alerts in 4 minutes |
+| Cough / talking / throat clear | 9/14 talking bouts and 3/5 coughs caught, ~1.1 false alerts/min; 81% accuracy on public test speakers. [Details](experiments/event_detection/README.md) |
 
-With 3 participants these numbers carry roughly ±5 points of uncertainty. Collecting more participants, and more varied swallows (water, food) and other activities, is the biggest next step.
+With 3 participants, differences of a few points are within noise. More participants, more varied swallows (water, food) and more labelled coughs and talking are the biggest next steps.
 
 ## Datasets
 

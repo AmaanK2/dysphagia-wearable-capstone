@@ -21,25 +21,23 @@ def series(name, key):
 
 
 lines = [
-    ('Boosted trees, best fixed threshold', *series('evaluation_trees.json', 'oracle_fixed_settings'), BLUE, '-'),
-    ('Logistic, best fixed threshold', *series('evaluation.json', 'oracle_fixed_settings'), ORANGE, '-'),
-    ('Logistic, fully nested (thresholds from 2 people)', *series('evaluation.json', 'pooled'), AQUA, '-'),
-    ('Unadapted public, logistic, best fixed threshold',
-     *series('evaluation_unadapted_control.json', 'oracle_fixed_settings'), GRAY, '--'),
+    ('Boosted trees (shipped)', *series('evaluation_trees.json', 'pooled'), BLUE, '-'),
+    ('Boosted trees, unadapted public data', *series('evaluation_unadapted_control_trees.json', 'pooled'), GRAY, '--'),
+    ('Logistic', *series('evaluation.json', 'pooled'), ORANGE, '-'),
 ]
 plt.rcParams.update({'font.size': 10, 'text.color': INK, 'axes.labelcolor': INK_2,
                      'xtick.color': INK_2, 'ytick.color': INK_2})
 fig, ax = plt.subplots(figsize=(9, 5.2), facecolor=SURFACE)
 ax.set_facecolor(SURFACE)
 ax.axvspan(20, 65, color=BLUE, alpha=.06, lw=0)
-ax.text(42.5, 90.6, 'plateau: 20-65% public', ha='center', color=INK_2, fontsize=9)
+ax.text(42.5, 55, 'plateau: 20-65% public', ha='center', color=INK_2, fontsize=9)
 for label, x, y, color, style in lines:
     ax.plot(x, y, style, color=color, lw=2, marker='o', ms=6, mec=SURFACE, mew=2, label=label)
-ax.annotate('86.0%', (35, 86.0), xytext=(0, 9), textcoords='offset points', ha='center', color=INK, fontsize=9)
-ax.annotate('wearable only', (0, 63.9), xytext=(6, -14), textcoords='offset points', color=INK_2, fontsize=9)
+ax.annotate('86.2%', (35, 86.2), xytext=(0, 9), textcoords='offset points', ha='center', color=INK, fontsize=9)
+ax.annotate('wearable only', (0, 76.2), xytext=(6, -14), textcoords='offset points', color=INK_2, fontsize=9)
 ax.set_xlabel('Public share of training weight (%)  —  remainder is our wearable data')
 ax.set_ylabel('Event F1 on held-out wearable participant (%)')
-ax.set_ylim(50, 92)
+ax.set_ylim(30, 92)
 ax.set_xlim(-3, 103)
 ax.grid(axis='y', color=GRID, lw=.8)
 for side in ('top', 'right'):
@@ -47,9 +45,9 @@ for side in ('top', 'right'):
 for side in ('left', 'bottom'):
     ax.spines[side].set_color(GRID)
 ax.legend(loc='lower left', frameon=False, fontsize=9)
-ax.set_title('Adapted public data helps most at 20-65% weight', loc='left', color=INK, fontsize=12, pad=12)
-fig.text(.01, .01, 'Leave-one-participant-out over 3 wearable participants (85 swallows). '
-         '"Best fixed threshold" is chosen on the same pooled folds, so it is optimistic.',
+ax.set_title('Adding adapted public data: best at 20-65% weight', loc='left', color=INK, fontsize=12, pad=12)
+fig.text(.01, .01, 'Leave-one-participant-out over 3 wearable participants (154 swallows). '
+         'Alert threshold chosen without the test participant (nested).',
          color=INK_2, fontsize=8)
 fig.tight_layout(rect=(0, .03, 1, 1))
 fig.savefig(HERE / 'share_sweep.png', dpi=150, facecolor=SURFACE)

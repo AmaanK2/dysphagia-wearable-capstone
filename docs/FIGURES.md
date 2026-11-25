@@ -31,7 +31,7 @@ For example, if the model flags 5 events and 3 match out of 4 labelled swallows,
 
 [![F1 vs public share](../experiments/mixed_public_wearable/share_sweep.png)](../experiments/mixed_public_wearable/share_sweep.png)
 
-Each point is event F1 on a wearable participant the model never trained on. Training only on our recordings gives 64–69% F1. Adding the adapted public data at 20–65% of the training weight raises it to about 80–86%. Above ~80% public weight, accuracy falls again.
+Each point is event F1 on a wearable participant the model never trained on, with the alert threshold also chosen without them. Boosted trees trained only on our recordings reach 76%. Adding the adapted public data at 20–65% of the training weight raises that to 84–86%. The grey dashed line uses unadapted public data and scores 1–4 points lower.
 
 <a id="figure-w2"></a>
 ## W2. Making public recordings look like ours

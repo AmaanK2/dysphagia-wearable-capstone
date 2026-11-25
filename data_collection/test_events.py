@@ -60,9 +60,16 @@ class TriggerTest(unittest.TestCase):
 
     def test_talking_alerts_once_per_bout(self):
         trigger = EventTrigger(dict(cough=.5, throat_clear=.5, talking=.5))
-        names = ['talking'] * 30 + ['none'] * 25 + ['talking'] * 10
+        # A 2.5 s pause continues the bout; a 3.5 s pause starts a new one.
+        names = ['talking'] * 30 + ['none'] * 25 + ['talking'] * 10 + ['none'] * 35 + ['talking'] * 10
         fired = [t for t, name in enumerate(names) if trigger.update(t / 10, self.probs(name))]
-        self.assertEqual(fired, [4, 59])
+        self.assertEqual(fired, [4, 104])
+
+    def test_cough_is_not_reported_while_talking(self):
+        trigger = EventTrigger(dict(cough=.5, throat_clear=.5, talking=.5))
+        names = ['talking'] * 20 + ['cough'] * 3 + ['talking'] * 5 + ['none'] * 40 + ['cough'] * 3
+        alerts = [(t, a) for t, name in enumerate(names) for a in trigger.update(t / 10, self.probs(name))]
+        self.assertEqual([(t, a[0]) for t, a in alerts], [(4, 'talking'), (69, 'cough')])
 
 
 if __name__ == '__main__':

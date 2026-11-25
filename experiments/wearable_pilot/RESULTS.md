@@ -2,7 +2,7 @@
 
 These are the first wearable results, before public data was added (that's in [`../mixed_public_wearable`](../mixed_public_wearable/SUMMARY.md)). The model is a class-balanced logistic model on causal mic + IMU features (`data_collection/train_live.py`). It scores a trailing 0.5 s window every 0.1 s and alerts after two positive windows.
 
-**Data:** 3 participants (P01–P03), 116 reviewed dry swallows, 14 talking and 5 cough intervals. Only 9 of the 12 sessions are in Git, so the in-repo data has 85 swallows. An alert counts as a match if it falls between the labelled onset and 0.25 s after the labelled end.
+**Data:** 3 participants (P01–P03), 116 reviewed dry swallows, 14 talking and 5 cough intervals. At the time only 9 of those sessions were in Git (85 swallows); all sessions are in Git now. An alert counts as a match if it falls between the labelled onset and 0.25 s after the labelled end.
 
 ## Leave-one-participant-out results
 

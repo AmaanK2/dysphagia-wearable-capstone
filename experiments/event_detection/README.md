@@ -8,7 +8,7 @@ Code: `data_collection/events.py` (features, model, alert logic) and `data_colle
 
 | Source | Swallow | Cough | Talking | Throat clear |
 | --- | ---: | ---: | ---: | ---: |
-| Our recordings (reviewed labels) | 85 | 5 | 5 intervals | 0 |
+| Our recordings (reviewed labels, 14 sessions) | 154 | 5 | 14 intervals | 0 |
 | Throat dataset ([Zenodo 12630148](https://zenodo.org/records/12630148)), training speakers | 2,028 | 1,984 | 2,107 | 2,089 |
 | Throat dataset, test speakers (5 languages) | 161 | 150 | 333 | 148 |
 
@@ -24,34 +24,37 @@ Our unlabelled windows, away from any label or marker, serve as the "nothing" cl
 
 ## Results
 
-**Throat-dataset test speakers** (never trained on), one window per clip: **80.9% accuracy** (79.1% balanced).
+Updated 25 Nov 2026 with 5 new sessions, and with the alert logic changed so cough and throat-clear alerts are held back while someone is talking.
+
+**Throat-dataset test speakers** (never trained on), one window per clip: **81.3% accuracy** (78.8% balanced).
 
 | True ↓ / predicted → | Swallow | Cough | Talking | Throat clear | Nothing |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Swallow | **93%** | 4% | 0% | 1% | 2% |
-| Cough | 13% | **75%** | 6% | 3% | 3% |
-| Talking | 3% | 4% | **86%** | 6% | 1% |
-| Throat clear | 1% | 12% | 22% | **63%** | 3% |
+| Swallow | **93%** | 6% | 0% | 0% | 2% |
+| Cough | 13% | **75%** | 6% | 3% | 4% |
+| Talking | 4% | 3% | **89%** | 4% | 1% |
+| Throat clear | 1% | 11% | 26% | **59%** | 3% |
 
-The dataset's authors report about 96% with their full 6.4 kHz signal. Our IMU only captures vibration below ~450 Hz, so cough versus throat clear is the hardest pair.
+The dataset's authors report about 96% with their full 6.4 kHz signal. Our IMU only captures vibration below ~450 Hz, so throat clear is the hardest class.
 
-**Our recordings, leave one participant out**, replayed through the live alert logic (two consecutive windows for cough/throat clear, one alert per talking bout):
+**Our recordings, leave one participant out** (28 minutes), replayed through the live alert logic:
 
 | Training data | Coughs caught | Talking bouts caught | False alerts/min (cough / talking / throat clear) |
 | --- | ---: | ---: | --- |
-| Throat dataset only | 4 / 5 | 2 / 5 | 0.67 / 0.33 / 0.33 |
-| **Throat dataset + our recordings (shipped)** | **5 / 5** | **4 / 5** | **0.83 / 0.67 / 0.28** |
+| Throat dataset only | 4 / 5 | 3 / 14 | 0.32 / 0.18 / 0.32 |
+| **Throat dataset + our recordings (shipped)** | **3 / 5** | **9 / 14** | **0.46 / 0.54 / 0.14** |
 
-**Where the false alerts happen:**
-- **Quiet use:** in P03's dry-swallow sessions there was 1 false alert in 6 minutes (~0.2/min).
-- **Mixed sessions:** nearly all the rest fall in unlabelled stretches of P01's and P02's "mixed" sessions, which may contain talking or coughing nobody labelled.
-- **Swallows:** none of the false alerts land on a labelled swallow.
+- **Our recordings matter for talking:** 9/14 bouts with them vs 3/14 without, because the throat dataset's speech doesn't look like talking measured at our sensor.
+- **Coughs are too few to judge:** all 5 come from P01 and P02, so when P01 is held out only one of our coughs is left to train on. 3/5 versus 4/5 is a one-event difference.
+- **False alerts total 1.1/min,** down from 1.8 before the retrain. Only 2 land on a labelled swallow.
+- **Many "false" alerts may be real events.** In P03's dry-swallow session S05, most alerts fall where the microphone is 5–40× louder than the session's typical level, which suggests unlabelled talking or noise.
+- **The first model was optimistic.** Before retraining, it caught 6 of the 9 new talking bouts but raised 2.2 false alerts/min on the new sessions. My earlier "~0.2/min in quiet sessions" claim was based on too little data.
 
-Raising the alert threshold from 0.5 to 0.8 only cuts false alerts to ~1.2/min and loses detections, so the shipped model keeps 0.5.
+Raising the alert threshold to 0.8 lowers false alerts (to ~0.7/min) but drops talking to 4/14, so the shipped model keeps 0.5.
 
 ## Limits and next steps
 
-- **Few labels of our own:** 5 coughs and 5 talking intervals from 2 people, and no throat clears. Treat the wearable numbers as a smoke test.
+- **Few labels of our own:** 5 coughs from 2 people, 14 talking intervals, and no throat clears. Treat the wearable numbers as a smoke test.
 - **Label everything in mixed sessions,** so false alerts can be told apart from real unlabelled events. Then record dedicated cough, talking and throat-clear sessions on several more people.
 - **The mic could help:** adding mic features would likely separate cough from throat clear better, but the throat dataset has no microphone channel to train them from.
 
