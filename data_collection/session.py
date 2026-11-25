@@ -118,6 +118,7 @@ class Session:
         self.last_time = 0.0
         self.last_times = {'mic': 0.0, 'imu': 0.0}
         self.events = []
+        self.detection_writer = None
         self.closed = False
         self.files = {}
         self.writers = {}
@@ -173,6 +174,17 @@ class Session:
         self.event_writer.writerow(row)
         self.event_file.flush()
         self.events.append(row)
+
+    def enable_detection(self):
+        file = (self.folder / 'Detections.csv').open('x', newline='', encoding='utf-8')
+        self.files['detections'] = file
+        self.detection_writer = csv.writer(file)
+        self.detection_writer.writerow(['time_s', 'event', 'model_score'])
+        self.metadata['live_detector'] = 'wearable'
+        self.write_metadata()
+
+    def detection(self, seconds, score):
+        self.detection_writer.writerow([f'{seconds:.3f}', 'swallow', f'{score:.6f}'])
 
     def flush(self):
         for file in (*self.files.values(), self.event_file):

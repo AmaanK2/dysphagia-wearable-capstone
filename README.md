@@ -8,7 +8,8 @@ This project does **not** diagnose dysphagia or predict aspiration. The second t
 
 | Location | Purpose |
 | --- | --- |
-| [data_collection/](data_collection/README.md) | Swallow Studio acquisition app, live plots, event review and its firmware |
+| [data_collection/](data_collection/README.md) | Swallow Studio acquisition app, live swallow detection, event review and firmware |
+| [Live detection pilot](data_collection/LIVE_DETECTION_RESULTS.md) | Held-out wearable accuracy and public-data transfer |
 | [record_teensy.py](record_teensy.py) | Earlier standalone recorder with interval markers |
 | Root Python scripts | Training, prediction and evaluation commands documented below |
 | [experiments/](experiments/) | Versioned model comparisons, scores and experiment scripts |

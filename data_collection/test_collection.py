@@ -20,11 +20,46 @@ except ImportError:
 from session import EVENT_FIELDS, Protocol, Session, next_session, safe_name, save_events
 from device import Acquisition, Demo, LivePreview, peak_envelope
 from app import MainWindow, Setup, STYLE
+from live_detection import FEATURE_COUNT, FEATURE_VERSION, AgreementModel, Model, Trigger
+from train_live import make_record
 
 
 def read(path):
     with path.open(newline='', encoding='utf-8') as file:
         return list(csv.DictReader(file))
+
+
+class DetectionTests(unittest.TestCase):
+    def test_detector_requires_mic_and_imu_in_the_same_window(self):
+        def detector(column):
+            return dict(feature_version=FEATURE_VERSION, columns=[column], mean=[0.],
+                        scale=[1.], weights=[2.], bias=0.)
+
+        model = AgreementModel(dict(joint=dict(detector(0), weights=[0.], bias=4.),
+                                    mic=detector(0), imu=detector(11)))
+        windows = np.zeros((4, FEATURE_COUNT))
+        windows[:, [0, 11]] = [[2, -2], [-2, 2], [-2, -2], [2, 2]]
+        np.testing.assert_array_equal(model.score(windows) >= model.threshold, [False, False, False, True])
+
+    def test_background_windows_exclude_swallow_boundaries_and_unreviewed_markers(self):
+        mic = np.array([[0., 0.], [8., 0.]])
+        imu = np.array([[0., 0., 0., 0.], [8., 0., 0., 0.]])
+        with patch('train_live.window_features', return_value=np.zeros(FEATURE_COUNT)):
+            record = make_record(mic, imu, [(1., 1.5)], uncertain=[6.],
+                                 reviewed_background=[(3., 4.)], ambiguous=[(4.1, 4.4)])
+        indexes = {round(t, 1): i for i, t in enumerate(record['times'])}
+        self.assertTrue(record['labels'][indexes[1.3]])
+        self.assertFalse(record['clean_trainable'][indexes[1.1]])
+        self.assertTrue(record['reviewed_background'][indexes[3.5]])
+        self.assertTrue(record['clean_trainable'][indexes[2.5]])
+        self.assertFalse(record['clean_trainable'][indexes[4.2]])
+        self.assertFalse(record['clean_trainable'][indexes[6.]])
+
+    def test_model_cooldown_makes_a_second_burst_wait(self):
+        trigger = Trigger(.65, 1.2)
+        times_and_scores = [(0., .9), (.1, .9), (.2, .2), (.3, .2),
+                            (1., .9), (1.2, .9), (1.4, .9)]
+        self.assertEqual([t for t, score in times_and_scores if trigger.update(t, score)], [.1, 1.4])
 
 
 class StorageTests(unittest.TestCase):
@@ -264,6 +299,70 @@ class GuiTests(unittest.TestCase):
         self.assertEqual(dialog.task, 'throat_clear')
         self.assertEqual(dialog.seconds.value(), 42.5)
         window.close()
+
+    def test_live_microphone_range_tracks_visible_values(self):
+        window = MainWindow()
+        window.origin = 20.
+        imu = np.empty((0, 4))
+        try:
+            for graph in (window.graph, window.live_graph):
+                for samples, expected in (
+                    (np.array([[19., 30000.], [20., -1000.], [21., 1000.]]), [-1100., 1100.]),
+                    (np.array([[22., -10.], [23., 10.]]), [-11., 11.]),
+                    (np.array([[24., 400.], [25., 400.]]), [399., 401.]),
+                ):
+                    frame = dict(raw=(samples, imu), filtered=(samples, imu), clipping=False)
+                    window.receive(frame, graph)
+                    np.testing.assert_allclose(graph.plots[0].viewRange()[1], expected)
+                    np.testing.assert_array_equal(graph.curves[0][0].yData, samples[:, 1])
+        finally:
+            window.close()
+
+    def test_live_session_displays_and_saves_detector_alert(self):
+        source = Demo()
+        model = Model(dict(feature_version=FEATURE_VERSION, columns=[0], mean=[0.], scale=[1.],
+                           weights=[0.], bias=4.))
+        with (tempfile.TemporaryDirectory() as root,
+              patch('device.serial.Serial') as serial, patch('device.load_model', return_value=model),
+              patch('app.ports', return_value=[('TEST', 'Test USB', True)])):
+            port = serial.return_value
+            port.in_waiting = 1000
+            port.read.side_effect = lambda count: source.read()
+            window = MainWindow()
+            window.show()
+            try:
+                window.connect_device()
+                window.worker.root = Path(root)
+                self.wait_for(lambda: window.ready)
+                window.tabs.setCurrentWidget(window.live)
+                self.wait_for(lambda: window.live_log.count() > 0)
+                self.wait_for(lambda: window.live_graph.curves[0][0].xData is not None)
+                self.assertTrue(window.live_start.isEnabled())
+                self.assertFalse(window.live_mark.isEnabled())
+                self.assertIn('Not recording', window.live_name.text())
+                self.assertEqual(list(Path(root).iterdir()), [])
+                window.worker.command('start', ('P01', 'mixed', 1.3))
+                self.wait_for(lambda: window.recording)
+                self.assertEqual(window.live_log.count(), 0)
+                self.wait_for(lambda: window.live_log.count() > 0)
+                self.assertIs(window.tabs.currentWidget(), window.live)
+                self.assertTrue(window.recording)
+                self.assertIn('Swallow detected', window.live_alert.text())
+                self.assertEqual(len(window.live_graph.overlays), 2)
+                self.wait_for(lambda: window.latest_session is not None)
+                folder = window.latest_session
+                self.assertEqual(read(folder / 'Events.csv'), [])
+                detections = read(folder / 'Detections.csv')
+                self.assertEqual(len(detections), 1)
+                self.assertEqual(detections[0]['event'], 'swallow')
+                self.assertGreaterEqual(float(detections[0]['time_s']), .6)
+                self.wait_for(lambda: window.live_log.count() > 0)
+                self.assertFalse(window.recording)
+                self.assertIn('Not recording', window.live_name.text())
+                self.assertEqual(read(folder / 'Detections.csv'), detections)
+            finally:
+                window.close()
+                self.app.processEvents()
 
     def test_fragmented_usb_and_disconnect_preserve_partial_session(self):
         class FakeSerial:

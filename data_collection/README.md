@@ -1,6 +1,6 @@
 # Swallow Studio
 
-One folder for Teensy acquisition, live microphone/acceleration plots, observer markers, and event review. Existing training and recorder code elsewhere in the repository is unchanged. Password access is deferred as requested.
+One folder for Teensy acquisition, live microphone and acceleration plots, swallow detection, observer markers, and event review.
 
 ## Start here
 
@@ -20,7 +20,21 @@ To try recording and reviewing without a device:
 .venv\Scripts\python app.py --demo
 ```
 
-Demo mode uses synthetic signals and saves under `recordings/demo/`. Participant sessions use `recordings/participants/`. Neither directory is committed to Git.
+Demo mode uses synthetic signals and saves under `recordings/demo/`. Participant sessions use `recordings/participants/`. The recorder normally leaves new session files untracked.
+
+## Live Session
+
+Connect a device in **Record**, then open **Live Session** to preview the rolling microphone and acceleration traces and see live alerts. Preview data stays in memory. Start recording from either tab to reset the session clock and save data. Live preview resumes when recording ends. A model alert adds **Swallow detected**, its recording-relative time, and a green line to both plots. Press Space to place an observer marker or use **Stop** to save. The session stores confirmed alerts in `Detections.csv` with the combined model score, and observer markers and reviewed labels in `Events.csv`. Model scores serve as a ranking signal.
+
+The pilot detector scores the microphone and IMU separately and also computes a combined score. All three checks must pass on the same trailing 0.5-second window. It checks every 0.1 seconds and alerts after two consecutive passing windows. The current model uses a 1.6-second cooldown to reduce repeated alerts from nearby bursts. Weak or clipped microphone windows and windows missing sensor data suppress alerts. Demo recordings show the live plots with model inference disabled.
+
+Train or rebuild the local model from inside `data_collection`:
+
+```sh
+.venv/bin/python train_live.py
+```
+
+Use `.venv\Scripts\python` on Windows. The command uses non-simulated sessions with reviewed labels or observer markers in `recordings/participants/`. It tunes settings using participant-separated replay, then trains on usable windows throughout each recording and gives extra weight to reviewed non-swallow intervals and background windows that score like swallows. It reads `Mic.csv` or `Mic.csv.gz`, and writes `models/wearable.json` and `models/evaluation.json`. Swallow Studio loads the model when the device connects and at the start of each recording. See [the pilot accuracy report](LIVE_DETECTION_RESULTS.md).
 
 ## Prepare the Teensy once
 

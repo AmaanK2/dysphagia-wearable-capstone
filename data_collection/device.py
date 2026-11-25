@@ -14,6 +14,7 @@ except ImportError:
     from PySide6.QtCore import QThread, Signal
 from serial.tools import list_ports
 
+from live_detection import LiveDetector, load_model
 from session import Protocol, Session, next_session
 
 
@@ -49,7 +50,7 @@ class LivePreview:
         self.buffers = {'mic': deque(), 'imu': deque()}
         self.filters = {}
 
-    def update(self, packets, rates):
+    def update(self, packets, rates, detect=None):
         mic, imu = [], []
         for kind, index, timestamp, values in packets:
             if kind == 'mic':
@@ -75,16 +76,20 @@ class LivePreview:
                 self.buffers[kind].popleft()
             if kind == 'mic':
                 clipping = bool(np.any(np.abs(array[:, 1]) >= 32760))
-        raw, filtered = [], []
+        raw, filtered, full_rate = [], [], []
         for kind, width in (('mic', 2), ('imu', 4)):
             if not self.buffers[kind]:
+                full_rate.append(np.empty((0, width)))
                 raw.append(np.empty((0, width)))
                 filtered.append(np.empty((0, width)))
                 continue
             array = np.concatenate(self.buffers[kind])
             array = array[array[:, 0] >= array[-1, 0] - 10]
+            full_rate.append(array[:, :width])
             raw.append(peak_envelope(array[:, :width]))
             filtered.append(peak_envelope(np.column_stack((array[:, 0], array[:, width:]))))
+        if detect is not None:
+            detect(*full_rate)
         return {'raw': raw, 'filtered': filtered, 'clipping': clipping}
 
 
@@ -134,6 +139,8 @@ class Acquisition(QThread):
     begun = Signal(object)
     saved = Signal(str, str)
     failed = Signal(str)
+    detected = Signal(float, float)
+    detection_status = Signal(str)
 
     def __init__(self, port, root, demo=False):
         super().__init__()
@@ -147,6 +154,8 @@ class Acquisition(QThread):
         self.reference = None
         self._preview_lock = threading.Lock()
         self._latest_preview = None
+        self.detector = None
+        self.signal_valid = None
 
     def take_preview(self):
         """A single-slot mailbox: a slow/minimized UI never queues old frames."""
@@ -165,6 +174,53 @@ class Acquisition(QThread):
                 status, note = 'incomplete', 'One or both sensor streams contained no saved samples. ' + note
             saved.close(status, note)
             self.saved.emit(str(saved.folder), saved.metadata['status'])
+
+    def start_detection(self):
+        self.preview_origin = None
+        self.detector = None
+        self.signal_valid = None
+        if self.demo:
+            self.detection_status.emit('Demo signals · live detection disabled')
+            return
+        try:
+            model = load_model()
+        except FileNotFoundError:
+            self.detection_status.emit('Detector unavailable. Run train_live.py to create the model.')
+        except (OSError, ValueError, KeyError, TypeError):
+            self.detection_status.emit('Could not load the detector model. Run train_live.py again.')
+        else:
+            self.detector = LiveDetector(model)
+            if self.session:
+                self.session.enable_detection()
+            self.detection_status.emit('Pilot detector active · Dry swallows')
+
+    def detect(self, mic, imu):
+        try:
+            if self.session:
+                origin, duration = self.session.origin, self.session.duration
+            else:
+                if not len(mic) or not len(imu):
+                    return
+                if self.preview_origin is None:
+                    self.preview_origin = min(mic[-1, 0], imu[-1, 0])
+                origin, duration = self.preview_origin, math.inf
+            events = self.detector.update(mic, imu, origin, duration)
+        except (ValueError, FloatingPointError) as error:
+            self.detector = None
+            self.detection_status.emit(f'Detector stopped: {error}')
+            return
+        valid = self.detector.signal_valid
+        if valid is not None and valid != self.signal_valid:
+            self.signal_valid = valid
+            text = ('Pilot detector active · Dry swallows' if valid
+                    else 'Detection paused · Weak, clipped, or missing signal')
+            self.detection_status.emit(text)
+        for seconds, score in events:
+            if self.session:
+                self.session.detection(seconds, score)
+            else:
+                seconds += origin
+            self.detected.emit(seconds, score)
 
     def handle_commands(self):
         while True:
@@ -191,6 +247,7 @@ class Acquisition(QThread):
                 self.started = when
                 self.stop_at = when + seconds + .25  # Allow queued USB packets to drain.
                 self.begun.emit(dict(folder=str(folder), started=when, seconds=seconds, origin=origin))
+                self.start_detection()
             elif name == 'stop' and self.session:
                 self.session.duration = min(self.session.duration, max(0, when - self.started))
                 self.stop_at = min(self.stop_at, when + .25)
@@ -230,6 +287,10 @@ class Acquisition(QThread):
                         if self.session:
                             raise ValueError('Device restarted during recording.')
                         self.fresh = {'mic': 0.0, 'imu': 0.0}
+                        self.reference = None
+                        output.clear()
+                        preview = LivePreview()
+                        self.start_detection()
                         continue
                     kind, index, seconds, values = packet
                     now = time.perf_counter()
@@ -251,15 +312,18 @@ class Acquisition(QThread):
                     raise ValueError('Sensor stream stalled. Partial recording was saved.')
                 if not self.ready and now - connecting_at > 5:
                     raise ValueError('No complete sensor stream. Check firmware, sensor wiring and USB data cable.')
-                if self.session and now >= self.stop_at:
-                    self.finish('stopped' if self.session.duration < self.session.metadata['requested_duration_s'] else 'complete')
-                if now - last_plot >= .1:
+                finishing = self.session and now >= self.stop_at
+                if finishing or now - last_plot >= .1:
                     if output:
-                        frame = preview.update(output, self.protocol.rates)
+                        detect = self.detect if self.ready and self.detector else None
+                        frame = preview.update(output, self.protocol.rates, detect)
                         with self._preview_lock:
                             self._latest_preview = frame
                         output = []
                     last_plot = now
+                if finishing:
+                    self.finish('stopped' if self.session.duration < self.session.metadata['requested_duration_s'] else 'complete')
+                    self.start_detection()
                 if self.session and now - last_flush >= 1:
                     self.session.flush()
                     last_flush = now

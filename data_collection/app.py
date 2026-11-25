@@ -110,9 +110,11 @@ class SignalPlots(W.QWidget):
             plot.removeItem(item)
         self.overlays = []
 
-    def marker(self, seconds):
+    def marker(self, seconds, detected=False):
+        color = '#70e2b0' if detected else THEME['overlay']
+        style = QtCore.Qt.PenStyle.SolidLine if detected else QtCore.Qt.PenStyle.DashLine
         for plot in self.plots:
-            line = pg.InfiniteLine(seconds, pen=pg.mkPen(THEME['overlay'], width=1.3, style=QtCore.Qt.PenStyle.DashLine))
+            line = pg.InfiniteLine(seconds, pen=pg.mkPen(color, width=1.3, style=style))
             plot.addItem(line)
             self.overlays.append((plot, line))
 
@@ -556,6 +558,44 @@ class MainWindow(W.QMainWindow):
         self.status.setObjectName('muted')
         self.status.setWordWrap(True)
         record_layout.addWidget(self.status)
+        self.live = W.QWidget()
+        self.tabs.insertTab(1, self.live, 'Live Session')
+        live_layout = W.QVBoxLayout(self.live)
+        live_layout.setContentsMargins(0, 12, 0, 0)
+        live_top = W.QHBoxLayout()
+        self.live_name = W.QLabel('No recording')
+        self.live_name.setObjectName('heading')
+        self.live_time = W.QLabel('00:00.0')
+        self.live_time.setObjectName('timer')
+        self.live_mark = button('Mark event   [Space]', self.mark)
+        self.live_stop = button('Stop', self.stop)
+        self.live_start = button('Start recording', self.setup, True)
+        self.live_start.setEnabled(False)
+        self.live_mark.setEnabled(False)
+        self.live_stop.setEnabled(False)
+        live_top.addWidget(self.live_name, 1)
+        for widget in (self.live_time, self.live_start, self.live_mark, self.live_stop):
+            live_top.addWidget(widget)
+        live_layout.addLayout(live_top)
+        live_body = W.QHBoxLayout()
+        self.live_graph = SignalPlots()
+        live_body.addWidget(self.live_graph, 1)
+        events = W.QVBoxLayout()
+        self.live_alert = W.QLabel('No detections yet')
+        self.live_alert.setObjectName('heading')
+        self.live_alert.setWordWrap(True)
+        self.live_log = W.QListWidget()
+        self.live_log.setAccessibleName('Swallow detection log')
+        self.live_log.setMinimumWidth(230)
+        self.live_log.setMaximumWidth(280)
+        events.addWidget(self.live_alert)
+        events.addWidget(self.live_log, 1)
+        live_body.addLayout(events)
+        live_layout.addLayout(live_body, 1)
+        self.live_status = W.QLabel('Connect a device in Record to preview the live signals.')
+        self.live_status.setObjectName('muted')
+        self.live_status.setWordWrap(True)
+        live_layout.addWidget(self.live_status)
         self.refresh_ports()
         self.show_source()
         self.usb_timer = QtCore.QTimer(self)
@@ -610,6 +650,7 @@ class MainWindow(W.QMainWindow):
             message(self, 'No USB serial device found. Use a USB data cable and upload the included firmware.')
             return
         self.origin = 0
+        self.reset_live_view('Connecting…')
         self.graph.clear_overlays()
         self.graph.draw(np.empty((0, 2)), np.empty((0, 4)))
         self.data_root = HOME / 'recordings' / ('demo' if demo else 'participants')
@@ -617,6 +658,8 @@ class MainWindow(W.QMainWindow):
         self.worker.status.connect(self.device_status)
         self.worker.begun.connect(self.begun)
         self.worker.saved.connect(self.saved)
+        self.worker.detected.connect(self.detected)
+        self.worker.detection_status.connect(self.live_status.setText)
         self.worker.failed.connect(self.failed)
         self.worker.finished.connect(self.disconnected)
         self.worker.start()
@@ -628,13 +671,20 @@ class MainWindow(W.QMainWindow):
     def device_status(self, text, ready):
         self.ready = ready
         self.connection_status.setText('Demo ready' if self.demo.isChecked() and ready else ('Ready' if ready else 'Connecting'))
-        self.start_button.setEnabled(ready and not self.recording and not self.pending)
+        can_start = ready and not self.recording and not self.pending
+        self.start_button.setEnabled(can_start)
+        self.live_start.setEnabled(can_start)
+        if ready and not self.recording:
+            self.live_name.setText('Live preview · Not recording')
         if not self.recording:
             self.status.setText(text)
 
     def disconnected(self):
         self.ready = False
         self.connection_status.setText('Disconnected')
+        self.reset_live_view('Disconnected')
+        self.live_status.setText('Connect a device in Record to preview the live signals.')
+        self.live_start.setEnabled(False)
         self.start_button.setEnabled(False)
         self.connect_button.setText('Connect device')
         self.connect_button.setEnabled(True)
@@ -651,15 +701,24 @@ class MainWindow(W.QMainWindow):
         self.last_participant = dialog.code
         self.pending = True
         self.start_button.setEnabled(False)
+        self.live_start.setEnabled(False)
         self.connect_button.setEnabled(False)
         self.worker.command('start', (dialog.code, dialog.task, dialog.seconds.value()))
+
+    def reset_live_view(self, title):
+        self.live_graph.clear_overlays()
+        self.live_graph.draw(np.empty((0, 2)), np.empty((0, 4)))
+        self.live_name.setText(title)
+        self.live_time.setText('00:00.0')
+        self.live_log.clear()
+        self.live_alert.setText('No detections yet')
 
     def begun(self, data):
         self.pending = False
         self.recording = True
         self.start_button.setEnabled(False)
         self.connect_button.setEnabled(False)
-        self.tabs.setTabEnabled(1, False)
+        self.tabs.setTabEnabled(self.tabs.indexOf(self.review), False)
         self.started, self.seconds, self.origin = data['started'], data['seconds'], data['origin']
         self.markers = []
         self.graph.clear_overlays()
@@ -670,6 +729,12 @@ class MainWindow(W.QMainWindow):
         self.shortcut.setEnabled(True)
         self.review_button.setEnabled(False)
         self.status.setText('Recording. Press Space when you observe an event.')
+        self.reset_live_view(self.session_name.text())
+        self.live_start.setEnabled(False)
+        self.live_status.setText('Starting detector…')
+        self.live_mark.setEnabled(True)
+        self.live_stop.setEnabled(True)
+        self.tabs.setCurrentWidget(self.live)
 
     def stop(self):
         if self.recording:
@@ -678,6 +743,8 @@ class MainWindow(W.QMainWindow):
             self.mark_button.setEnabled(False)
             self.shortcut.setEnabled(False)
             self.status.setText('Finishing recording and saving CSV files…')
+            self.live_mark.setEnabled(False)
+            self.live_stop.setEnabled(False)
 
     def mark(self):
         if not self.recording or not self.mark_button.isEnabled():
@@ -689,6 +756,17 @@ class MainWindow(W.QMainWindow):
         self.markers.append(seconds)
         self.count.setText(f'{len(self.markers)} markers')
         self.graph.marker(seconds)
+        self.live_graph.marker(seconds)
+
+    def detected(self, seconds, score):
+        self.live_alert.setText(f'Swallow detected at {seconds:.2f} s')
+        self.live_log.addItem(f'{seconds:7.2f} s   ·   Swallow detected')
+        self.live_log.item(self.live_log.count() - 1).setToolTip(f'Model score {score:.2f}')
+        if not self.recording and self.live_log.count() > 100:
+            self.live_log.takeItem(0)
+        self.live_log.scrollToBottom()
+        self.live_graph.marker(seconds, detected=True)
+        self.prune_markers(self.live_graph, seconds - 10)
 
     def tick(self):
         if not self.recording:
@@ -696,8 +774,11 @@ class MainWindow(W.QMainWindow):
         elapsed = min(time.perf_counter() - self.started, self.seconds)
         self.timer.setText(f'{int(elapsed // 60):02d}:{elapsed % 60:04.1f}')
         self.remaining.setText(f'{max(0, self.seconds - elapsed):.1f} seconds remaining')
+        self.live_time.setText(self.timer.text())
         self.progress.setValue(round(elapsed / self.seconds * 1000))
         if elapsed >= self.seconds:
+            self.live_mark.setEnabled(False)
+            self.live_stop.setEnabled(False)
             self.stop_button.setEnabled(False)
             self.mark_button.setEnabled(False)
             self.shortcut.setEnabled(False)
@@ -706,10 +787,18 @@ class MainWindow(W.QMainWindow):
         if not self.worker:
             return
         frame = self.worker.take_preview()
-        if frame is not None and not self.isMinimized() and self.tabs.currentIndex() == 0:
-            self.receive(frame)
+        if frame is None or self.isMinimized():
+            return
+        current = self.tabs.currentWidget()
+        if current is self.live:
+            self.receive(frame, self.live_graph)
+            if not self.recording and len(frame['raw'][0]):
+                elapsed = frame['raw'][0][-1, 0]
+                self.live_time.setText(f'{int(elapsed // 60):02d}:{elapsed % 60:04.1f}')
+        elif self.tabs.currentIndex() == 0:
+            self.receive(frame, self.graph)
 
-    def receive(self, frame):
+    def receive(self, frame, graph):
         # These arrays contain at most 1800 points per plot, prepared by
         # acquisition. Never rebuild the full microphone window in the GUI.
         arrays = []
@@ -718,20 +807,34 @@ class MainWindow(W.QMainWindow):
             if len(data):
                 data[:, 0] -= self.origin
             arrays.append(data)
-        self.graph.draw(*arrays)
+        graph.draw(*arrays)
         if len(arrays[0]):
-            latest = arrays[0][-1, 0]
-            self.graph.plots[0].setXRange(max(0, latest - 10), max(10, latest), padding=0)
-            for plot, item in self.graph.overlays[:]:
-                if isinstance(item, pg.InfiniteLine) and item.value() < latest - 10:
-                    plot.removeItem(item)
-                    self.graph.overlays.remove((plot, item))
+            mic = arrays[0]
+            latest = mic[-1, 0]
+            left, right = max(0, latest - 10), max(10, latest)
+            mic_plot = graph.plots[0]
+            mic_plot.setXRange(left, right, padding=0)
+            # Range the displayed PCM envelope directly. Clip-to-view downsampling
+            # can otherwise leave the linked live plot with stale Y bounds.
+            visible = mic[(mic[:, 0] >= left) & (mic[:, 0] <= right), 1]
+            visible = visible[np.isfinite(visible)]
+            if len(visible):
+                low, high = float(visible.min()), float(visible.max())
+                margin = max(1., .05 * (high - low))
+                mic_plot.setYRange(low - margin, high + margin, padding=0)
+            self.prune_markers(graph, latest - 10)
         if frame['clipping']:
             self.status.setText('Microphone clipping detected. Lower the input gain before the next recording.')
 
+    def prune_markers(self, graph, cutoff):
+        for plot, item in graph.overlays[:]:
+            if isinstance(item, pg.InfiniteLine) and item.value() < cutoff:
+                plot.removeItem(item)
+                graph.overlays.remove((plot, item))
+
     def saved(self, folder, status):
         self.recording = self.pending = False
-        self.tabs.setTabEnabled(1, True)
+        self.tabs.setTabEnabled(self.tabs.indexOf(self.review), True)
         self.latest_session = Path(folder)
         self.stop_button.setEnabled(False)
         self.mark_button.setEnabled(False)
@@ -742,10 +845,19 @@ class MainWindow(W.QMainWindow):
         self.status.setText(f'Saved ({status}): {self.latest_session.parent.name} / {self.latest_session.name}')
         self.status.setToolTip(folder)
         self.remaining.setText('Saved')
+        self.live_mark.setEnabled(False)
+        self.live_stop.setEnabled(False)
+        self.origin = 0
+        self.graph.clear_overlays()
+        self.reset_live_view('Live preview · Not recording')
+        self.live_start.setEnabled(self.ready)
+        self.live_status.setText(self.status.text())
 
     def failed(self, error):
         self.pending = False
         self.connect_button.setEnabled(True)
+        self.start_button.setEnabled(self.ready and not self.recording)
+        self.live_start.setEnabled(self.ready and not self.recording)
         self.status.setText(error)
         message(self, error)
 
