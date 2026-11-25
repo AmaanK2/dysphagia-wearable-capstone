@@ -69,7 +69,7 @@ Steps applied to every public recording:
 - **Three participants and 85 dry swallows.** No result here should be read as precise to better than about ±5 F1 points. P01's microphone dropouts still dominate P01's errors.
 - **Different swallow types.** Public swallows are clinical bolus swallows from patients; wearable swallows are dry swallows from healthy people.
 - **Optimistic final thresholds.** The exported models choose their threshold on the same three people that measure them. Confirm on new participants before trusting the numbers.
-- **Missing sessions.** Only 9 of the 12 sessions in `LIVE_DETECTION_RESULTS.md` are in Git (P03 S03–S05 are missing). Re-running with them is a direct improvement.
+- **Missing sessions.** Only 9 of the 12 sessions in [the wearable pilot](../wearable_pilot/RESULTS.md) are in Git (P03 S03–S05 are missing). Re-running with them is a direct improvement.
 
 ## Reproduce
 

@@ -324,6 +324,7 @@ class GuiTests(unittest.TestCase):
                            weights=[0.], bias=4.))
         with (tempfile.TemporaryDirectory() as root,
               patch('device.serial.Serial') as serial, patch('device.load_model', return_value=model),
+              patch('device.load_event_model', side_effect=FileNotFoundError),
               patch('app.ports', return_value=[('TEST', 'Test USB', True)])):
             port = serial.return_value
             port.in_waiting = 1000
@@ -383,6 +384,7 @@ class GuiTests(unittest.TestCase):
                 (models / name).write_text(json.dumps(training))
             listed = available_models(models)
             with (patch('device.serial.Serial') as serial, patch('device.load_model', side_effect=load),
+                  patch('device.load_event_model', side_effect=FileNotFoundError),
                   patch('app.available_models', return_value=listed),
                   patch('app.ports', return_value=[('TEST', 'Test USB', True)])):
                 port = serial.return_value
@@ -414,6 +416,45 @@ class GuiTests(unittest.TestCase):
                 finally:
                     window.close()
                     self.app.processEvents()
+
+    def test_live_session_shows_and_saves_cough_alerts(self):
+        class CoughModel:
+            thresholds = dict(cough=.5, throat_clear=.5, talking=.5)
+
+            def probabilities(self, features):
+                return np.array([.05, .05, .8, .05, .05])
+
+        source = Demo()
+        silent = Model(dict(feature_version=FEATURE_VERSION, columns=[0], mean=[0.], scale=[1.],
+                            weights=[0.], bias=-8.))
+        with (tempfile.TemporaryDirectory() as root,
+              patch('device.serial.Serial') as serial, patch('device.load_model', return_value=silent),
+              patch('device.load_event_model', return_value=CoughModel()),
+              patch('app.ports', return_value=[('TEST', 'Test USB', True)])):
+            port = serial.return_value
+            port.in_waiting = 1000
+            port.read.side_effect = lambda count: source.read()
+            window = MainWindow()
+            window.show()
+            try:
+                window.connect_device()
+                window.worker.root = Path(root)
+                self.wait_for(lambda: window.ready)
+                window.tabs.setCurrentWidget(window.live)
+                window.worker.command('start', ('P01', 'mixed', 1.6))
+                self.wait_for(lambda: window.recording)
+                self.assertFalse(window.events_toggle.isEnabled())
+                self.wait_for(lambda: 'Cough detected' in window.live_alert.text())
+                self.wait_for(lambda: window.latest_session is not None)
+                detections = read(window.latest_session / 'Detections.csv')
+                self.assertTrue(detections)
+                self.assertEqual({row['event'] for row in detections}, {'cough'})
+                metadata = json.loads((window.latest_session / 'Session.json').read_text())
+                self.assertEqual(metadata['live_event_detector_file'], 'events.json')
+                self.assertTrue(window.events_toggle.isEnabled())
+            finally:
+                window.close()
+                self.app.processEvents()
 
     def test_fragmented_usb_and_disconnect_preserve_partial_session(self):
         class FakeSerial:

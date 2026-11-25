@@ -8,3 +8,4 @@ models/*
 !models/mixed/
 models/mixed/*
 !models/mixed/mixed_*.json
+!models/events.json

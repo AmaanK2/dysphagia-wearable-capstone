@@ -360,7 +360,7 @@ def agreement_evaluation(records, settings):
 
 
 def public_records(path, participants):
-    manifest = json.loads((HOME.parent / 'results/records.json').read_text())
+    manifest = json.loads((HOME.parent / 'public_baseline/results/records.json').read_text())
     with zipfile.ZipFile(path / 'signals.zip') as signals:
         for i, record in enumerate(r for r in manifest if r['participant'] in participants):
             raw = signals.read(f'signals/{record["id"]}.npy')
@@ -449,7 +449,7 @@ def main():
     write_json(report_path, report)
     print(f'Wearable model and evaluation saved to {MODEL_PATH.parent}', flush=True)
     if args.public_data:
-        splits = json.loads((HOME.parent / 'results/participant_splits.json').read_text())
+        splits = json.loads((HOME.parent / 'public_baseline/results/participant_splits.json').read_text())
         public = list(public_records(args.public_data, set(splits['train'])))
         public_model = Model(fit(public, SHAPE))
         public_test = list(public_records(args.public_data, set(splits['test'])))

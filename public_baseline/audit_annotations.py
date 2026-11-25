@@ -65,8 +65,7 @@ for match in [lambda r:r['unlabelled_region_location']=='no_annotations_in_recor
               lambda r:r['unlabelled_region_location']=='between_annotations',
               lambda r:r['category']=='overlaps_annotation_boundary_or_duplicate']:
     cases.append(sorted([r for r in review if match(r)],key=lambda r:(r['recording'],float(r['start_seconds'])))[0])
-signals=root.parent/'dataset_inspection/signals.zip'
-if not signals.exists():signals=root/'data/raw/signals.zip'
+signals=root.parent/'data/raw/signals.zip'
 fig,axes=plt.subplots(3,2,figsize=(12,8),layout='constrained')
 with zipfile.ZipFile(signals) as z:
     for pair,row in zip(axes,cases):

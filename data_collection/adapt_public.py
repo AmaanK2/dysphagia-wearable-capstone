@@ -53,13 +53,13 @@ AXIS_MAP = {'A-P': 2, 'S-I': 0, 'M-L': 1}   # public column -> wearable native a
 
 
 def public_manifest(participants=None):
-    manifest = json.loads((REPO / 'results' / 'records.json').read_text())
+    manifest = json.loads((REPO / 'public_baseline' / 'results' / 'records.json').read_text())
     return [r for r in manifest if participants is None or r['participant'] in participants]
 
 
 def training_participants():
     """Public participants outside the original 27-person public test split."""
-    splits = json.loads((REPO / 'results' / 'participant_splits.json').read_text())
+    splits = json.loads((REPO / 'public_baseline' / 'results' / 'participant_splits.json').read_text())
     return set(splits['train']) | set(splits['validation'])
 
 

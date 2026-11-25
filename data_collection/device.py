@@ -14,6 +14,7 @@ except ImportError:
     from PySide6.QtCore import QThread, Signal
 from serial.tools import list_ports
 
+from events import EVENT_MODEL_PATH, LiveEventDetector, load_event_model
 from live_detection import MODEL_PATH, LiveDetector, load_model, model_label
 from session import Protocol, Session, next_session
 
@@ -139,13 +140,15 @@ class Acquisition(QThread):
     begun = Signal(object)
     saved = Signal(str, str)
     failed = Signal(str)
-    detected = Signal(float, float)
+    detected = Signal(float, str, float)
     detection_status = Signal(str)
 
     def __init__(self, port, root, demo=False, model_path=None):
         super().__init__()
         self.model_path = Path(model_path or MODEL_PATH)
         self.detector_label = model_label(self.model_path)
+        self.events_enabled = True
+        self.event_detector = None
         self.port, self.root, self.demo = port, Path(root), demo
         self.commands = queue.Queue()
         self.session = None
@@ -177,26 +180,38 @@ class Acquisition(QThread):
             saved.close(status, note)
             self.saved.emit(str(saved.folder), saved.metadata['status'])
 
+    def active_text(self):
+        events = ' · cough, talking, throat clear' if self.event_detector else ''
+        swallow = f'{self.detector_label} active · swallows' if self.detector else 'Swallow detector off'
+        return swallow + events
+
     def start_detection(self):
         self.preview_origin = None
         self.detector = None
+        self.event_detector = None
         self.signal_valid = None
         if self.demo:
             self.detection_status.emit('Demo signals · live detection disabled')
             return
         label = self.detector_label = model_label(self.model_path)
+        problem = None
         try:
-            model = load_model(self.model_path)
+            self.detector = LiveDetector(load_model(self.model_path))
         except FileNotFoundError:
-            self.detection_status.emit(f'Detector unavailable ({self.model_path.name} not found). '
-                                       'Run train_live.py or train_mixed.py to create it.')
+            problem = (f'Detector unavailable ({self.model_path.name} not found). '
+                       'Run train_live.py or train_mixed.py to create it.')
         except (OSError, ValueError, KeyError, TypeError):
-            self.detection_status.emit(f'Could not load {self.model_path.name}. Retrain or choose another detector.')
-        else:
-            self.detector = LiveDetector(model)
-            if self.session:
-                self.session.enable_detection(label, self.model_path.name)
-            self.detection_status.emit(f'{label} active · Dry swallows')
+            problem = f'Could not load {self.model_path.name}. Retrain or choose another detector.'
+        if self.events_enabled:
+            try:
+                self.event_detector = LiveEventDetector(load_event_model())
+            except (OSError, ValueError, KeyError, TypeError):
+                problem = (problem + ' ' if problem else '') + 'Event model unavailable (run train_events.py).'
+        if self.session and (self.detector or self.event_detector):
+            self.session.enable_detection(label if self.detector else 'off', self.model_path.name if self.detector else None,
+                                          EVENT_MODEL_PATH.name if self.event_detector else None)
+        self.detection_status.emit(problem if problem and not (self.detector or self.event_detector)
+                                   else self.active_text() + (f' · {problem}' if problem else ''))
 
     def detect(self, mic, imu):
         try:
@@ -208,23 +223,24 @@ class Acquisition(QThread):
                 if self.preview_origin is None:
                     self.preview_origin = min(mic[-1, 0], imu[-1, 0])
                 origin, duration = self.preview_origin, math.inf
-            events = self.detector.update(mic, imu, origin, duration)
-        except (ValueError, FloatingPointError) as error:
-            self.detector = None
+            events = [(t, 'swallow', p) for t, p in self.detector.update(mic, imu, origin, duration)] if self.detector else []
+            if self.event_detector:
+                events += self.event_detector.update(imu, origin, duration)
+        except (ValueError, FloatingPointError, np.linalg.LinAlgError) as error:
+            self.detector = self.event_detector = None
             self.detection_status.emit(f'Detector stopped: {error}')
             return
-        valid = self.detector.signal_valid
+        valid = self.detector.signal_valid if self.detector else None
         if valid is not None and valid != self.signal_valid:
             self.signal_valid = valid
-            text = (f'{self.detector_label} active · Dry swallows' if valid
-                    else 'Detection paused · Weak, clipped, or missing signal')
-            self.detection_status.emit(text)
-        for seconds, score in events:
+            self.detection_status.emit(self.active_text() if valid
+                                       else 'Swallow detection paused · Weak, clipped, or missing signal')
+        for seconds, event, score in sorted(events):
             if self.session:
-                self.session.detection(seconds, score)
+                self.session.detection(seconds, score, event)
             else:
                 seconds += origin
-            self.detected.emit(seconds, score)
+            self.detected.emit(seconds, event, score)
 
     def handle_commands(self):
         while True:
@@ -257,6 +273,10 @@ class Acquisition(QThread):
                 self.stop_at = min(self.stop_at, when + .25)
             elif name == 'marker' and self.session:
                 self.session.marker(when - self.started)
+            elif name == 'events':
+                self.events_enabled = bool(value)
+                if not self.session:
+                    self.start_detection()
             elif name == 'model':
                 # The GUI locks the choice during recording; this guard keeps each
                 # session's Detections.csv from a single detector.
@@ -325,7 +345,7 @@ class Acquisition(QThread):
                 finishing = self.session and now >= self.stop_at
                 if finishing or now - last_plot >= .1:
                     if output:
-                        detect = self.detect if self.ready and self.detector else None
+                        detect = self.detect if self.ready and (self.detector or self.event_detector) else None
                         frame = preview.update(output, self.protocol.rates, detect)
                         with self._preview_lock:
                             self._latest_preview = frame

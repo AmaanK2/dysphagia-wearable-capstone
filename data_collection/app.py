@@ -36,6 +36,10 @@ THEME = {
     'font': 'Segoe UI',
 }
 COLORS = [THEME['series_1'], THEME['series_2'], THEME['series_3']]
+# Live alert colours on the graphite plots; swallow keeps its original green.
+EVENT_COLORS = {'swallow': '#70e2b0', 'cough': '#f2a25c', 'talking': '#c8a6ff', 'throat_clear': '#f3d36b'}
+EVENT_TEXT = {'swallow': 'Swallow detected', 'cough': 'Cough detected', 'talking': 'Talking started',
+              'throat_clear': 'Throat clear detected'}
 
 
 def button(text, action, primary=False):
@@ -112,7 +116,8 @@ class SignalPlots(W.QWidget):
         self.overlays = []
 
     def marker(self, seconds, detected=False):
-        color = '#70e2b0' if detected else THEME['overlay']
+        # ``detected`` is False for observer marks, or the detected event name.
+        color = EVENT_COLORS.get(detected if isinstance(detected, str) else 'swallow') if detected else THEME['overlay']
         style = QtCore.Qt.PenStyle.SolidLine if detected else QtCore.Qt.PenStyle.DashLine
         for plot in self.plots:
             line = pg.InfiniteLine(seconds, pen=pg.mkPen(color, width=1.3, style=style))
@@ -591,6 +596,16 @@ class MainWindow(W.QMainWindow):
         model_row.addWidget(detector_label)
         model_row.addWidget(self.model_choice)
         model_row.addWidget(self.model_refresh)
+        model_row.addSpacing(16)
+        self.events_toggle = W.QCheckBox('Also detect cough, talking, throat clear')
+        self.events_toggle.setChecked(True)
+        self.events_toggle.setToolTip('IMU event classifier (models/events.json). Locked while recording.')
+        self.events_toggle.toggled.connect(self.toggle_events)
+        model_row.addWidget(self.events_toggle)
+        legend = W.QLabel('  '.join(f'<span style="color:{EVENT_COLORS[k]}">■</span> {k.replace("_", " ").capitalize()}'
+                                    for k in EVENT_COLORS))
+        legend.setObjectName('muted')
+        model_row.addWidget(legend)
         model_row.addStretch()
         live_layout.addLayout(model_row)
         self.populate_models()
@@ -657,9 +672,14 @@ class MainWindow(W.QMainWindow):
         if path and self.worker and self.worker.isRunning() and not self.recording and not self.pending:
             self.worker.command('model', path)
 
+    def toggle_events(self, enabled):
+        if self.worker and self.worker.isRunning() and not self.recording and not self.pending:
+            self.worker.command('events', enabled)
+
     def lock_model_choice(self, locked):
         self.model_choice.setEnabled(not locked)
         self.model_refresh.setEnabled(not locked)
+        self.events_toggle.setEnabled(not locked)
 
     def show_source(self):
         self.port.setVisible(not self.demo.isChecked())
@@ -700,6 +720,7 @@ class MainWindow(W.QMainWindow):
         self.graph.draw(np.empty((0, 2)), np.empty((0, 4)))
         self.data_root = HOME / 'recordings' / ('demo' if demo else 'participants')
         self.worker = Acquisition('DEMO' if demo else port, self.data_root, demo, self.model_choice.currentData())
+        self.worker.events_enabled = self.events_toggle.isChecked()
         self.worker.status.connect(self.device_status)
         self.worker.begun.connect(self.begun)
         self.worker.saved.connect(self.saved)
@@ -806,14 +827,17 @@ class MainWindow(W.QMainWindow):
         self.graph.marker(seconds)
         self.live_graph.marker(seconds)
 
-    def detected(self, seconds, score):
-        self.live_alert.setText(f'Swallow detected at {seconds:.2f} s')
-        self.live_log.addItem(f'{seconds:7.2f} s   ·   Swallow detected')
-        self.live_log.item(self.live_log.count() - 1).setToolTip(f'Model score {score:.2f}')
+    def detected(self, seconds, event, score):
+        text = EVENT_TEXT.get(event, event)
+        self.live_alert.setText(f'{text} at {seconds:.2f} s')
+        self.live_log.addItem(f'{seconds:7.2f} s   ·   {text}')
+        item = self.live_log.item(self.live_log.count() - 1)
+        item.setToolTip(f'Model score {score:.2f}')
+        item.setForeground(QtGui.QColor(EVENT_COLORS.get(event, THEME['ink'])).darker(140))
         if not self.recording and self.live_log.count() > 100:
             self.live_log.takeItem(0)
         self.live_log.scrollToBottom()
-        self.live_graph.marker(seconds, detected=True)
+        self.live_graph.marker(seconds, detected=event)
         self.prune_markers(self.live_graph, seconds - 10)
 
     def tick(self):

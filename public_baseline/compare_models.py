@@ -39,8 +39,7 @@ fig.savefig(p/'rf_vs_cnn.png',dpi=150);plt.close(fig)
 meta=json.loads((root/'results/records.json').read_text())
 splits=json.loads((root/'results/participant_splits.json').read_text())
 r=sorted((r for r in meta if r['participant'] in splits['test']),key=lambda r:r['id'])[0]
-signals=root.parent/'dataset_inspection/signals.zip'
-if not signals.exists():signals=root/'data/raw/signals.zip'
+signals=root.parent/'data/raw/signals.zip'
 with zipfile.ZipFile(signals) as z:x=np.load(io.BytesIO(z.read('signals/'+r['id']+'.npy')),allow_pickle=False)
 fig,axes=plt.subplots(4,1,figsize=(11,6),sharex=True,gridspec_kw={'height_ratios':[2,1,1,1]},layout='constrained')
 axes[0].plot(np.arange(len(x))[::8]/4000,x[::8,0],lw=.6,color='#245b7a');axes[0].set_ylabel('Microphone')

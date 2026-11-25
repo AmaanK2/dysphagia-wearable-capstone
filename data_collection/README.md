@@ -1,137 +1,80 @@
 # Swallow Studio
 
-One folder for Teensy acquisition, live microphone and acceleration plots, swallow detection, observer markers, and event review.
+The desktop app for the wearable: it records the Teensy's contact microphone and IMU, shows live signals, detects swallows (plus coughs, talking and throat clears) in real time, and lets you review and label sessions.
 
-## Start here
+## Run it
 
-Use Python 3.12 or newer. Open a terminal **inside this folder**:
-
-```powershell
-py -3 -m venv .venv
-.venv\Scripts\python -m pip install -r requirements.txt
-.venv\Scripts\python app.py
-```
-
-After setup, double-click `start.bat` on Windows. On macOS/Linux, use `python3` and `.venv/bin/python` instead.
-
-To try recording and reviewing without a device:
-
-```powershell
-.venv\Scripts\python app.py --demo
-```
-
-Demo mode uses synthetic signals and saves under `recordings/demo/`. Participant sessions use `recordings/participants/`. The recorder normally leaves new session files untracked.
-
-## Live Session
-
-Connect a device in **Record**, then open **Live Session** to preview the rolling microphone and acceleration traces and see live alerts. Preview data stays in memory. Start recording from either tab to reset the session clock and save data. Live preview resumes when recording ends. A model alert adds **Swallow detected**, its recording-relative time, and a green line to both plots. Press Space to place an observer marker or use **Stop** to save. The session stores confirmed alerts in `Detections.csv` with the combined model score, and observer markers and reviewed labels in `Events.csv`. Model scores serve as a ranking signal.
-
-The pilot detector scores the microphone and IMU separately and also computes a combined score. All three checks must pass on the same trailing 0.5-second window. It checks every 0.1 seconds and alerts after two consecutive passing windows. The current model uses a 1.6-second cooldown to reduce repeated alerts from nearby bursts. Weak or clipped microphone windows and windows missing sensor data suppress alerts. Demo recordings show the live plots with model inference disabled.
-
-Train or rebuild the local model from inside `data_collection`:
+Python 3.12+. From this folder:
 
 ```sh
-.venv/bin/python train_live.py
+python -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt     # Windows: .venv\Scripts\python
+.venv/bin/python app.py                                 # add --demo to try it without hardware
 ```
 
-Use `.venv\Scripts\python` on Windows. The command uses non-simulated sessions with reviewed labels or observer markers in `recordings/participants/`. It tunes settings using participant-separated replay, then trains on usable windows throughout each recording and gives extra weight to reviewed non-swallow intervals and background windows that score like swallows. It reads `Mic.csv` or `Mic.csv.gz`, and writes `models/wearable.json` and `models/evaluation.json`. Swallow Studio loads the model when the device connects and at the start of each recording. See [the pilot accuracy report](LIVE_DETECTION_RESULTS.md).
+On Windows, after setup, you can double-click `start.bat`.
 
-`train_mixed.py` trains on these recordings plus the public Pittsburgh dataset after `adapt_public.py` converts it to the wearable's rates, units, axes and spectral shape. It writes weighted models (e.g. 50/50, 80/20, 35/65 public/wearable) to `models/mixed/`. Choose the detector from the **Detector** list in **Live Session**: your current `models/wearable.json` appears first, followed by the mixed models (35/65 trees is recommended). The choice applies to live preview straight away. It is locked while recording, and `Session.json` saves which detector produced `Detections.csv`. Training these models needs `pandas`, `scikit-learn` and `matplotlib` in addition to `requirements.txt`; running them in the app does not. Results and reproduction commands: [mixed-data summary](../experiments/mixed_public_wearable/SUMMARY.md).
+## Using the app
 
-## Prepare the Teensy once
+1. **Record tab:** pick the USB port and click **Connect device**. **Ready** means both sensor streams are arriving. It doesn't check sensor placement or contact.
+2. **Start recording:** enter a participant code (never a name), choose an activity (Dry swallow, Talking, Mixed or Custom) and a duration of up to 30 minutes.
+3. **Mark events:** press **Space** for each swallow you see, or at the start and end of longer activities. Presses are approximate observer marks.
+4. **Live Session tab:** shows the rolling signals and detections.
+   - **Detector** chooses the swallow model: your current `models/wearable.json` appears first, then the mixed public+wearable models (35/65 trees is recommended).
+   - **Also detect cough, talking, throat clear** turns the IMU event classifier (`models/events.json`) on or off.
+   - Each event type has its own colour on the plots and in the log. Both settings lock during a recording.
+5. **Review tab:** open a session, drag the selection over each event, choose its activity and click **Save event**. Mark **Uncertain** when unsure. Reviewed labels are what training uses.
 
-The included firmware targets the supplied parts list:
+Sessions are saved to `recordings/participants/<code>/Sxx_<activity>/`. Numbering continues across a participant's visits, and existing folders are never overwritten.
 
-| Component | Connection / setting |
+| File | Contents |
 | --- | --- |
-| Teensy 4.1 | Native USB port; a USB **data** cable |
-| Teensy Audio Shield Rev D | Stacked with the headers; SGTL5000 line input |
-| TE CM-01B contact microphone | Amplified signal to **left LINE IN**, ground to common ground, supply per the microphone's pinout/specification; the supplied plan specifies 5 V VIN |
-| Adafruit ISM330DHCX | 3.3 V, GND, SDA = pin 18, SCL = pin 19; default I²C address 0x6A |
+| `Mic.csv` | `sample_idx,time_s,mic_raw`: raw 16-bit PCM at 44.1 kHz |
+| `IMU.csv` | `sample_idx,time_s,ax,ay,az`: raw acceleration in m/s² (gravity included), ~904 Hz |
+| `Events.csv` | Observer markers (`record_type=marker`) and reviewed labels (`record_type=label`, `start_s`/`end_s`) |
+| `Detections.csv` | Live alerts: `time_s,event,model_score` (`event` is swallow, cough, talking or throat_clear) |
+| `Session.json` | Rates, timing origin, status, and which detector files were used |
 
-Use the microphone manufacturer's pinout, not guessed wire colours. The audio shield and IMU share I²C; their addresses differ. No extra interrupt wire is required by this implementation.
+Every time is in seconds from one shared session start. CSVs store raw values; the filtering you see on screen is for display only. Large `Mic.csv` files can be stored as `Mic.csv.gz`.
 
-1. Install Arduino IDE with [PJRC Teensy support](https://www.pjrc.com/teensy/td_download.html). The Boards Manager URL is `https://www.pjrc.com/teensy/package_teensy_index.json`.
-2. In Library Manager, install **Adafruit LSM6DS** and accept its dependencies: Adafruit Unified Sensor and Adafruit BusIO. The Audio library comes with Teensy support.
-3. Open `firmware/SwallowRecorder/SwallowRecorder.ino`. Select **Teensy 4.1**, **USB Type: Serial**, and **600 MHz**. Upload it.
-4. Close Arduino Serial Monitor so the GUI can open the port. Launch the GUI and click **Connect device**. USB ports refresh automatically; Teensy ports are listed first.
+## Models
 
-This app requires the included **V1 firmware**. The standalone `record_teensy.py` accepts both V1 and older packet layouts, but older firmware does not provide the documented timing information required here. Uploading this sketch replaces the Teensy's previous program; keep a copy of that program if you need it later.
+| Model | Train with | Notes |
+| --- | --- | --- |
+| `models/wearable.json` | `python train_live.py` | Wearable-only logistic detector (git-ignored, machine-specific) |
+| `models/mixed/mixed_*.json` | `python train_mixed.py --model trees --mode export ...` | Wearable + adapted public swallow data. [Results](../experiments/mixed_public_wearable/SUMMARY.md) |
+| `models/events.json` | `python train_events.py` | Cough / talking / throat-clear classifier. [Results](../experiments/event_detection/README.md) |
 
-Firmware defaults: microphone signed 16-bit PCM at 44.1 kHz; acceleration at nominal 833 Hz, ±2 g, reported in m/s². Axes are the sensor's native X/Y/Z; use the same placement and orientation every session. Gyroscope data is not collected. `MIC_CHANNEL` selects left/right input, `IMU_ADDRESS` selects 0x6A/0x6B, and `lineInLevel(5)` sets fixed input gain. Change these only when matching the actual wiring or after a bench gain check.
+Training needs the public datasets (`python ../download_data.py` and `python ../download_data.py --throat`, both run from the repo root) and `requirements-training.txt`. The app itself only needs `requirements.txt`.
 
-References: [PJRC audio shield](https://www.pjrc.com/store/teensy3_audio.html), [Adafruit sensor setup](https://learn.adafruit.com/lsm6dsox-and-ism330dhc-6-dof-imu/arduino).
-
-## Collect a session
-
-1. Place the sensors consistently. Connect the device. **Ready** requires valid microphone samples and three finite acceleration values, with both streams received within the last 0.75 seconds. USB enumeration alone does not enable recording.
-2. Click **Start recording**. Enter the participant ID, choose **Dry swallow**, **Talking**, **Mixed activities**, or **Custom**, and set the duration. Use a minute preset or enter a custom value in seconds, up to 30 minutes.
-3. Confirm **Begin recording**. The timer and plots run live. Begin with normal breathing; leave normal breathing between attempts.
-4. Press **Space** once per observed swallow. For longer activities, press at the apparent start and end. Every press is an independent approximate marker; no automatic pairing or swallow classification is applied.
-5. Wait for the timer or click **Stop recording**. The app drains pending packets briefly, finishes the three CSVs, and enables **Review last session**. Disconnecting or closing retains available samples and marks interrupted sessions in `Session.json`.
-
-Session numbering is participant-wide, across all activities and days. Reuse the participant ID on return visits. For example:
-
-| Recording | Folder |
+| Code | Purpose |
 | --- | --- |
-| First dry-swallow session | `recordings/participants/P01/S01_dry_swallow/` |
-| Next talking session | `recordings/participants/P01/S02_talking/` |
-| Next mixed session | `recordings/participants/P01/S03_mixed/` |
+| `app.py` | GUI: record, live session, review |
+| `device.py`, `session.py` | USB acquisition and session files |
+| `live_detection.py` | Swallow features, models (logistic and trees) and alert logic |
+| `events.py` | Cough / talking / throat-clear features, model and alert logic |
+| `adapt_public.py`, `check_adaptation.py` | Convert public swallow recordings to the wearable's format and check the match |
+| `train_live.py`, `train_mixed.py`, `train_events.py` | Model training and evaluation |
+| `test_*.py` | Tests: `python -m unittest test_collection test_mixed test_events` |
 
-Choose a participant code without names. Codes and custom activities accept letters, numbers, underscores and hyphens. Custom activity spaces become underscores. Existing session folders are never overwritten.
+## Hardware (one-time setup)
 
-## Files and timing
-
-| File | Columns / meaning |
+| Part | Connection |
 | --- | --- |
-| `Mic.csv` | `sample_idx,time_s,mic_raw` — signed 16-bit PCM counts, unchanged |
-| `IMU.csv` | `sample_idx,time_s,ax,ay,az` — unfiltered acquisition acceleration in m/s², including gravity |
-| `Events.csv` | `record_type,activity,time_s,start_s,end_s,notes` |
-| `Session.json` | Rates, device origin, requested/saved duration, counts, demo flag and completion/interruption status |
+| Teensy 4.1 | USB **data** cable |
+| Teensy Audio Shield Rev D | Stacked; SGTL5000 line input |
+| TE CM-01B contact microphone | Amplified output to **left LINE IN**, common ground, power per its datasheet (5 V VIN) |
+| Adafruit ISM330DHCX | 3.3 V, GND, SDA pin 18, SCL pin 19, I²C address 0x6A |
 
-All CSV times are seconds relative to **one session origin**, not independent zeroes per signal. The first saved microphone and IMU samples may begin slightly after zero because of their different sample rates. `sample_idx` starts at zero for each saved stream and preserves subsequent sequence gaps. Session time zero is the estimated device time when the tester confirms recording.
+1. Install the Arduino IDE with [Teensy support](https://www.pjrc.com/teensy/td_download.html), then the **Adafruit LSM6DS** library (with its dependencies).
+2. Open `firmware/SwallowRecorder/SwallowRecorder.ino`, select **Teensy 4.1**, **USB Type: Serial**, **600 MHz**, and upload it.
+3. Close the Serial Monitor before connecting from the app.
 
-Live markers use `record_type=marker`, with `time_s` populated. Reviewed events use `record_type=label`, with `start_s` and `end_s` populated. Uncertain labels retain the activity and use a `[uncertain]` prefix in notes. CSV headers and filenames use the exact capitalization above.
+Firmware defaults: mic at 44.1 kHz with fixed gain `lineInLevel(5)`; accelerometer at ±2 g (nominal 833 Hz; ~904 Hz measured). Mount the sensor in the same place and orientation every session. Check for clipping before collecting participant data.
 
-Samples and markers are written during recording and flushed at least once per second; markers flush immediately. An abrupt power loss can lose the latest unflushed samples. A `recording` status left in `Session.json` indicates an unclean interruption; preserve that folder for investigation. A completed status means software recording completed, not that signal quality or physiological labels have been verified.
+## USB protocol (V1)
 
-## Review and label
-
-Open a saved session with **Review last session** or **Open session**. The microphone and X/Y/Z signals share the timeline. Orange dashed lines are original observer presses; shaded bands are reviewed labels.
-
-Select a marker, zoom using the mouse wheel, and drag the blue selection region to the estimated start and end. Exact times can also be typed. Choose the activity for that event and click **Save event**. This works for both single-activity and mixed sessions. Each swallow needs its own label. For talking, select the interval between the two approximate presses and save one talking label.
-
-Select an existing label to update its boundaries, activity or notes. Mark **Uncertain event** and add a note when confidence is low. **Delete selected label** removes only reviewed labels. Every successful add, update and deletion saves atomically to `Events.csv`; original marker rows are preserved. Unsaved selection changes are not labels. Review cannot open an actively recording session. Review one session in one app instance at a time.
-
-## Filtering and accuracy
-
-The interface uses Hallmark's Cobalt design: light controls, graphite plots and a blue primary action. Live filtering and peak-preserving plot reduction run in the acquisition worker. The GUI pulls only the newest frame at 10 Hz, with at most 1800 points per plot, so a slow or minimized window cannot accumulate an event queue of old signal frames. This limit affects the live display only; every raw sample still goes to its CSV. Review loading and filtering also run outside the GUI thread.
-
-CSV values are never smoothed, resampled or replaced by filtered values. Live view uses stateful second-order Butterworth bandpass designs: microphone 20–2000 Hz; acceleration 0.5–100 Hz. This suppresses microphone DC/low-frequency movement and acceleration gravity/slow drift while retaining a broad vibration band. These are initial visualization settings, not validated optimal filters for this device or trained models. Turn off the filter checkbox to inspect raw signals.
-
-The live filter is causal and has frequency-dependent delay. Review uses forward/backward filtering to avoid that phase shift; edge transients remain possible. Inspect the raw view around uncertain boundaries. Plot downsampling preserves visible peaks and affects rendering only.
-
-Both sensors are timestamped on the Teensy's microsecond clock. Audio sample times are reconstructed from the I²S sample clock and an audio-block callback anchor. IMU timestamps mark the acquisition read after data-ready polling; they are not hardware-latched sensor conversion timestamps. Codec group delay, sensor filtering, callback latency, USB delay and observer reaction are **not calibrated out**. Observer times use a host clock mapped to the latest device timestamp, so they remain approximate, exactly as in the collection plan. Do not interpret displayed decimal places as measured synchronization precision.
-
-The firmware explicitly reports audio-buffer overflow, I²C failures and excessive IMU read delays. The host rejects malformed packets, non-finite samples, clock reversals, device restarts and sequence gaps; during a recording it preserves available data as incomplete. Sequence checks do not prove that the sensor never overwrote an internal sample. The firmware polls data-ready without an IMU FIFO; delay checks reduce, but cannot eliminate, that risk.
-
-Before participant collection, bench-check a known common mechanical/acoustic event on both sensors, measure timing offset/drift, confirm sample counts and a stable 1–2 minute capture, verify axis orientation, and inspect for clipping/flat signals. Structural **Ready** confirms packets, not microphone contact, correct placement or useful physiological signal quality. No physical hardware validation has been performed in this development environment. The public-dataset models elsewhere in this repo are not applied to this wearable stream.
-
-## Check the software
-
-```powershell
-.venv\Scripts\python -m unittest -v test_collection.py
-```
-
-Tests exercise device clocks and rollover, malformed packets, dropped/duplicate indices, participant-wide numbering, raw values, common CSV timing, early stop, timed demo acquisition, session setup, and review edits while preserving markers. Demo runs through the same parser and CSV writer as USB acquisition. It cannot validate physical wiring, sensor noise or synchronization error.
-
-Development validation: the automated desktop suite passes. The complete sketch and its core/library dependencies compiled and linked to a Teensy 4.1 ARM firmware image using PJRC Teensy 1.62.0 / GCC 15.2.1, Adafruit LSM6DS 4.7.4, Adafruit BusIO 1.17.4 and Adafruit Unified Sensor 1.1.15. No firmware was flashed and no physical sensors were tested here.
-
-Files are deliberately separated by purpose: `app.py` is the GUI, plots and review; `device.py` handles USB acquisition; `session.py` validates packets and writes sessions; the sketch is the device-side acquisition code. No clinician authentication is implemented yet.
-
-## V1 USB protocol
-
-ASCII newline-terminated packets. Host commands are the single bytes `S` (start preview) and `X` (stop). Default audio blocks contain exactly 128 samples.
+Newline-terminated ASCII. The host sends `S` to start streaming and `X` to stop.
 
 | Packet | Format |
 | --- | --- |
@@ -140,4 +83,4 @@ ASCII newline-terminated packets. Host commands are the single bytes `S` (start 
 | Acceleration | `I,sample_idx,read_us,ax,ay,az` |
 | Fault | `E,message` |
 
-Timestamps are unsigned 32-bit microseconds. Audio and acceleration indices reset on `S`. The host handles microsecond rollover relative to the stream epoch and limits a preview stream to one hour; reconnect to reset the preview clock. Recording start/stop does not restart preview, so there is no second USB start handshake during session setup.
+Timestamps come from the Teensy's microsecond clock. The host rejects malformed packets, clock resets and sequence gaps, and keeps whatever was recorded if a session is interrupted.
