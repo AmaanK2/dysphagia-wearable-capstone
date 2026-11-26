@@ -20,10 +20,15 @@ import pyqtgraph as pg
 
 from device import Acquisition, ports, filter_sos
 from live_detection import RECOMMENDED_MODEL, available_models
+from swallow_metrics import session_events, water_test
 from session import EVENT_FIELDS, safe_name, save_events
 
 HOME = Path(__file__).resolve().parent
-ACTIVITIES = {'Dry swallow': 'dry_swallow', 'Talking': 'talking', 'Mixed activities': 'mixed'}
+ACTIVITIES = {'Dry swallow': 'dry_swallow', 'Talking': 'talking', 'Mixed activities': 'mixed',
+              'Water swallow test': 'water_swallow_test'}
+WATER_TEST_HELP = ('Ask the person to drink the water as quickly as is comfortable. Press Space when the cup '
+                   'touches the lips, and again when they finish (optional). Keep recording ~60 s afterwards '
+                   'to catch late coughs.')
 THEME = {
     'paper': '#f7f9fc', 'paper_2': '#eef2f7', 'paper_3': '#e3e9f1',
     'ink': '#151c2a', 'ink_2': '#3a4556', 'muted': '#627086',
@@ -124,6 +129,17 @@ class SignalPlots(W.QWidget):
             plot.addItem(line)
             self.overlays.append((plot, line))
 
+    def event_interval(self, start, end, event):
+        fill = QtGui.QColor(EVENT_COLORS.get(event, THEME['overlay']))
+        fill.setAlpha(55)
+        for plot in self.plots:
+            item = pg.LinearRegionItem((start, end), movable=False, brush=pg.mkBrush(fill),
+                                       pen=pg.mkPen(None))
+            item.live_event = True
+            item.setZValue(-6)
+            plot.addItem(item)
+            self.overlays.append((plot, item))
+
     def interval(self, start, end, uncertain=False):
         fill = QtGui.QColor(THEME['overlay'])
         fill.setAlpha(35)
@@ -157,7 +173,25 @@ class Setup(W.QDialog):
         self.custom.setPlaceholderText('e.g. throat_clear')
         form.addRow('Custom activity', self.custom)
         form.setRowVisible(self.custom, False)
-        self.activity.currentTextChanged.connect(lambda t: form.setRowVisible(self.custom, t == 'Custom'))
+        self.volume = W.QSpinBox()
+        self.volume.setRange(5, 500)
+        self.volume.setValue(100)
+        self.volume.setSuffix(' ml')
+        form.addRow('Water volume', self.volume)
+        self.water_help = W.QLabel(WATER_TEST_HELP)
+        self.water_help.setWordWrap(True)
+        self.water_help.setObjectName('muted')
+        form.addRow(self.water_help)
+
+        def show_rows(text):
+            form.setRowVisible(self.custom, text == 'Custom')
+            form.setRowVisible(self.volume, text == 'Water swallow test')
+            form.setRowVisible(self.water_help, text == 'Water swallow test')
+            if text == 'Water swallow test':
+                self.seconds.setValue(90)
+
+        self.activity.currentTextChanged.connect(show_rows)
+        show_rows(self.activity.currentText())
         presets = W.QWidget()
         row = W.QHBoxLayout(presets)
         row.setContentsMargins(0, 0, 0, 0)
@@ -619,8 +653,8 @@ class MainWindow(W.QMainWindow):
         self.live_alert.setWordWrap(True)
         self.live_log = W.QListWidget()
         self.live_log.setAccessibleName('Swallow detection log')
-        self.live_log.setMinimumWidth(230)
-        self.live_log.setMaximumWidth(280)
+        self.live_log.setMinimumWidth(290)
+        self.live_log.setMaximumWidth(330)
         events.addWidget(self.live_alert)
         events.addWidget(self.live_log, 1)
         live_body.addLayout(events)
@@ -725,6 +759,7 @@ class MainWindow(W.QMainWindow):
         self.worker.begun.connect(self.begun)
         self.worker.saved.connect(self.saved)
         self.worker.detected.connect(self.detected)
+        self.worker.interval.connect(self.detected_interval)
         self.worker.detection_status.connect(self.live_status.setText)
         self.worker.failed.connect(self.failed)
         self.worker.finished.connect(self.disconnected)
@@ -771,6 +806,7 @@ class MainWindow(W.QMainWindow):
         self.live_start.setEnabled(False)
         self.connect_button.setEnabled(False)
         self.lock_model_choice(True)
+        self.water_volume = dialog.volume.value() if dialog.task == 'water_swallow_test' else None
         self.worker.command('start', (dialog.code, dialog.task, dialog.seconds.value()))
 
     def reset_live_view(self, title):
@@ -898,9 +934,24 @@ class MainWindow(W.QMainWindow):
         if frame['clipping']:
             self.status.setText('Microphone clipping detected. Lower the input gain before the next recording.')
 
+    def detected_interval(self, start, end, event, score):
+        """Shade the full event once it has ended and add its duration to the log."""
+        self.live_graph.event_interval(start, end, event)
+        text = EVENT_TEXT.get(event, event)
+        for row in range(self.live_log.count() - 1, -1, -1):
+            item = self.live_log.item(row)
+            seconds = float(item.text().split(' s')[0])
+            if text in item.text() and start - .6 <= seconds <= end + .6 and '(' not in item.text():
+                item.setText(f'{item.text()}  ({end - start:.1f} s)')
+                break
+        self.prune_markers(self.live_graph, end - 10)
+
     def prune_markers(self, graph, cutoff):
         for plot, item in graph.overlays[:]:
-            if isinstance(item, pg.InfiniteLine) and item.value() < cutoff:
+            if isinstance(item, pg.LinearRegionItem) and not getattr(item, 'live_event', False):
+                continue
+            right = item.value() if isinstance(item, pg.InfiniteLine) else item.getRegion()[1]
+            if right < cutoff:
                 plot.removeItem(item)
                 graph.overlays.remove((plot, item))
 
@@ -925,6 +976,28 @@ class MainWindow(W.QMainWindow):
         self.live_start.setEnabled(self.ready)
         self.live_status.setText(self.status.text())
         self.lock_model_choice(False)
+        volume, self.water_volume = getattr(self, 'water_volume', None), None
+        if volume:
+            self.report_water_test(Path(folder), volume)
+
+    def report_water_test(self, folder, volume):
+        """Summarise a timed water swallow test from the live detections and Space markers."""
+        try:
+            result = water_test(session_events(folder, source='detected'), volume)
+        except (OSError, ValueError, KeyError) as error:
+            message(self, f'Water swallow test could not be scored: {error}')
+            return
+        (folder / 'WaterTest.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+        lines = [f"{result['swallows']} swallows in {result['seconds']:.1f} s for {volume} ml",
+                 f"Capacity {result['capacity_ml_per_s']:.1f} ml/s · {result['ml_per_swallow']:.1f} ml per swallow · "
+                 f"{result['seconds_per_swallow']:.2f} s per swallow",
+                 f"Coughs: {result['coughs_during']} during, {result['coughs_after']} after"]
+        lines.append('Screening cues: ' + '; '.join(result['screening_cues']) if result['screening_cues']
+                     else 'No screening cues found.')
+        lines.append(result['note'])
+        self.status.setText(f"Water test: {result['capacity_ml_per_s']:.1f} ml/s, {result['swallows']} swallows"
+                            + (' · review recommended' if result['refer_for_assessment'] else ''))
+        W.QMessageBox.information(self, 'Water swallow test', '\n\n'.join(lines))
 
     def failed(self, error):
         self.pending = False

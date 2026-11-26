@@ -50,6 +50,8 @@ The dataset's authors report about 96% with their full 6.4 kHz signal. Our IMU o
 - **Many "false" alerts may be real events.** In P03's dry-swallow session S05, most alerts fall where the microphone is 5–40× louder than the session's typical level, which suggests unlabelled talking or noise.
 - **The first model was optimistic.** Before retraining, it caught 6 of the 9 new talking bouts but raised 2.2 false alerts/min on the new sessions. My earlier "~0.2/min in quiet sessions" claim was based on too little data.
 
+Each alert also gets a start–end interval. Median overlap with the labelled event is 0.84 for coughs and 0.86 for talking bouts (see [`../intervals`](../intervals/README.md)).
+
 Raising the alert threshold to 0.8 lowers false alerts (to ~0.7/min) but drops talking to 4/14, so the shipped model keeps 0.5.
 
 ## Limits and next steps

@@ -6,7 +6,17 @@
 #include <Adafruit_ISM330DHCX.h>
 
 constexpr uint8_t IMU_ADDRESS = 0x6A; // Change to 0x6B only if SA0 is high.
-constexpr float IMU_RATE = 833.0f;
+// Accelerometer output data rate: 833, 1666 or 3332 (nominal Hz; the sensor's clock runs
+// ~8% fast, e.g. 833 -> ~904 Hz measured). 1666 doubles the vibration bandwidth (useful
+// for cough vs throat clear); the host averages back to ~900 Hz for existing models.
+constexpr unsigned IMU_ODR_HZ = 1666;
+constexpr float IMU_RATE = IMU_ODR_HZ;
+constexpr lsm6ds_data_rate_t IMU_ODR_SETTING =
+    IMU_ODR_HZ >= 3332 ? LSM6DS_RATE_3_33K_HZ : IMU_ODR_HZ >= 1666 ? LSM6DS_RATE_1_66K_HZ : LSM6DS_RATE_833_HZ;
+// Allow two sample periods between reads before reporting a possibly overwritten sample.
+constexpr uint32_t IMU_MAX_GAP_US = (uint32_t)(2.0f * 1e6f / IMU_RATE);
+// ISM330DHCX at +/-2 g: 0.061 mg per LSB (datasheet), converted to m/s^2.
+constexpr float ACCEL_SCALE = 0.061e-3f * 9.80665f;
 constexpr uint8_t MIC_CHANNEL = 0;   // Left line input; use 1 for right.
 constexpr unsigned QUEUE_SIZE = 32;
 
@@ -107,11 +117,28 @@ void setup() {
   audioShield.lineInLevel(5); // Fixed gain. Check clipping before participant use.
   audioShield.muteHeadphone();
   if (!imu.begin_I2C(IMU_ADDRESS, &Wire)) return;
-  Wire.setClock(400000);
+  // 1 MHz (Fast-mode Plus, supported by the ISM330DHCX) leaves headroom for 1.66-3.33 kHz.
+  // The SGTL5000 is only addressed during setup above, at the default speed.
+  Wire.setClock(IMU_ODR_HZ > 833 ? 1000000 : 400000);
   imu.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
-  imu.setAccelDataRate(LSM6DS_RATE_833_HZ);
+  imu.setAccelDataRate(IMU_ODR_SETTING);
   imu.setGyroDataRate(LSM6DS_RATE_SHUTDOWN);
   hardwareReady = true;
+}
+
+// Read OUTX_L_A..OUTZ_H_A (0x28-0x2D) directly: 6 bytes instead of the 14 that
+// getEvent() reads (gyro and temperature are unused), so faster rates keep up.
+bool readAccel(float &x, float &y, float &z) {
+  Wire.beginTransmission(IMU_ADDRESS);
+  Wire.write(0x28);
+  if (Wire.endTransmission(false) != 0 || Wire.requestFrom(IMU_ADDRESS, (uint8_t)6) != 6) return false;
+  int16_t raw[3];
+  for (int16_t &value : raw) {
+    uint8_t low = Wire.read(), high = Wire.read();
+    value = (int16_t)((high << 8) | low);
+  }
+  x = raw[0] * ACCEL_SCALE; y = raw[1] * ACCEL_SCALE; z = raw[2] * ACCEL_SCALE;
+  return true;
 }
 
 bool accelReady() {
@@ -162,19 +189,17 @@ void loop() {
 
   if (accelReady()) {
     uint32_t timestamp = micros(); // Acquisition-read time, not USB-send time.
-    if (imuIndex > 0 && (uint32_t)(timestamp - lastImuRead) > 2400) {
+    if (imuIndex > 0 && (uint32_t)(timestamp - lastImuRead) > IMU_MAX_GAP_US) {
       fail("IMU service delay; possible overwritten sample"); return;
     }
-    sensors_event_t acceleration, gyro, temperature;
-    if (!imu.getEvent(&acceleration, &gyro, &temperature)) {
+    float ax, ay, az;
+    if (!readAccel(ax, ay, az)) {
       fail("IMU sample read failed"); return;
     }
     lastImuRead = timestamp;
     char line[160];
     int length = snprintf(line, sizeof(line), "I,%lu,%lu,%.7f,%.7f,%.7f\n",
-                          (unsigned long)imuIndex++, (unsigned long)timestamp,
-                          acceleration.acceleration.x, acceleration.acceleration.y,
-                          acceleration.acceleration.z);
+                          (unsigned long)imuIndex++, (unsigned long)timestamp, ax, ay, az);
     if (Serial.availableForWrite() < length) { fail("USB cannot keep up with IMU"); return; }
     Serial.write((const uint8_t *)line, length);
   }

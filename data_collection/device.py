@@ -141,6 +141,7 @@ class Acquisition(QThread):
     saved = Signal(str, str)
     failed = Signal(str)
     detected = Signal(float, str, float)
+    interval = Signal(float, float, str, float)   # start, end, event, peak score
     detection_status = Signal(str)
 
     def __init__(self, port, root, demo=False, model_path=None):
@@ -171,8 +172,26 @@ class Acquisition(QThread):
     def command(self, name, value=None):
         self.commands.put((name, value, time.perf_counter()))
 
+    def drain_intervals(self, origin=0.):
+        found = [('swallow', *i) for i in self.detector.intervals] if self.detector else []
+        if self.detector:
+            self.detector.intervals.clear()
+        if self.event_detector:
+            found += self.event_detector.intervals
+            self.event_detector.intervals = []
+        for event, start, end, score in sorted(found, key=lambda row: row[1]):
+            if self.session:
+                self.session.interval(event, start, end, score)
+            else:
+                start, end = start + origin, end + origin
+            self.interval.emit(start, end, event, score)
+
     def finish(self, status='complete', note=''):
         if self.session:
+            for detector in (self.detector, self.event_detector):
+                if detector:
+                    detector.finish()
+            self.drain_intervals()
             saved = self.session
             self.session = None
             if not all(saved.counts.values()):
@@ -241,6 +260,7 @@ class Acquisition(QThread):
             else:
                 seconds += origin
             self.detected.emit(seconds, event, score)
+        self.drain_intervals(origin)
 
     def handle_commands(self):
         while True:

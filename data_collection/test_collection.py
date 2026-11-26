@@ -449,12 +449,49 @@ class GuiTests(unittest.TestCase):
                 detections = read(window.latest_session / 'Detections.csv')
                 self.assertTrue(detections)
                 self.assertEqual({row['event'] for row in detections}, {'cough'})
+                intervals = read(window.latest_session / 'Intervals.csv')
+                self.assertTrue(intervals)
+                self.assertEqual({row['event'] for row in intervals}, {'cough'})
+                self.assertTrue(all(float(row['duration_s']) > 0 for row in intervals))
                 metadata = json.loads((window.latest_session / 'Session.json').read_text())
                 self.assertEqual(metadata['live_event_detector_file'], 'events.json')
                 self.assertTrue(window.events_toggle.isEnabled())
             finally:
                 window.close()
                 self.app.processEvents()
+
+    def test_water_swallow_test_setup_and_report(self):
+        window = MainWindow()
+        try:
+            dialog = Setup(window)
+            dialog.activity.setCurrentText('Water swallow test')
+            self.assertTrue(dialog.volume.isVisibleTo(dialog))
+            self.assertEqual(dialog.seconds.value(), 90)
+            dialog.activity.setCurrentText('Dry swallow')
+            self.assertFalse(dialog.volume.isVisibleTo(dialog))
+            dialog.close()
+            with tempfile.TemporaryDirectory() as root:
+                folder = Path(root)
+                (folder / 'Session.json').write_text(json.dumps(dict(saved_duration_s=60.)))
+                with (folder / 'Events.csv').open('w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(EVENT_FIELDS)
+                    writer.writerow(['marker', 'water_swallow_test', '1.000', '', '', ''])
+                with (folder / 'Intervals.csv').open('w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(['event', 'start_s', 'end_s', 'duration_s', 'peak_score'])
+                    for i in range(8):
+                        writer.writerow(['swallow', 2 + i, 2.6 + i, .6, .9])
+                with patch('app.W.QMessageBox.information') as shown:
+                    window.report_water_test(folder, 100)
+                result = json.loads((folder / 'WaterTest.json').read_text())
+                self.assertEqual(result['swallows'], 8)
+                self.assertAlmostEqual(result['capacity_ml_per_s'], 100 / 8.6, places=2)
+                self.assertFalse(result['refer_for_assessment'])
+                self.assertIn('8 swallows', shown.call_args.args[2])
+                self.assertIn('Water test', window.status.text())
+        finally:
+            window.close()
 
     def test_fragmented_usb_and_disconnect_preserve_partial_session(self):
         class FakeSerial:

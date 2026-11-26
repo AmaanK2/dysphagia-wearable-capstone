@@ -78,8 +78,10 @@ def window_event_features(imu, end):
     t = timestamps[left:right]
     if len(t) < 300 or t[0] > end - WINDOW + .015 or t[-1] < end - .015 or np.max(np.diff(t)) > .015:
         return None
+    from live_detection import match_model_rate
     rate = (len(t) - 1) / (t[-1] - t[0])
-    return signal_features(principal_projection(imu[left:right, 1:]), rate)
+    values, rate = match_model_rate(imu[left:right, 1:], rate)
+    return signal_features(principal_projection(values), rate)
 
 
 class EventModel:
@@ -162,12 +164,41 @@ class EventTrigger:
         return alerts
 
 
+class EventIntervals:
+    """Start/end intervals for alerted events, built from per-window class probabilities.
+
+    Cough and throat clear: windows where the class leads and reaches 70% of its
+    threshold, ending after two windows without it. Talking: windows above the talking
+    threshold, ending after the same 3 s pause that ends a talking bout.
+    """
+
+    def __init__(self, thresholds, talk_gap=3.):
+        from live_detection import INTERVAL_LOW_FRACTION, IntervalTracker
+        self.trackers = {name: IntervalTracker(INTERVAL_LOW_FRACTION * thresholds[name])
+                         for name in ('cough', 'throat_clear')}
+        self.trackers['talking'] = IntervalTracker(thresholds['talking'], end_windows=round(talk_gap / HOP))
+
+    def update(self, seconds, probs, alerted=()):
+        done = []
+        top = int(np.argmax(probs))
+        for name, tracker in self.trackers.items():
+            k = CLASSES.index(name)
+            score = probs[k] if name == 'talking' or k == top else 0.
+            done += [(name, *interval) for interval in tracker.update(seconds, score, name in alerted)]
+        return done
+
+    def flush(self):
+        return [(name, *interval) for name, tracker in self.trackers.items() for interval in tracker.flush()]
+
+
 class LiveEventDetector:
     """Score the trailing IMU window every 0.1 s, like ``live_detection.LiveDetector``."""
 
     def __init__(self, model):
         self.model = model
         self.trigger = EventTrigger(model.thresholds)
+        self.tracker = EventIntervals(model.thresholds, self.trigger.talk_gap)
+        self.intervals = []   # completed (event, start, end, peak); the caller drains this list
         self.step = round(WINDOW / HOP)
         self.latest = None
 
@@ -181,6 +212,11 @@ class LiveEventDetector:
             features = window_event_features(imu, origin + seconds)
             if features is not None:
                 self.latest = self.model.probabilities(features)
-                alerts += [(seconds, name, p) for name, p in self.trigger.update(seconds, self.latest)]
+                fired = self.trigger.update(seconds, self.latest)
+                alerts += [(seconds, name, p) for name, p in fired]
+                self.intervals += self.tracker.update(seconds, self.latest, {name for name, _ in fired})
             self.step += 1
         return alerts
+
+    def finish(self):
+        self.intervals += self.tracker.flush()

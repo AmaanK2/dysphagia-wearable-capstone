@@ -32,7 +32,7 @@ import pandas as pd
 from scipy.signal import resample_poly
 
 from adapt_public import _filter_centred, band_fir
-from events import (BANDS, CLASSES, EVENT_MODEL_PATH, FEATURE_NAMES, HOP, WINDOW, EventModel, EventTrigger,
+from events import (BANDS, CLASSES, EVENT_MODEL_PATH, FEATURE_NAMES, HOP, WINDOW, EventIntervals, EventModel, EventTrigger,
                     principal_projection, signal_features, window_event_features)
 
 HOME = Path(__file__).resolve().parent
@@ -218,18 +218,28 @@ def confusion(model, feats, targets):
 
 
 def replay(model, session, thresholds=None):
-    """Run the live alert logic over a session; match alerts to labelled intervals."""
+    """Run the live alert logic over a session; match alerts and intervals to labels."""
     times, feats, _ = session.get('_windows') or wearable_windows(session)
-    trigger = EventTrigger(thresholds or model.thresholds)
+    thresholds = thresholds or model.thresholds
+    trigger = EventTrigger(thresholds)
+    tracker = EventIntervals(thresholds, trigger.talk_gap)
     probs = model.probabilities(feats) if len(feats) else np.empty((0, len(CLASSES)))
-    alerts = [(t, name) for t, p in zip(times, probs) for name, _ in trigger.update(t, p)]
+    alerts, intervals = [], []
+    for t, p in zip(times, probs):
+        fired = trigger.update(t, p)
+        alerts += [(t, name) for name, _ in fired]
+        intervals += tracker.update(t, p, {name for name, _ in fired})
+    intervals += tracker.flush()
     labels = [(a, b, c) for a, b, c in session['labels'] if c in ('cough', 'talking', 'throat_clear')]
-    found = {c: dict(labelled=0, matched=0, alerted_as={}) for c in ('cough', 'talking', 'throat_clear')}
+    found = {c: dict(labelled=0, matched=0, alerted_as={}, iou=[]) for c in ('cough', 'talking', 'throat_clear')}
     for a, b, c in labels:
         found[c]['labelled'] += 1
         hits = [name for t, name in alerts if a <= t <= b + MATCH_LATE]
         if c in hits:
             found[c]['matched'] += 1
+            overlaps = [max(0., min(b, e) - max(a, s)) / (max(b, e) - min(a, s))
+                        for name, s, e, _ in intervals if name == c and s <= b + MATCH_LATE and e >= a]
+            found[c]['iou'].append(round(max(overlaps, default=0.), 3))
         for name in set(hits) - {c}:
             found[c]['alerted_as'][name] = found[c]['alerted_as'].get(name, 0) + 1
     spurious = {}
@@ -245,12 +255,13 @@ def replay(model, session, thresholds=None):
 
 
 def pool(rows):
-    total = dict(found={c: dict(labelled=0, matched=0, alerted_as={}) for c in ('cough', 'talking', 'throat_clear')},
+    total = dict(found={c: dict(labelled=0, matched=0, alerted_as={}, iou=[]) for c in ('cough', 'talking', 'throat_clear')},
                  false_alerts={}, false_alerts_during_swallows=0, minutes=0.)
     for r in rows:
         for c, v in r['found'].items():
             total['found'][c]['labelled'] += v['labelled']
             total['found'][c]['matched'] += v['matched']
+            total['found'][c]['iou'] += v.get('iou', [])
             for k, n in v['alerted_as'].items():
                 total['found'][c]['alerted_as'][k] = total['found'][c]['alerted_as'].get(k, 0) + n
         for k, n in r['false_alerts'].items():
@@ -333,7 +344,9 @@ def main():
             print(f'  threshold {level}:', {c: f"{v['matched']}/{v['labelled']}" for c, v in row['found'].items() if v['labelled']},
                   'false alerts/min', row['false_alerts_per_minute'], flush=True)
         print(f'Wearable LOPO ({variant}):', {c: f"{v['matched']}/{v['labelled']}" for c, v in pooled['found'].items()},
-              'false alerts/min', pooled['false_alerts_per_minute'], flush=True)
+              'false alerts/min', pooled['false_alerts_per_minute'],
+              'median interval IoU', {c: round(float(np.median(v['iou'])), 3) for c, v in pooled['found'].items() if v['iou']},
+              flush=True)
 
     # Final model: all wearable sessions + throat training speakers.
     data = fit(parts)

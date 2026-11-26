@@ -17,22 +17,25 @@ On Windows, after setup, you can double-click `start.bat`.
 ## Using the app
 
 1. **Record tab:** pick the USB port and click **Connect device**. **Ready** means both sensor streams are arriving. It doesn't check sensor placement or contact.
-2. **Start recording:** enter a participant code (never a name), choose an activity (Dry swallow, Talking, Mixed or Custom) and a duration of up to 30 minutes.
+2. **Start recording:** enter a participant code (never a name), choose an activity (Dry swallow, Talking, Mixed, Water swallow test or Custom) and a duration of up to 30 minutes.
 3. **Mark events:** press **Space** for each swallow you see, or at the start and end of longer activities. Presses are approximate observer marks.
 4. **Live Session tab:** shows the rolling signals and detections.
    - **Detector** chooses the swallow model: your current `models/wearable.json` appears first, then the mixed public+wearable models (35/65 trees is recommended).
    - **Also detect cough, talking, throat clear** turns the IMU event classifier (`models/events.json`) on or off.
-   - Each event type has its own colour on the plots and in the log. Both settings lock during a recording.
-5. **Review tab:** open a session, drag the selection over each event, choose its activity and click **Save event**. Mark **Uncertain** when unsure. Reviewed labels are what training uses.
+   - Each event type has its own colour. An alert first appears as a line; once the event ends, its full interval is shaded and its duration is added to the log. Both settings lock during a recording.
+5. **Water swallow test:** enter the water volume, press **Space** when the cup touches the lips (and optionally when drinking ends), and keep recording ~60 s afterwards. When the recording is saved, the app reports swallow count, ml/s, ml and seconds per swallow, and coughs, and saves `WaterTest.json`. [Details](../experiments/swallow_metrics/README.md)
+6. **Review tab:** open a session, drag the selection over each event, choose its activity and click **Save event**. Mark **Uncertain** when unsure. Reviewed labels are what training uses.
 
 Sessions are saved to `recordings/participants/<code>/Sxx_<activity>/`. Numbering continues across a participant's visits, and existing folders are never overwritten.
 
 | File | Contents |
 | --- | --- |
 | `Mic.csv` | `sample_idx,time_s,mic_raw`: raw 16-bit PCM at 44.1 kHz |
-| `IMU.csv` | `sample_idx,time_s,ax,ay,az`: raw acceleration in m/s² (gravity included), ~904 Hz |
+| `IMU.csv` | `sample_idx,time_s,ax,ay,az`: raw acceleration in m/s² (gravity included), ~904 Hz at the 833 Hz setting or ~1.8 kHz at 1666 Hz |
 | `Events.csv` | Observer markers (`record_type=marker`) and reviewed labels (`record_type=label`, `start_s`/`end_s`) |
 | `Detections.csv` | Live alerts: `time_s,event,model_score` (`event` is swallow, cough, talking or throat_clear) |
+| `Intervals.csv` | Live event intervals: `event,start_s,end_s,duration_s,peak_score` |
+| `WaterTest.json` | Water swallow test result (water swallow test sessions only) |
 | `Session.json` | Rates, timing origin, status, and which detector files were used |
 
 Every time is in seconds from one shared session start. CSVs store raw values; the filtering you see on screen is for display only. Large `Mic.csv` files can be stored as `Mic.csv.gz`.
@@ -54,8 +57,10 @@ Training needs the public datasets (`python ../download_data.py` and `python ../
 | `live_detection.py` | Swallow features, models (logistic and trees) and alert logic |
 | `events.py` | Cough / talking / throat-clear features, model and alert logic |
 | `adapt_public.py`, `check_adaptation.py` | Convert public swallow recordings to the wearable's format and check the match |
+| `swallow_metrics.py` | Per-swallow metrics, normal ranges and water swallow test scoring |
 | `train_live.py`, `train_mixed.py`, `train_events.py` | Model training and evaluation |
-| `test_*.py` | Tests: `python -m unittest test_collection test_mixed test_events` |
+| `evaluate_intervals.py` | How well live intervals match labelled swallow boundaries |
+| `test_*.py` | Tests: `python -m unittest test_collection test_mixed test_events test_metrics` |
 
 ## Hardware (one-time setup)
 
@@ -70,7 +75,15 @@ Training needs the public datasets (`python ../download_data.py` and `python ../
 2. Open `firmware/SwallowRecorder/SwallowRecorder.ino`, select **Teensy 4.1**, **USB Type: Serial**, **600 MHz**, and upload it.
 3. Close the Serial Monitor before connecting from the app.
 
-Firmware defaults: mic at 44.1 kHz with fixed gain `lineInLevel(5)`; accelerometer at ±2 g (nominal 833 Hz; ~904 Hz measured). Mount the sensor in the same place and orientation every session. Check for clipping before collecting participant data.
+Firmware defaults: mic at 44.1 kHz with fixed gain `lineInLevel(5)`; accelerometer at ±2 g.
+
+**IMU rate:** `IMU_ODR_HZ` at the top of the sketch selects 833, 1666 (default) or 3332 Hz nominal; the sensor's clock runs ~8% fast, so 1666 gives ~1.8 kHz.
+- **Why 1666:** it doubles the vibration bandwidth, which should help separate cough from throat clear.
+- **Current models still work:** the app averages faster IMU data back to ~900 Hz for them, and saves the full-rate data for training future models.
+- **I²C speed:** above 833 Hz the firmware runs I²C at 1 MHz and reads only the accelerometer registers.
+- **Not yet tested on hardware.** Before collecting data at 1666 Hz, record a minute and check the measured rate in `Session.json`, and that no "IMU service delay" error appears. If it does, set `IMU_ODR_HZ` back to 833.
+
+Mount the sensor in the same place and orientation every session. Check for clipping before collecting participant data.
 
 ## USB protocol (V1)
 

@@ -7,7 +7,7 @@ This is a neck-worn wearable (contact microphone + IMU on a Teensy 4.1) that det
 | Folder | What's inside |
 | --- | --- |
 | [`data_collection/`](data_collection/README.md) | **Swallow Studio**: the recording app, live detection, labelling tool, firmware, model training and our recordings |
-| [`experiments/`](experiments/) | Results for the wearable models: [mixed public + wearable swallow detector](experiments/mixed_public_wearable/SUMMARY.md), [event detection](experiments/event_detection/README.md), [wearable-only pilot](experiments/wearable_pilot/RESULTS.md) |
+| [`experiments/`](experiments/) | Results: [mixed public + wearable swallow detector](experiments/mixed_public_wearable/SUMMARY.md), [event detection](experiments/event_detection/README.md), [event intervals](experiments/intervals/README.md), [swallow metrics and water test](experiments/swallow_metrics/README.md), [wearable-only pilot](experiments/wearable_pilot/RESULTS.md) |
 | [`public_baseline/`](public_baseline/README.md) | Earlier RF and CNN swallow segmentation on the public Pittsburgh dataset |
 | [`docs/FIGURES.md`](docs/FIGURES.md) | Presentation figures with captions |
 | `download_data.py` | Fetches the public datasets into the git-ignored `data/` folder |
@@ -29,9 +29,10 @@ Every score below is measured on a wearable participant the model never trained 
 | Swallows, wearable data only | 76% event F1, ~1.6 false alerts/min |
 | **Swallows, wearable + adapted public data (35/65, recommended)** | **86% event F1 (90% with the exported model's tuned threshold), ~0.8 false alerts/min** |
 | Swallows, live in the app on new sessions | 37 of 38 swallows caught, 5 false alerts in 4 minutes |
+| Event intervals (start/end) | Median overlap with labelled swallows 0.65 (start ±0.15 s, end ±0.22 s); coughs 0.84, talking 0.86 |
 | Cough / talking / throat clear | 9/14 talking bouts and 3/5 coughs caught, ~1.1 false alerts/min; 81% accuracy on public test speakers. [Details](experiments/event_detection/README.md) |
 
-With 3 participants, differences of a few points are within noise. More participants, more varied swallows (water, food) and more labelled coughs and talking are the biggest next steps.
+Swallow Studio also runs a **timed water swallow test** (swallows, ml/s, coughs) as a first screening step; see [swallow metrics](experiments/swallow_metrics/README.md). With 3 participants, differences of a few points are within noise. More participants, more varied swallows (water, food) and more labelled coughs and talking are the biggest next steps.
 
 ## Datasets
 

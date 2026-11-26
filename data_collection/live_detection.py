@@ -16,6 +16,16 @@ FEATURE_COUNT = 29
 MIC_COLUMNS = (*range(11), 22, 23, 24)
 IMU_COLUMNS = (*range(11, 22), 25, 26, 27)
 MODEL_PATH = Path(__file__).with_name('models') / 'wearable.json'
+MODEL_IMU_RATE = 904.5   # measured rate of the 833 Hz setting that every current model was trained on
+
+
+def match_model_rate(values, rate):
+    """Block-average faster IMU data (1.66/3.33 kHz settings) down to ~MODEL_IMU_RATE."""
+    factor = int(round(rate / MODEL_IMU_RATE))
+    if factor < 2:
+        return values, rate
+    usable = len(values) // factor * factor
+    return values[:usable].reshape(-1, factor, values.shape[1]).mean(axis=1), rate / factor
 
 
 @lru_cache(maxsize=64)
@@ -39,11 +49,13 @@ def window_features(mic, imu, end, *, wearable=True, feature_version=FEATURE_VER
                 or t[-1] < end - .015 or np.max(np.diff(t)) > .015):
             return None
         centered = values - values.mean(axis=0)
+        rate = full_rate = (len(t) - 1) / (t[-1] - t[0])
+        if samples.shape[1] == 4:
+            centered, rate = match_model_rate(centered, rate)
         energy = np.sum(centered ** 2, axis=1)
         rms = np.sqrt(energy.mean())
         if wearable and samples.shape[1] == 2 and (rms < 10 or np.max(np.abs(values)) >= 32760):
             return None
-        rate = (len(t) - 1) / (t[-1] - t[0])
         # Keep the raw amplitude/quality features and average PCM in groups
         # before the low-frequency spectrum, which only uses bins below 800 Hz.
         if feature_version >= 2 and samples.shape[1] == 2:
@@ -68,7 +80,12 @@ def window_features(mic, imu, end, *, wearable=True, feature_version=FEATURE_VER
             if timestamps[history_left] < history_start:
                 history_left = timestamps.searchsorted(history_start)
             prior = samples[history_left:left, 1:]
-            prior_rms = np.linalg.norm(prior.std(axis=0)) if len(prior) > len(t) // 2 else rms
+            if samples.shape[1] == 4 and len(prior):
+                prior = match_model_rate(prior - prior.mean(axis=0), full_rate)[0]
+                enough = len(prior) > len(centered) // 2
+            else:
+                enough = len(prior) > len(t) // 2
+            prior_rms = np.linalg.norm(prior.std(axis=0)) if enough else rms
             extras.extend([probability.max(initial=0.),
                            -np.sum(probability * np.log(probability + 1e-20)) / np.log(max(2, len(band))),
                            np.log((rms + 1e-4) / (prior_rms + 1e-4))])
@@ -261,11 +278,70 @@ class Trigger:
         return False
 
 
+# Interval boundaries. A window ending at t covers [t - WINDOW, t]; its centre is used as
+# the time of its score. Biases shift the first/last active window centre onto the
+# labelled start/end (set from leave-one-participant-out analysis, see evaluate_intervals.py).
+INTERVAL_LOW_FRACTION = .7      # a run continues while score >= this fraction of the alert threshold
+SWALLOW_START_BIAS = 0.
+SWALLOW_END_BIAS = 0.
+
+
+class IntervalTracker:
+    """Turn per-window scores into (start, end, peak score) intervals.
+
+    A run starts when the score reaches ``low`` and ends after ``end_windows`` consecutive
+    windows below it. A run is reported only if an alert fired inside it, so every
+    interval belongs to exactly one alert, and only once the run has ended.
+    """
+
+    def __init__(self, low, end_windows=2, start_bias=0., end_bias=0.):
+        self.low = low
+        self.end_windows = end_windows
+        self.start_bias = start_bias
+        self.end_bias = end_bias
+        self.first = self.last = None
+        self.below = 0
+        self.peak = 0.
+        self.alerted = False
+
+    def update(self, seconds, score, alerted=False):
+        centre = seconds - WINDOW / 2
+        done = []
+        if score >= self.low:
+            if self.first is None:
+                self.first, self.peak, self.alerted = centre, 0., False
+            self.last = centre
+            self.peak = max(self.peak, score)
+            self.below = 0
+        elif self.first is not None:
+            self.below += 1
+            if self.below >= self.end_windows:
+                done = self.flush()
+        if alerted and self.first is not None:
+            self.alerted = True
+        return done
+
+    def flush(self):
+        """Close the current run (e.g. at the end of a recording)."""
+        done = []
+        if self.first is not None and self.alerted:
+            start = self.first + self.start_bias
+            end = max(start + HOP, self.last + self.end_bias)
+            done.append((round(start, 3), round(end, 3), float(self.peak)))
+        self.first = self.last = None
+        self.below = 0
+        self.alerted = False
+        return done
+
+
 class LiveDetector:
     def __init__(self, model):
         self.model = model
         self.step = round(WINDOW / HOP)
         self.trigger = Trigger(model.threshold, model.refractory)
+        self.tracker = IntervalTracker(INTERVAL_LOW_FRACTION * model.threshold,
+                                       start_bias=SWALLOW_START_BIAS, end_bias=SWALLOW_END_BIAS)
+        self.intervals = []   # completed (start, end, peak); the caller drains this list
         self.signal_valid = None
 
     def update(self, mic, imu, origin, duration):
@@ -279,7 +355,13 @@ class LiveDetector:
                                        feature_version=self.model.feature_version, history_start=origin)
             self.signal_valid = features is not None
             score = float(self.model.score(features)) if self.signal_valid else 0.
-            if self.trigger.update(seconds, score):
+            fired = self.trigger.update(seconds, score)
+            if fired:
                 detections.append((seconds, score))
+            self.intervals += self.tracker.update(seconds, score, fired)
             self.step += 1
         return detections
+
+    def finish(self):
+        """Report an interval still open when the recording stops."""
+        self.intervals += self.tracker.flush()

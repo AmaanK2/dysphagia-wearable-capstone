@@ -1,0 +1,360 @@
+{
+  "sessions": [
+    {
+      "session": "P01/S02_dry_swallow",
+      "swallows": 5,
+      "swallows_per_minute": 5.0,
+      "duration_s": {
+        "n": 5,
+        "median": 0.597,
+        "p25": 0.582,
+        "p75": 0.611,
+        "p5": 0.571,
+        "p95": 0.622
+      },
+      "onset_interval_s": {
+        "n": 4,
+        "median": 3.682,
+        "p25": 3.303,
+        "p75": 4.05,
+        "p5": 3.123,
+        "p95": 4.205
+      },
+      "clusters": 5,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P01/S03_mixed",
+      "swallows": 5,
+      "swallows_per_minute": 5.0,
+      "duration_s": {
+        "n": 5,
+        "median": 0.737,
+        "p25": 0.681,
+        "p75": 0.849,
+        "p5": 0.591,
+        "p95": 0.883
+      },
+      "onset_interval_s": {
+        "n": 4,
+        "median": 6.632,
+        "p25": 3.607,
+        "p75": 9.378,
+        "p5": 2.804,
+        "p95": 9.511
+      },
+      "clusters": 5,
+      "multi_swallow_clusters": 0,
+      "coughs": 4,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P01/S04_mixed",
+      "swallows": 4,
+      "swallows_per_minute": 2.0,
+      "duration_s": {
+        "n": 4,
+        "median": 0.674,
+        "p25": 0.567,
+        "p75": 0.816,
+        "p5": 0.461,
+        "p95": 1.005
+      },
+      "onset_interval_s": {
+        "n": 3,
+        "median": 10.687,
+        "p25": 8.096,
+        "p75": 33.207,
+        "p5": 6.023,
+        "p95": 51.224
+      },
+      "clusters": 4,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P01/S05_dry_swallow",
+      "swallows": 21,
+      "swallows_per_minute": 10.5,
+      "duration_s": {
+        "n": 21,
+        "median": 0.835,
+        "p25": 0.681,
+        "p75": 0.947,
+        "p5": 0.568,
+        "p95": 1.158
+      },
+      "onset_interval_s": {
+        "n": 20,
+        "median": 4.939,
+        "p25": 4.388,
+        "p75": 5.901,
+        "p5": 3.681,
+        "p95": 10.992
+      },
+      "clusters": 21,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P01/S06_dry_swallow",
+      "swallows": 17,
+      "swallows_per_minute": 8.5,
+      "duration_s": {
+        "n": 17,
+        "median": 0.793,
+        "p25": 0.695,
+        "p75": 0.898,
+        "p5": 0.591,
+        "p95": 1.004
+      },
+      "onset_interval_s": {
+        "n": 16,
+        "median": 6.036,
+        "p25": 4.861,
+        "p75": 8.755,
+        "p5": 4.533,
+        "p95": 11.32
+      },
+      "clusters": 17,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P02/S01_mixed",
+      "swallows": 8,
+      "swallows_per_minute": 4.0,
+      "duration_s": {
+        "n": 8,
+        "median": 1.091,
+        "p25": 1.021,
+        "p75": 1.163,
+        "p5": 0.971,
+        "p95": 1.193
+      },
+      "onset_interval_s": {
+        "n": 7,
+        "median": 10.972,
+        "p25": 10.695,
+        "p75": 12.723,
+        "p5": 10.336,
+        "p95": 13.425
+      },
+      "clusters": 8,
+      "multi_swallow_clusters": 0,
+      "coughs": 1,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P02/S02_dry_swallow",
+      "swallows": 10,
+      "swallows_per_minute": 3.33,
+      "duration_s": {
+        "n": 10,
+        "median": 1.172,
+        "p25": 0.984,
+        "p75": 1.2,
+        "p5": 0.933,
+        "p95": 1.253
+      },
+      "onset_interval_s": {
+        "n": 9,
+        "median": 12.446,
+        "p25": 11.244,
+        "p75": 18.087,
+        "p5": 8.024,
+        "p95": 44.517
+      },
+      "clusters": 10,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P02/S04_dry_swallow",
+      "swallows": 14,
+      "swallows_per_minute": 4.67,
+      "duration_s": {
+        "n": 14,
+        "median": 1.186,
+        "p25": 1.158,
+        "p75": 1.2,
+        "p5": 1.148,
+        "p95": 1.369
+      },
+      "onset_interval_s": {
+        "n": 13,
+        "median": 10.652,
+        "p25": 10.276,
+        "p75": 12.04,
+        "p5": 8.056,
+        "p95": 14.281
+      },
+      "clusters": 14,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P03/S01_dry_swallow",
+      "swallows": 18,
+      "swallows_per_minute": 6.0,
+      "duration_s": {
+        "n": 18,
+        "median": 0.526,
+        "p25": 0.467,
+        "p75": 0.6,
+        "p5": 0.42,
+        "p95": 0.756
+      },
+      "onset_interval_s": {
+        "n": 17,
+        "median": 10.389,
+        "p25": 8.796,
+        "p75": 11.087,
+        "p5": 7.131,
+        "p95": 12.455
+      },
+      "clusters": 18,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P03/S02_dry_swallow",
+      "swallows": 21,
+      "swallows_per_minute": 7.0,
+      "duration_s": {
+        "n": 21,
+        "median": 0.721,
+        "p25": 0.575,
+        "p75": 0.956,
+        "p5": 0.362,
+        "p95": 1.2
+      },
+      "onset_interval_s": {
+        "n": 20,
+        "median": 8.637,
+        "p25": 7.647,
+        "p75": 9.186,
+        "p5": 6.505,
+        "p95": 10.683
+      },
+      "clusters": 21,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P03/S03_dry_swallow",
+      "swallows": 12,
+      "swallows_per_minute": 6.0,
+      "duration_s": {
+        "n": 12,
+        "median": 0.505,
+        "p25": 0.375,
+        "p75": 0.561,
+        "p5": 0.295,
+        "p95": 0.692
+      },
+      "onset_interval_s": {
+        "n": 11,
+        "median": 10.4,
+        "p25": 8.467,
+        "p75": 11.348,
+        "p5": 7.541,
+        "p95": 13.391
+      },
+      "clusters": 12,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P03/S04_mixed",
+      "swallows": 10,
+      "swallows_per_minute": 5.0,
+      "duration_s": {
+        "n": 10,
+        "median": 0.716,
+        "p25": 0.572,
+        "p75": 0.814,
+        "p5": 0.311,
+        "p95": 1.025
+      },
+      "onset_interval_s": {
+        "n": 9,
+        "median": 7.759,
+        "p25": 6.34,
+        "p75": 10.01,
+        "p5": 5.548,
+        "p95": 27.637
+      },
+      "clusters": 10,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    },
+    {
+      "session": "P03/S05_dry_swallow",
+      "swallows": 9,
+      "swallows_per_minute": 4.5,
+      "duration_s": {
+        "n": 9,
+        "median": 0.428,
+        "p25": 0.281,
+        "p75": 0.47,
+        "p5": 0.236,
+        "p95": 0.563
+      },
+      "onset_interval_s": {
+        "n": 8,
+        "median": 11.35,
+        "p25": 10.445,
+        "p75": 16.887,
+        "p5": 8.79,
+        "p95": 18.156
+      },
+      "clusters": 9,
+      "multi_swallow_clusters": 0,
+      "coughs": 0,
+      "post_swallow_coughs": 0
+    }
+  ],
+  "pooled": {
+    "swallow_duration_s": {
+      "n": 154,
+      "median": 0.737,
+      "p25": 0.568,
+      "p75": 0.988,
+      "p5": 0.351,
+      "p95": 1.2
+    },
+    "onset_interval_s": {
+      "n": 141,
+      "median": 9.117,
+      "p25": 6.29,
+      "p75": 10.945,
+      "p5": 3.985,
+      "p95": 16.63
+    },
+    "cluster_size": {
+      "n": 154,
+      "median": 1.0,
+      "p25": 1.0,
+      "p75": 1.0,
+      "p5": 1.0,
+      "p95": 1.0
+    }
+  },
+  "median_duration_by_participant": {
+    "P01": 0.737,
+    "P02": 1.172,
+    "P03": 0.526
+  }
+}

@@ -180,6 +180,10 @@ class Session:
         self.files['detections'] = file
         self.detection_writer = csv.writer(file)
         self.detection_writer.writerow(['time_s', 'event', 'model_score'])
+        interval_file = (self.folder / 'Intervals.csv').open('x', newline='', encoding='utf-8')
+        self.files['intervals'] = interval_file
+        self.interval_writer = csv.writer(interval_file)
+        self.interval_writer.writerow(['event', 'start_s', 'end_s', 'duration_s', 'peak_score'])
         self.metadata['live_detector'] = label
         if model_file:
             self.metadata['live_detector_file'] = model_file
@@ -189,6 +193,9 @@ class Session:
 
     def detection(self, seconds, score, event='swallow'):
         self.detection_writer.writerow([f'{seconds:.3f}', event, f'{score:.6f}'])
+
+    def interval(self, event, start, end, score):
+        self.interval_writer.writerow([event, f'{start:.3f}', f'{end:.3f}', f'{end - start:.3f}', f'{score:.6f}'])
 
     def flush(self):
         for file in (*self.files.values(), self.event_file):

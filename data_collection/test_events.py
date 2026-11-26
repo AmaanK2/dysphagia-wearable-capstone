@@ -72,5 +72,70 @@ class TriggerTest(unittest.TestCase):
         self.assertEqual([(t, a[0]) for t, a in alerts], [(4, 'talking'), (69, 'cough')])
 
 
+class IntervalTest(unittest.TestCase):
+    def test_tracker_reports_alerted_runs_with_window_centres(self):
+        from live_detection import IntervalTracker
+        tracker = IntervalTracker(.5)
+        scores = [0, .6, .9, .9, .7, .2, .1, 0, .6, .4, .1, .1, 0]
+        alerted = {3}
+        out = []
+        for i, score in enumerate(scores):
+            out += tracker.update(1 + i / 10, score, i in alerted)
+        # Run 1 spans windows 1-4 (alert inside), run 2 (window 8) has no alert.
+        self.assertEqual(len(out), 1)
+        start, end, peak = out[0]
+        self.assertAlmostEqual(start, 1.1 - .25)
+        self.assertAlmostEqual(end, 1.4 - .25)
+        self.assertEqual(peak, .9)
+
+    def test_open_run_is_flushed(self):
+        from live_detection import IntervalTracker
+        tracker = IntervalTracker(.5)
+        for i in range(5):
+            tracker.update(i / 10, .9, i == 2)
+        self.assertEqual(len(tracker.flush()), 1)
+        self.assertEqual(tracker.flush(), [])
+
+    def test_talking_interval_spans_short_pauses(self):
+        from events import EventIntervals
+        intervals = EventIntervals(dict(cough=.5, throat_clear=.5, talking=.5))
+        talk = np.array([.05, .05, .05, .8, .05])
+        quiet = np.array([.8, .05, .05, .05, .05])
+        out = []
+        names = ['talk'] * 20 + ['quiet'] * 15 + ['talk'] * 10 + ['quiet'] * 40
+        for i, name in enumerate(names):
+            out += intervals.update(i / 10, talk if name == 'talk' else quiet, {'talking'} if i == 5 else set())
+        self.assertEqual(len(out), 1)
+        event, start, end, _ = out[0]
+        self.assertEqual(event, 'talking')
+        self.assertAlmostEqual(start, -.25)
+        self.assertAlmostEqual(end, 4.4 - .25)
+
+
+class SampleRateTest(unittest.TestCase):
+    def make(self, rate, seconds=3., seed=0):
+        t = np.arange(int(seconds * rate)) / rate
+        rng = np.random.default_rng(seed)
+        burst = np.exp(-((t - 2.2) / .12) ** 2)
+        signal = burst * (np.sin(2 * np.pi * 60 * t) + .5 * np.sin(2 * np.pi * 180 * t)) * .3
+        # Same noise density (per root hertz) at both rates, as for the real sensor.
+        noise = .002 * np.sqrt(rate / 904.5) * rng.normal(size=(len(t), 3))
+        imu = np.column_stack((t, signal + noise[:, 0], .5 * signal + noise[:, 1], -9.81 + .2 * signal + noise[:, 2]))
+        mic = np.column_stack((np.arange(int(seconds * 44100)) / 44100,
+                               200 * np.sin(2 * np.pi * 120 * np.arange(int(seconds * 44100)) / 44100)))
+        return mic, imu
+
+    def test_features_at_1666_setting_match_833_setting(self):
+        from live_detection import window_features
+        from events import window_event_features
+        mic, slow = self.make(904.5)
+        _, fast = self.make(1809.)
+        a, b = window_features(mic, slow, 2.45), window_features(mic, fast, 2.45)
+        imu_columns = list(range(11, 22)) + [25, 26, 27]
+        np.testing.assert_allclose(a[imu_columns], b[imu_columns], atol=.06)
+        e1, e2 = window_event_features(slow, 2.45), window_event_features(fast, 2.45)
+        np.testing.assert_allclose(e1, e2, atol=.08)
+
+
 if __name__ == '__main__':
     unittest.main()
