@@ -77,11 +77,10 @@ Training needs the public datasets (`python ../download_data.py` and `python ../
 
 Firmware defaults: mic at 44.1 kHz with fixed gain `lineInLevel(5)`; accelerometer at ±2 g.
 
-**IMU rate:** `IMU_ODR_HZ` at the top of the sketch selects 833, 1666 (default) or 3332 Hz nominal; the sensor's clock runs ~8% fast, so 1666 gives ~1.8 kHz.
-- **Why 1666:** it doubles the vibration bandwidth, which should help separate cough from throat clear.
-- **Current models still work:** the app averages faster IMU data back to ~900 Hz for them, and saves the full-rate data for training future models.
-- **I²C speed:** above 833 Hz the firmware runs I²C at 1 MHz and reads only the accelerometer registers.
-- **Not yet tested on hardware.** Before collecting data at 1666 Hz, record a minute and check the measured rate in `Session.json`, and that no "IMU service delay" error appears. If it does, set `IMU_ODR_HZ` back to 833.
+**IMU rate:** `IMU_ODR_HZ` at the top of the sketch selects 833 (default), 1666 or 3332 Hz nominal; the sensor's clock runs ~8% fast, so 833 gives ~904 Hz.
+- **833 (default):** runs exactly the hardware-tested read path that every current model was trained on.
+- **1666:** doubles the vibration bandwidth, which should help separate cough from throat clear. The app averages faster data back to ~900 Hz for the current models and saves the full-rate data for training future ones. Above 833 Hz the firmware runs I²C at 1 MHz and reads only the accelerometer registers.
+- **Faster rates are untested on hardware.** Before collecting data at 1666 Hz, record a minute and check that the measured rate in `Session.json` is ~1.8 kHz, that no "IMU service delay" error appears, and that detections look normal.
 
 Mount the sensor in the same place and orientation every session. Check for clipping before collecting participant data.
 

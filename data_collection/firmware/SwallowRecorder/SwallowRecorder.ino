@@ -6,10 +6,11 @@
 #include <Adafruit_ISM330DHCX.h>
 
 constexpr uint8_t IMU_ADDRESS = 0x6A; // Change to 0x6B only if SA0 is high.
-// Accelerometer output data rate: 833, 1666 or 3332 (nominal Hz; the sensor's clock runs
-// ~8% fast, e.g. 833 -> ~904 Hz measured). 1666 doubles the vibration bandwidth (useful
-// for cough vs throat clear); the host averages back to ~900 Hz for existing models.
-constexpr unsigned IMU_ODR_HZ = 1666;
+// Accelerometer output data rate: 833 (default, what every current model was trained on),
+// 1666 or 3332 nominal Hz. The sensor's clock runs ~8% fast (833 -> ~904 Hz measured).
+// 1666 doubles the vibration bandwidth and the app averages it back to ~900 Hz for the
+// current models, but it is untested on hardware: bench-check before collecting data.
+constexpr unsigned IMU_ODR_HZ = 833;
 constexpr float IMU_RATE = IMU_ODR_HZ;
 constexpr lsm6ds_data_rate_t IMU_ODR_SETTING =
     IMU_ODR_HZ >= 3332 ? LSM6DS_RATE_3_33K_HZ : IMU_ODR_HZ >= 1666 ? LSM6DS_RATE_1_66K_HZ : LSM6DS_RATE_833_HZ;
@@ -126,9 +127,16 @@ void setup() {
   hardwareReady = true;
 }
 
-// Read OUTX_L_A..OUTZ_H_A (0x28-0x2D) directly: 6 bytes instead of the 14 that
-// getEvent() reads (gyro and temperature are unused), so faster rates keep up.
 bool readAccel(float &x, float &y, float &z) {
+  if (IMU_ODR_HZ <= 833) {
+    // Default rate: the original, hardware-tested library read.
+    sensors_event_t acceleration, gyro, temperature;
+    if (!imu.getEvent(&acceleration, &gyro, &temperature)) return false;
+    x = acceleration.acceleration.x; y = acceleration.acceleration.y; z = acceleration.acceleration.z;
+    return true;
+  }
+  // Faster rates: read OUTX_L_A..OUTZ_H_A (0x28-0x2D) directly, 6 bytes instead of the 14
+  // that getEvent() reads (gyro and temperature are unused), so the loop keeps up.
   Wire.beginTransmission(IMU_ADDRESS);
   Wire.write(0x28);
   if (Wire.endTransmission(false) != 0 || Wire.requestFrom(IMU_ADDRESS, (uint8_t)6) != 6) return false;
