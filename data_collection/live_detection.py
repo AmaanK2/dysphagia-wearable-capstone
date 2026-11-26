@@ -135,6 +135,8 @@ class TreeModel:
 
     All trees share one flat node table; ``roots`` holds each tree's first node. The
     score is expit(baseline + sum of reached leaf values), like the logistic ``Model``.
+    A random forest (``aggregate: mean``) instead stores each leaf's swallow probability
+    and the score is the average over trees.
     """
 
     def __init__(self, data):
@@ -154,6 +156,9 @@ class TreeModel:
         self.roots = np.asarray(trees['roots'], dtype=int)
         self.depth = int(trees['depth'])
         self.baseline = float(trees['baseline'])
+        self.aggregate = trees.get('aggregate', 'sum')
+        if self.aggregate not in ('sum', 'mean'):
+            raise ValueError('Unknown tree aggregation.')
         nodes = len(self.feature)
         if (self.columns.ndim != 1 or not len(self.columns)
                 or np.any((self.columns < 0) | (self.columns >= FEATURE_COUNT))
@@ -172,7 +177,8 @@ class TreeModel:
         for _ in range(self.depth):
             go_left = x[rows, self.feature[node]] <= self.split[node]
             node = np.where(self.leaf[node], node, np.where(go_left, self.left[node], self.right[node]))
-        scores = expit(self.baseline + self.value[node].sum(axis=1))
+        leaves = self.value[node]
+        scores = leaves.mean(axis=1) if self.aggregate == 'mean' else expit(self.baseline + leaves.sum(axis=1))
         return scores if np.ndim(features) > 1 else scores[0]
 
 
@@ -231,6 +237,9 @@ def model_label(path):
         training = json.loads(path.read_text(encoding='utf-8')).get('training', {})
     except (OSError, ValueError):
         training = {}
+    if 'random forest' in training.get('model', ''):
+        public = round(100 * training.get('public_share', 0))
+        return 'Random forest · wearable data only' if public == 0 else f'Random forest {public}/{100 - public} public/wearable'
     if 'public_share' in training:
         public = round(100 * training['public_share'])
         kind = 'trees' if 'tree' in training.get('model', '') else 'logistic'
@@ -248,7 +257,8 @@ def available_models(folder=None):
     mixed = sorted((folder / 'mixed').glob('mixed_*.json'),
                    key=lambda p: ('logistic' in p.stem, 'optimal' not in p.stem, p.stem))
     found += mixed
-    found += sorted(p for p in folder.glob('*.json') if p.name not in (MODEL_PATH.name, 'evaluation.json'))
+    # Other swallow detectors saved next to wearable.json (events.json is the cough/talking model).
+    found += sorted(p for p in folder.glob('*.json') if p.name not in (MODEL_PATH.name, 'evaluation.json', 'events.json'))
     return [(model_label(p), p) for p in found]
 
 

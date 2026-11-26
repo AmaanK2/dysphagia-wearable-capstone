@@ -7,7 +7,7 @@ This is a neck-worn wearable (contact microphone + IMU on a Teensy 4.1) that det
 | Folder | What's inside |
 | --- | --- |
 | [`data_collection/`](data_collection/README.md) | **Swallow Studio**: the recording app, live detection, labelling tool, firmware, model training and our recordings |
-| [`experiments/`](experiments/) | Results: [mixed public + wearable swallow detector](experiments/mixed_public_wearable/SUMMARY.md), [event detection](experiments/event_detection/README.md), [event intervals](experiments/intervals/README.md), [swallow metrics and water test](experiments/swallow_metrics/README.md), [wearable-only pilot](experiments/wearable_pilot/RESULTS.md) |
+| [`experiments/`](experiments/) | Results: [mixed public + wearable swallow detector](experiments/mixed_public_wearable/SUMMARY.md), [event detection](experiments/event_detection/README.md), [random forest vs boosting](experiments/model_comparison/README.md), [event intervals](experiments/intervals/README.md), [swallow metrics and water test](experiments/swallow_metrics/README.md), [wearable-only pilot](experiments/wearable_pilot/RESULTS.md) |
 | [`public_baseline/`](public_baseline/README.md) | Earlier RF and CNN swallow segmentation on the public Pittsburgh dataset |
 | [`docs/FIGURES.md`](docs/FIGURES.md) | Presentation figures with captions |
 | `download_data.py` | Fetches the public datasets into the git-ignored `data/` folder |

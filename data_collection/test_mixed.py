@@ -111,5 +111,34 @@ class TreeExportTest(unittest.TestCase):
         self.assertEqual(agreement.score(records[0]['features']).shape, (200,))
 
 
+class ForestExportTest(unittest.TestCase):
+    def test_numpy_forest_matches_sklearn_and_loads_in_app(self):
+        import json, tempfile
+        from pathlib import Path
+        from sklearn.ensemble import RandomForestClassifier
+        from live_detection import TreeModel, AgreementModel, available_models, model_label
+        from train_mixed import export_forest
+        rng = np.random.default_rng(5)
+        x = rng.normal(size=(2000, 29))
+        y = (x[:, 0] * x[:, 11] + .3 * rng.normal(size=2000)) > .2
+        forest = RandomForestClassifier(n_estimators=40, max_depth=8, min_samples_leaf=5, random_state=0).fit(x, y)
+        joint = dict(feature_version=3, columns=list(range(29)), threshold=.6, refractory=1., trees=export_forest(forest))
+        model = TreeModel(json.loads(json.dumps(joint)))
+        np.testing.assert_allclose(model.score(x[:400]), forest.predict_proba(x[:400])[:, 1], atol=1e-4)
+        sensors = dict(feature_version=3, columns=[0], mean=[0.], scale=[1.], weights=[1.], bias=0.,
+                       threshold=.01, refractory=1.)
+        data = dict(joint=joint, mic=sensors, imu=dict(sensors, columns=[11]),
+                    training=dict(model='random forest', public_share=0.))
+        AgreementModel(data)
+        with tempfile.TemporaryDirectory() as root:
+            folder = Path(root)
+            (folder / 'mixed').mkdir()
+            (folder / 'mixed' / 'mixed_forest_wearable_only.json').write_text(json.dumps(data))
+            (folder / 'events.json').write_text('{}')
+            listed = available_models(folder)
+            self.assertEqual([label for label, _ in listed], ['Random forest · wearable data only'])
+            self.assertEqual(model_label(listed[0][1]), 'Random forest · wearable data only')
+
+
 if __name__ == '__main__':
     unittest.main()

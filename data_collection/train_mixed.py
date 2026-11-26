@@ -147,7 +147,53 @@ def fit_mixed_trees(wearable, public, columns=ALL, public_share=.5, *, threshold
                 refractory=refractory, trees=export_trees(classifier), trees_settings=TREES)
 
 
-FITTERS = dict(logistic=fit_mixed, trees=fit_mixed_trees)
+FOREST = dict(n_estimators=300, max_depth=14, min_samples_leaf=5, max_features='sqrt')
+
+
+def export_forest(classifier):
+    """Flatten a fitted RandomForestClassifier into TreeModel arrays (mean of leaf probabilities)."""
+    feature, split, left, right, leaf, value, roots = [], [], [], [], [], [], []
+    depth = 0
+    for estimator in classifier.estimators_:
+        tree = estimator.tree_
+        offset = len(feature)
+        roots.append(offset)
+        is_leaf = tree.children_left < 0
+        counts = tree.value[:, 0, :]
+        probability = counts[:, 1] / np.maximum(counts.sum(axis=1), 1e-12)
+        feature += np.where(is_leaf, 0, tree.feature).astype(int).tolist()
+        split += np.where(is_leaf, 0., tree.threshold).round(7).tolist()
+        left += np.where(is_leaf, 0, tree.children_left + offset).astype(int).tolist()
+        right += np.where(is_leaf, 0, tree.children_right + offset).astype(int).tolist()
+        leaf += is_leaf.tolist()
+        value += probability.round(5).tolist()
+        depth = max(depth, int(tree.max_depth))
+    return dict(feature=feature, split=split, left=left, right=right, leaf=leaf, value=value, roots=roots,
+                depth=depth, baseline=0., aggregate='mean')
+
+
+def fit_mixed_forest(wearable, public, columns=ALL, public_share=0., *, threshold=.7, refractory=1.2, seed=0,
+                     **_ignored):
+    """Random forest with the same per-dataset, class-balanced weighting."""
+    from sklearn.ensemble import RandomForestClassifier
+    columns = np.asarray(columns)
+    parts = []
+    if public_share < 1:
+        rows, labels, _, weights = dataset_rows(wearable, columns, 'clean_trainable')
+        parts.append((rows, labels, (1 - public_share) * weights))
+    if public_share > 0:
+        rows, labels, _, weights = dataset_rows(public, columns, 'trainable')
+        parts.append((rows, labels, public_share * weights))
+    X = np.vstack([p[0] for p in parts])
+    y = np.concatenate([p[1] for p in parts])
+    w = np.concatenate([p[2] for p in parts])
+    classifier = RandomForestClassifier(**FOREST, random_state=seed, n_jobs=-1)
+    classifier.fit(X, y, sample_weight=w / w.mean())
+    return dict(feature_version=FEATURE_VERSION, columns=columns.tolist(), threshold=threshold,
+                refractory=refractory, trees=export_forest(classifier), forest_settings=FOREST)
+
+
+FITTERS = dict(logistic=fit_mixed, trees=fit_mixed_trees, forest=fit_mixed_forest)
 
 
 def best_settings(scored):
@@ -285,7 +331,7 @@ def export_model(wearable, public_for, share, settings, name, gate=SENSOR_GATE, 
     public = public_for(sorted({r['participant'] for r in wearable}))
     data = agreement_fit(wearable, public, share, settings, fitter, gate, chosen)
     data['training'] = dict(
-        model=('boosted trees' if fitter is fit_mixed_trees else 'quadratic logistic'),
+        model={fit_mixed_trees: 'boosted trees', fit_mixed_forest: 'random forest'}.get(fitter, 'quadratic logistic'),
         public_share=share, wearable_share=round(1 - share, 4), settings=settings, chosen=chosen,
         sensor_gate=dict(mic=gate[0], imu=gate[1]), wearable_sessions=sorted(r['session'] for r in wearable),
         public_recordings=len(public),
@@ -294,7 +340,9 @@ def export_model(wearable, public_for, share, settings, name, gate=SENSOR_GATE, 
                                        pooled=brief(lopo['pooled']),
                                        by_participant={p: brief(r) for p, r in lopo['by_participant'].items()}))
     AgreementModel(data)  # validate the format the app loads
-    write_json(OUT / f'{name}.json', data)
+    path = OUT / f'{name}.json'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, separators=(',', ':')) + '\n', encoding='utf-8')   # compact: forests are large
     return data
 
 
@@ -308,6 +356,8 @@ def main():
     parser.add_argument('--export', nargs='*', default=[], metavar='NAME=SHARE',
                         help='Models to export in export mode, e.g. mixed_50_50=0.5')
     parser.add_argument('--model', choices=tuple(FITTERS), default='logistic')
+    parser.add_argument('--no-gate', action='store_true',
+                        help='Export without the mic/IMU agreement check (it lowers random-forest accuracy)')
     args = parser.parse_args()
     fitter = FITTERS[args.model]
     base = BASE if args.model == 'logistic' else {}
@@ -357,7 +407,8 @@ def main():
     else:
         for item in args.export:
             name, share = item.split('=')
-            data = export_model(wearable, public_for, float(share), base, name, fitter=fitter)
+            data = export_model(wearable, public_for, float(share), base, name, fitter=fitter,
+                                gate=(.01, .01) if args.no_gate else SENSOR_GATE)
             print(f'Exported {name}: share {share}, settings {data["training"]["chosen"]}', flush=True)
     print(f'Finished in {perf_counter() - started:.1f}s', flush=True)
 

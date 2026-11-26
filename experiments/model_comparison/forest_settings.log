@@ -1,0 +1,10 @@
+share 0.00 | Gradient boosting (shipped settings)                 | nested F1 0.762 P 0.735 R 0.792 FP/min 1.57 | P01:0.821 P02:0.744 P03:0.721 | best-fixed F1 0.816 (0.7) | 16s
+share 0.00 | Random forest: baseline settings (depth 14, leaf 5)  | nested F1 0.854 P 0.820 R 0.890 FP/min 1.07 | P01:0.832 P02:0.831 P03:0.885 | best-fixed F1 0.869 (0.7) | 4s
+share 0.00 | Random forest: fully grown, leaf 20                  | nested F1 0.819 P 0.789 R 0.851 FP/min 1.25 | P01:0.841 P02:0.753 P03:0.844 | best-fixed F1 0.863 (0.75) | 4s
+share 0.00 | Random forest: fully grown, leaf 40                  | nested F1 0.796 P 0.730 R 0.877 FP/min 1.79 | P01:0.807 P02:0.703 P03:0.853 | best-fixed F1 0.857 (0.8) | 4s
+share 0.00 | Random forest: leaf 20, 50% of features per split    | nested F1 0.804 P 0.809 R 0.799 FP/min 1.04 | P01:0.846 P02:0.831 P03:0.752 | best-fixed F1 0.827 (0.8) | 6s
+share 0.35 | Gradient boosting (shipped settings)                 | nested F1 0.862 P 0.815 R 0.916 FP/min 1.14 | P01:0.855 P02:0.810 P03:0.899 | best-fixed F1 0.887 (0.8) | 33s
+share 0.35 | Random forest: baseline settings (depth 14, leaf 5)  | nested F1 0.815 P 0.743 R 0.903 FP/min 1.71 | P01:0.844 P02:0.674 P03:0.891 | best-fixed F1 0.862 (0.7) | 39s
+share 0.35 | Random forest: fully grown, leaf 20                  | nested F1 0.818 P 0.736 R 0.922 FP/min 1.82 | P01:0.832 P02:0.674 P03:0.906 | best-fixed F1 0.855 (0.7) | 40s
+share 0.35 | Random forest: fully grown, leaf 40                  | nested F1 0.821 P 0.771 R 0.877 FP/min 1.43 | P01:0.818 P02:0.744 P03:0.872 | best-fixed F1 0.860 (0.7) | 38s
+share 0.35 | Random forest: leaf 20, 50% of features per split    | nested F1 0.831 P 0.775 R 0.896 FP/min 1.43 | P01:0.838 P02:0.753 P03:0.873 | best-fixed F1 0.850 (0.7) | 100s

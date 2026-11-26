@@ -52,6 +52,7 @@ Every time is in seconds from one shared session start. CSVs store raw values; t
 | --- | --- | --- |
 | `models/wearable.json` | `python train_live.py` | Wearable-only logistic detector (git-ignored, machine-specific) |
 | `models/mixed/mixed_*.json` | `python train_mixed.py --model trees --mode export ...` | Wearable + adapted public swallow data. [Results](../experiments/mixed_public_wearable/SUMMARY.md) |
+| `models/mixed/mixed_forest_wearable_only.json` | `python train_mixed.py --mode export --model forest --no-gate --export mixed_forest_wearable_only=0` | Random forest on our recordings only; ties the recommended model. [Comparison](../experiments/model_comparison/README.md) |
 | `models/events.json` | `python train_events.py` | Cough / talking / throat-clear classifier. [Results](../experiments/event_detection/README.md) |
 
 Training needs the public datasets (`python ../download_data.py` and `python ../download_data.py --throat`, both run from the repo root) and `requirements-training.txt`. The app itself only needs `requirements.txt`.
