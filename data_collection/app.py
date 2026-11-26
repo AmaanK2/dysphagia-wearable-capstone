@@ -1,4 +1,5 @@
-"""Run: python app.py. Use --demo to try the complete workflow without hardware."""
+"""Run: python app.py. Use --demo to try the workflow without hardware, or
+--replay <session folder> to stream a saved recording through live detection."""
 
 import argparse
 import csv
@@ -499,8 +500,9 @@ class Review(W.QWidget):
 
 
 class MainWindow(W.QMainWindow):
-    def __init__(self, demo=False):
+    def __init__(self, demo=False, replay=None):
         super().__init__()
+        self.replay = Path(replay) if replay else None
         self.setWindowTitle('Swallow Studio')
         self.resize(1200, 820)
         self.setMinimumSize(960, 660)
@@ -753,7 +755,8 @@ class MainWindow(W.QMainWindow):
         self.graph.clear_overlays()
         self.graph.draw(np.empty((0, 2)), np.empty((0, 4)))
         self.data_root = HOME / 'recordings' / ('demo' if demo else 'participants')
-        self.worker = Acquisition('DEMO' if demo else port, self.data_root, demo, self.model_choice.currentData())
+        self.worker = Acquisition('DEMO' if demo else port, self.data_root, demo, self.model_choice.currentData(),
+                                  replay=self.replay if demo else None)
         self.worker.events_enabled = self.events_toggle.isChecked()
         self.worker.status.connect(self.device_status)
         self.worker.begun.connect(self.begun)
@@ -771,7 +774,9 @@ class MainWindow(W.QMainWindow):
 
     def device_status(self, text, ready):
         self.ready = ready
-        self.connection_status.setText('Demo ready' if self.demo.isChecked() and ready else ('Ready' if ready else 'Connecting'))
+        source = f'Replay of {self.replay.parent.name}/{self.replay.name}' if self.replay else 'Demo'
+        self.connection_status.setText(f'{source} ready' if self.demo.isChecked() and ready
+                                       else ('Ready' if ready else 'Connecting'))
         can_start = ready and not self.recording and not self.pending
         self.start_button.setEnabled(can_start)
         self.live_start.setEnabled(can_start)
@@ -1069,14 +1074,18 @@ QToolTip { color: $ink; background: $key; border: 1px solid $rule; padding: 6px;
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--demo', action='store_true')
+    parser.add_argument('--demo', action='store_true', help='Synthetic signals, no detection')
+    parser.add_argument('--replay', type=Path, metavar='SESSION',
+                        help='Stream a saved session folder in real time through live detection')
     args = parser.parse_args()
+    if args.replay and not (args.replay / 'IMU.csv').is_file():
+        parser.error(f'{args.replay} is not a session folder (no IMU.csv)')
     app = W.QApplication(sys.argv[:1])
     app.setStyle('Fusion')
     app.setFont(QtGui.QFont(THEME['font'], 10))
     app.setStyleSheet(STYLE)
     pg.setConfigOptions(antialias=False, foreground=THEME['graphite_muted'])
-    window = MainWindow(args.demo)
+    window = MainWindow(args.demo or bool(args.replay), args.replay)
     window.show()
     sys.exit(app.exec())
 

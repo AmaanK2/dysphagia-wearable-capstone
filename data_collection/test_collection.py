@@ -147,6 +147,37 @@ class ProtocolTests(unittest.TestCase):
             self.p.parse(b'I,1,999999,1,2,3')
 
 
+class ReplayTests(unittest.TestCase):
+    def test_replay_streams_a_session_as_valid_packets_and_loops(self):
+        from device import Replay
+        with tempfile.TemporaryDirectory() as root:
+            folder = Path(root)
+            with (folder / 'Mic.csv').open('w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['sample_idx', 'time_s', 'mic_raw'])
+                for i in range(4410):
+                    writer.writerow([i, .002 + i / 44100, i % 50 - 25])
+            with (folder / 'IMU.csv').open('w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['sample_idx', 'time_s', 'ax', 'ay', 'az'])
+                for i in range(90):
+                    writer.writerow([i, .001 + i / 904.5, .1, .2, 9.8])
+            replay = Replay(folder)
+            replay.start -= .35          # pretend 0.35 s have passed: more than one full loop
+            protocol = Protocol()
+            packets = []
+            for _ in range(6):
+                for line in replay.read().splitlines():
+                    packet = protocol.parse(line)
+                    if packet:
+                        packets.append(packet)
+            self.assertEqual(packets[0][0], 'header')
+            kinds = {p[0] for p in packets[1:]}
+            self.assertEqual(kinds, {'mic', 'imu'})
+            self.assertEqual(protocol.gaps, 0)
+            self.assertGreaterEqual(replay.loop, 1)
+
+
 class PreviewTests(unittest.TestCase):
     def test_envelope_is_bounded_and_preserves_each_axis_extrema(self):
         values = np.zeros((44100, 4))

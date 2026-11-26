@@ -14,6 +14,12 @@ python -m venv .venv
 
 On Windows, after setup, you can double-click `start.bat`.
 
+To see live detection without the device, replay a saved session in real time. It loops, and anything you record during a replay is saved as a simulated session under `recordings/demo/`:
+
+```sh
+.venv/bin/python app.py --replay recordings/participants/P01/S03_mixed
+```
+
 ## Using the app
 
 1. **Record tab:** pick the USB port and click **Connect device**. **Ready** means both sensor streams are arriving. It doesn't check sensor placement or contact.

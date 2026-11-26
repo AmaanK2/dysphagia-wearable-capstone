@@ -135,6 +135,58 @@ class Demo:
         return ('\n'.join(rows) + ('\n' if rows else '')).encode('ascii')
 
 
+class Replay:
+    """Stream a saved session through the V1 protocol in real time, looping at the end.
+
+    Used with ``app.py --replay <session folder>`` to show live detection without a
+    device. Recordings made during a replay are saved as simulated demo sessions.
+    """
+
+    def __init__(self, folder):
+        import pandas as pd
+        folder = Path(folder)
+        mic_path = folder / 'Mic.csv' if (folder / 'Mic.csv').is_file() else folder / 'Mic.csv.gz'
+        mic = pd.read_csv(mic_path, usecols=['time_s', 'mic_raw']).to_numpy()
+        imu = pd.read_csv(folder / 'IMU.csv', usecols=['time_s', 'ax', 'ay', 'az']).to_numpy(float)
+        t0 = min(mic[0, 0], imu[0, 0])
+        self.duration = max(mic[-1, 0], imu[-1, 0]) - t0 + .01
+        self.mic_rate = (len(mic) - 1) / (mic[-1, 0] - mic[0, 0])
+        self.imu_rate = (len(imu) - 1) / (imu[-1, 0] - imu[0, 0])
+        blocks = len(mic) // 128
+        self.mic_times = (mic[:blocks * 128:128, 0] - t0).astype(float)
+        self.mic_values = mic[:blocks * 128, 1].astype(int).reshape(blocks, 128)
+        self.imu_times = imu[:, 0] - t0
+        self.imu_values = imu[:, 1:]
+        self.start = time.perf_counter()
+        self.header = True
+        self.loop = self.next_mic = self.next_imu = 0
+
+    def read(self):
+        if self.header:
+            self.header = False
+            return f'S,1000000,{self.mic_rate:.6f},{self.imu_rate:.3f},m/s2,V1\n'.encode('ascii')
+        now = time.perf_counter() - self.start - self.loop * self.duration
+        rows = []
+        offset = self.loop * self.duration
+        mic_base, imu_base = self.loop * len(self.mic_times) * 128, self.loop * len(self.imu_times)
+        while self.next_mic < len(self.mic_times) and self.mic_times[self.next_mic] <= now and len(rows) < 60:
+            i = self.next_mic
+            us = 1000000 + round((self.mic_times[i] + offset) * 1e6)
+            rows.append(f'A,{mic_base + i * 128},{us},' + ','.join(map(str, self.mic_values[i])))
+            self.next_mic += 1
+        while self.next_imu < len(self.imu_times) and self.imu_times[self.next_imu] <= now and len(rows) < 260:
+            i = self.next_imu
+            us = 1000000 + round((self.imu_times[i] + offset) * 1e6)
+            x, y, z = self.imu_values[i]
+            rows.append(f'I,{imu_base + i},{us},{x:.6f},{y:.6f},{z:.6f}')
+            self.next_imu += 1
+        if self.next_mic >= len(self.mic_times) and self.next_imu >= len(self.imu_times):
+            self.loop += 1
+            self.next_mic = self.next_imu = 0
+        time.sleep(.003)
+        return ('\n'.join(rows) + ('\n' if rows else '')).encode('ascii')
+
+
 class Acquisition(QThread):
     status = Signal(str, bool)
     begun = Signal(object)
@@ -144,8 +196,9 @@ class Acquisition(QThread):
     interval = Signal(float, float, str, float)   # start, end, event, peak score
     detection_status = Signal(str)
 
-    def __init__(self, port, root, demo=False, model_path=None):
+    def __init__(self, port, root, demo=False, model_path=None, replay=None):
         super().__init__()
+        self.replay = replay
         self.model_path = Path(model_path or MODEL_PATH)
         self.detector_label = model_label(self.model_path)
         self.events_enabled = True
@@ -209,7 +262,7 @@ class Acquisition(QThread):
         self.detector = None
         self.event_detector = None
         self.signal_valid = None
-        if self.demo:
+        if self.demo and not self.replay:
             self.detection_status.emit('Demo signals · live detection disabled')
             return
         label = self.detector_label = model_label(self.model_path)
@@ -314,7 +367,7 @@ class Acquisition(QThread):
         last_status = None
         try:
             if self.demo:
-                source = Demo()
+                source = Replay(self.replay) if self.replay else Demo()
             else:
                 port = serial.Serial(self.port, 115200, timeout=.03, write_timeout=.5)
                 port.reset_input_buffer()
