@@ -1,0 +1,507 @@
+{
+ "composition": {
+  "wearable": {
+   "participants": 3,
+   "sessions": 17,
+   "minutes": 34.5,
+   "swallows": 159,
+   "windows": 18875,
+   "swallow_window_fraction": 0.065,
+   "background_kinds": {
+    "background": 16142,
+    "talking": 1355,
+    "cough": 158
+   }
+  },
+  "public": {
+   "participants": 148,
+   "recordings": 1044,
+   "minutes": 153.5,
+   "swallows": 1513,
+   "windows": 84423,
+   "swallow_window_fraction": 0.155
+  }
+ },
+ "feature_shift": [
+  {
+   "cls": "swallow",
+   "source": "raw",
+   "mean_abs_smd": 0.627,
+   "mean_ks": 0.201,
+   "worst": [
+    [
+     "mic_logrms",
+     -10.22,
+     1.0
+    ],
+    [
+     "imu_logrms",
+     -1.03,
+     0.51
+    ],
+    [
+     "mic_share_20-60",
+     -0.72,
+     0.3
+    ],
+    [
+     "mic_share_60-150",
+     0.78,
+     0.3
+    ],
+    [
+     "imu_rise",
+     -0.53,
+     0.28
+    ],
+    [
+     "imu_share_15-40",
+     -0.55,
+     0.27
+    ],
+    [
+     "mic_env_4",
+     0.23,
+     0.26
+    ],
+    [
+     "mic_entropy",
+     0.59,
+     0.24
+    ]
+   ]
+  },
+  {
+   "cls": "swallow",
+   "source": "adapted",
+   "mean_abs_smd": 0.123,
+   "mean_ks": 0.109,
+   "worst": [
+    [
+     "imu_rise",
+     -0.5,
+     0.27
+    ],
+    [
+     "mic_env_4",
+     0.22,
+     0.26
+    ],
+    [
+     "mic_rise",
+     -0.3,
+     0.24
+    ],
+    [
+     "mic_crest",
+     -0.19,
+     0.21
+    ],
+    [
+     "mic_env_3",
+     0.09,
+     0.19
+    ],
+    [
+     "mic_share_350-800",
+     0.19,
+     0.16
+    ],
+    [
+     "mic_env_2",
+     -0.04,
+     0.14
+    ],
+    [
+     "imu_crest",
+     -0.04,
+     0.13
+    ]
+   ]
+  },
+  {
+   "cls": "background",
+   "source": "raw",
+   "mean_abs_smd": 0.407,
+   "mean_ks": 0.197,
+   "worst": [
+    [
+     "mic_logrms",
+     -6.1,
+     1.0
+    ],
+    [
+     "mic_share_60-150",
+     0.71,
+     0.44
+    ],
+    [
+     "imu_share_15-40",
+     -0.81,
+     0.4
+    ],
+    [
+     "mic_share_20-60",
+     -0.37,
+     0.36
+    ],
+    [
+     "mic_entropy",
+     0.66,
+     0.33
+    ],
+    [
+     "mic_crest",
+     -0.13,
+     0.3
+    ],
+    [
+     "mic_share_150-350",
+     0.07,
+     0.28
+    ],
+    [
+     "imu_share_5-15",
+     0.6,
+     0.28
+    ]
+   ]
+  },
+  {
+   "cls": "background",
+   "source": "adapted",
+   "mean_abs_smd": 0.108,
+   "mean_ks": 0.125,
+   "worst": [
+    [
+     "mic_crest",
+     -0.24,
+     0.37
+    ],
+    [
+     "mic_logrms",
+     0.39,
+     0.24
+    ],
+    [
+     "imu_share_15-40",
+     -0.29,
+     0.21
+    ],
+    [
+     "imu_logrms",
+     -0.02,
+     0.19
+    ],
+    [
+     "imu_share_100-300",
+     -0.11,
+     0.18
+    ],
+    [
+     "env_corr",
+     -0.4,
+     0.18
+    ],
+    [
+     "mic_share_60-150",
+     0.11,
+     0.17
+    ],
+    [
+     "mic_share_150-350",
+     -0.11,
+     0.15
+    ]
+   ]
+  }
+ ],
+ "feature_direction": {
+  "correlation": 0.806,
+  "opposite_direction": [
+   [
+    "imu_share_15-40",
+    0.45,
+    0.61
+   ]
+  ],
+  "per_feature": {
+   "mic_share_20-60": [
+    0.452,
+    0.484
+   ],
+   "mic_share_60-150": [
+    0.645,
+    0.562
+   ],
+   "mic_share_150-350": [
+    0.497,
+    0.454
+   ],
+   "mic_share_350-800": [
+    0.321,
+    0.384
+   ],
+   "mic_env_0": [
+    0.494,
+    0.485
+   ],
+   "mic_env_1": [
+    0.52,
+    0.504
+   ],
+   "mic_env_2": [
+    0.502,
+    0.51
+   ],
+   "mic_env_3": [
+    0.436,
+    0.479
+   ],
+   "mic_env_4": [
+    0.361,
+    0.438
+   ],
+   "mic_crest": [
+    0.547,
+    0.581
+   ],
+   "mic_logrms": [
+    0.769,
+    0.674
+   ],
+   "imu_share_5-15": [
+    0.492,
+    0.43
+   ],
+   "imu_share_15-40": [
+    0.449,
+    0.606
+   ],
+   "imu_share_40-100": [
+    0.717,
+    0.611
+   ],
+   "imu_share_100-300": [
+    0.523,
+    0.407
+   ],
+   "imu_env_0": [
+    0.486,
+    0.497
+   ],
+   "imu_env_1": [
+    0.541,
+    0.507
+   ],
+   "imu_env_2": [
+    0.553,
+    0.504
+   ],
+   "imu_env_3": [
+    0.487,
+    0.459
+   ],
+   "imu_env_4": [
+    0.4,
+    0.408
+   ],
+   "imu_crest": [
+    0.702,
+    0.654
+   ],
+   "imu_logrms": [
+    0.747,
+    0.716
+   ],
+   "mic_peak": [
+    0.449,
+    0.429
+   ],
+   "mic_entropy": [
+    0.576,
+    0.526
+   ],
+   "mic_rise": [
+    0.623,
+    0.557
+   ],
+   "imu_peak": [
+    0.408,
+    0.423
+   ],
+   "imu_entropy": [
+    0.61,
+    0.521
+   ],
+   "imu_rise": [
+    0.711,
+    0.545
+   ],
+   "env_corr": [
+    0.475,
+    0.573
+   ]
+  }
+ },
+ "domain_classifier": {
+  "swallow": {
+   "auc": 0.723,
+   "most_separating_single_features": [
+    [
+     "imu_rise",
+     0.651
+    ],
+    [
+     "mic_env_4",
+     0.641
+    ],
+    [
+     "mic_crest",
+     0.62
+    ],
+    [
+     "mic_env_3",
+     0.589
+    ],
+    [
+     "mic_rise",
+     0.585
+    ],
+    [
+     "mic_share_350-800",
+     0.569
+    ],
+    [
+     "imu_crest",
+     0.554
+    ],
+    [
+     "imu_entropy",
+     0.551
+    ]
+   ]
+  },
+  "background": {
+   "auc": 0.847,
+   "most_separating_single_features": [
+    [
+     "mic_crest",
+     0.702
+    ],
+    [
+     "mic_logrms",
+     0.645
+    ],
+    [
+     "env_corr",
+     0.62
+    ],
+    [
+     "imu_logrms",
+     0.594
+    ],
+    [
+     "imu_share_15-40",
+     0.592
+    ],
+    [
+     "mic_share_60-150",
+     0.591
+    ],
+    [
+     "imu_share_100-300",
+     0.577
+    ],
+    [
+     "mic_entropy",
+     0.572
+    ]
+   ]
+  }
+ },
+ "transfer": {
+  "public_only_on_wearable": {
+   "window_auc": 0.935,
+   "event": {
+    "tp": 132,
+    "fp": 61,
+    "fn": 27,
+    "precision": 0.6839,
+    "recall": 0.8302,
+    "f1": 0.75,
+    "extra_per_minute": 1.7941
+   },
+   "by_kind": {
+    "background": {
+     "n": 16070,
+     "mean_score": 0.197,
+     "above_best_threshold": 0.029
+    },
+    "cough": {
+     "n": 158,
+     "mean_score": 0.142,
+     "above_best_threshold": 0.0
+    },
+    "swallow": {
+     "n": 1220,
+     "mean_score": 0.711,
+     "above_best_threshold": 0.561
+    },
+    "talking": {
+     "n": 1355,
+     "mean_score": 0.088,
+     "above_best_threshold": 0.004
+    }
+   }
+  },
+  "wearable_lopo": {
+   "window_auc": 0.94
+  },
+  "wearable_on_public": {
+   "window_auc": 0.792
+  }
+ },
+ "onset_timing": {
+  "wearable_mic_logrms": {
+   "n": 149,
+   "peak_after_onset_s": 0.5,
+   "half_rise_s": 0.1
+  },
+  "adapted_mic_logrms": {
+   "n": 1022,
+   "peak_after_onset_s": 0.4,
+   "half_rise_s": 0.1
+  },
+  "wearable_imu_logrms": {
+   "n": 149,
+   "peak_after_onset_s": 0.5,
+   "half_rise_s": 0.2
+  },
+  "adapted_imu_logrms": {
+   "n": 1022,
+   "peak_after_onset_s": 0.3,
+   "half_rise_s": 0.1
+  }
+ },
+ "durations_and_contrast": {
+  "wearable": [
+   0.36,
+   0.57,
+   0.74,
+   0.98,
+   1.2
+  ],
+  "adapted": [
+   0.53,
+   0.7,
+   0.83,
+   0.97,
+   1.33
+  ],
+  "wearable_mic_logrms_swallow_minus_background": 0.95,
+  "wearable_imu_logrms_swallow_minus_background": 0.134,
+  "adapted_mic_logrms_swallow_minus_background": 0.524,
+  "adapted_imu_logrms_swallow_minus_background": 0.096
+ }
+}

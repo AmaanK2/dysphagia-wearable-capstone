@@ -14,7 +14,8 @@ from scipy.optimize import minimize
 from scipy.special import expit
 
 from live_detection import (FEATURE_COUNT, FEATURE_VERSION, HOP, IMU_COLUMNS, MIC_COLUMNS, MODEL_PATH, REFRACTORY, THRESHOLD, WINDOW,
-                            AgreementModel, Model, Trigger, agreement_scores, quadratic_terms, window_features)
+                            AgreementModel, Model, Trigger, agreement_scores, quadratic_terms, stack_lags,
+                            window_features)
 
 HOME = Path(__file__).resolve().parent
 ALL = np.arange(FEATURE_COUNT)
@@ -173,8 +174,10 @@ def fit(records, columns, supplemental=(), *, quadratic=False, threshold=THRESHO
 
 def score_records(model, records):
     scored = []
+    lags = getattr(model, 'lags', ())
     for record in records:
-        features = record['features']
+        features = stack_lags(record['features'], lags) if lags and record['features'].shape[1] == FEATURE_COUNT \
+            else record['features']
         usable = np.isfinite(features).all(axis=1)
         scores = np.zeros(len(features))
         scores[usable] = model.score(features[usable])

@@ -26,7 +26,7 @@ To see live detection without the device, replay a saved session in real time. I
 2. **Start recording:** enter a participant code (never a name), choose an activity (Dry swallow, Talking, Mixed, Water swallow test or Custom) and a duration of up to 30 minutes.
 3. **Mark events:** press **Space** for each swallow you see, or at the start and end of longer activities. Presses are approximate observer marks.
 4. **Live Session tab:** shows the rolling signals and detections.
-   - **Detector** chooses the swallow model: your current `models/wearable.json` appears first, then the mixed public+wearable models (35/65 trees is recommended).
+   - **Detector** chooses the swallow model: your current `models/wearable.json` appears first, then the mixed public+wearable models (35/65 trees + context is recommended).
    - **Also detect cough, talking, throat clear** turns the IMU event classifier (`models/events.json`) on or off.
    - Each event type has its own colour. An alert first appears as a line; once the event ends, its full interval is shaded and its duration is added to the log. Both settings lock during a recording.
 5. **Water swallow test:** enter the water volume, press **Space** when the cup touches the lips (and optionally when drinking ends), and keep recording ~60 s afterwards. When the recording is saved, the app reports swallow count, ml/s, ml and seconds per swallow, and coughs, and saves `WaterTest.json`. [Details](../experiments/swallow_metrics/README.md)
@@ -52,6 +52,7 @@ Every time is in seconds from one shared session start. CSVs store raw values; t
 | --- | --- | --- |
 | `models/wearable.json` | `python train_live.py` | Wearable-only logistic detector (git-ignored, machine-specific) |
 | `models/mixed/mixed_*.json` | `python train_mixed.py --model trees --mode export ...` | Wearable + adapted public swallow data. [Results](../experiments/mixed_public_wearable/SUMMARY.md) |
+| `models/mixed/mixed_context_35_65.json` | `python train_mixed.py --model trees --lags 2 4 --mode export --export mixed_context_35_65=0.35` | Recommended. Boosted trees that also see the windows 0.2 and 0.4 s earlier. [Study](../experiments/public_domain_gap/README.md) |
 | `models/mixed/mixed_forest_wearable_only.json` | `python train_mixed.py --mode export --model forest --no-gate --export mixed_forest_wearable_only=0` | Random forest on our recordings only; ties the recommended model. [Comparison](../experiments/model_comparison/README.md) |
 | `models/events.json` | `python train_events.py` | Cough / talking / throat-clear classifier. [Results](../experiments/event_detection/README.md) |
 

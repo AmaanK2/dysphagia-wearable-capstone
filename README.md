@@ -22,12 +22,12 @@ python -m venv .venv && .venv/bin/python -m pip install -r requirements.txt
 
 ## Current results
 
-Every score below is measured on a wearable participant the model never trained on (3 participants, 14 sessions: 154 reviewed swallows, 5 coughs, 14 talking intervals).
+Every score below is measured on a wearable participant the model never trained on (3 participants). Swallow scores are nested: the alert threshold is also chosen without that participant.
 
 | Detector | Result |
 | --- | --- |
-| Swallows, wearable data only | 76% event F1, ~1.6 false alerts/min |
-| **Swallows, wearable + adapted public data (35/65, recommended)** | **86% event F1 (90% with the exported model's tuned threshold), ~0.8 false alerts/min** |
+| Swallows, wearable data only | 76% event F1, ~1.6 false alerts/min (original 14 sessions) |
+| **Swallows, wearable + adapted public data, with context (35/65, recommended)** | **90% event F1 on the original 14 sessions (was 88%); 77% on all 24 sessions (was 75%), 1.25 false alerts/min.** The newer sessions add many coughs and unlabelled stretches. [Study](experiments/public_domain_gap/README.md) |
 | Swallows, live in the app on new sessions | 37 of 38 swallows caught, 5 false alerts in 4 minutes |
 | Event intervals (start/end) | Median overlap with labelled swallows 0.65 (start ±0.15 s, end ±0.22 s); coughs 0.84, talking 0.86 |
 | Cough / talking / throat clear | 9/14 talking bouts and 3/5 coughs caught, ~1.1 false alerts/min; 81% accuracy on public test speakers. [Details](experiments/event_detection/README.md) |

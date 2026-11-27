@@ -410,8 +410,10 @@ class GuiTests(unittest.TestCase):
             models = Path(root) / 'models'
             (models / 'mixed').mkdir(parents=True)
             for name, share in (('wearable.json', None), ('mixed/mixed_optimal_35_65.json', .35),
-                                ('mixed/mixed_80_20.json', .8)):
+                                ('mixed/mixed_80_20.json', .8), ('mixed/mixed_context_35_65.json', .35)):
                 training = {} if share is None else dict(training=dict(public_share=share, model='boosted trees'))
+                if 'context' in name:
+                    training['training']['settings'] = dict(lags=[2, 4])
                 (models / name).write_text(json.dumps(training))
             listed = available_models(models)
             with (patch('device.serial.Serial') as serial, patch('device.load_model', side_effect=load),
@@ -426,14 +428,15 @@ class GuiTests(unittest.TestCase):
                 try:
                     labels = [window.model_choice.itemText(i) for i in range(window.model_choice.count())]
                     self.assertEqual(labels, ['Wearable only (current)',
-                                              'Mixed 35/65 public/wearable · trees (recommended)',
+                                              'Mixed 35/65 public/wearable · trees + context (recommended)',
+                                              'Mixed 35/65 public/wearable · trees',
                                               'Mixed 80/20 public/wearable · trees'])
                     self.assertEqual(window.model_choice.currentIndex(), 0)
                     window.connect_device()
                     window.worker.root = Path(root) / 'sessions'
                     self.wait_for(lambda: window.ready and loaded)
                     self.assertEqual(loaded[-1], 'wearable.json')
-                    window.model_choice.setCurrentIndex(1)
+                    window.model_choice.setCurrentIndex(2)
                     self.wait_for(lambda: loaded[-1] == 'mixed_optimal_35_65.json')
                     self.wait_for(lambda: 'Mixed 35/65' in window.live_status.text())
                     window.worker.command('start', ('P01', 'mixed', 1.3))

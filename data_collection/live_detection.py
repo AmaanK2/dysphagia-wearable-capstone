@@ -98,7 +98,32 @@ def window_features(mic, imu, end, *, wearable=True, feature_version=FEATURE_VER
     return np.array(out)
 
 
+def stack_lags(features, lags):
+    """Append, to each window's features, the rows from ``lag`` windows (x 0.1 s) earlier.
+
+    ``features`` is (windows, FEATURE_COUNT) in time order; rows without enough history are NaN.
+    Column block 0 is the current window, block k the window ``lags[k-1]`` hops earlier.
+    """
+    if not lags:
+        return features
+    blocks = [features]
+    for lag in lags:
+        shifted = np.full_like(features, np.nan)
+        shifted[lag:] = features[:-lag]
+        blocks.append(shifted)
+    return np.hstack(blocks)
+
+
+def model_lags(data):
+    lags = tuple(int(lag) for lag in data.get('lags', ()))
+    if any(lag < 1 for lag in lags) or len(set(lags)) != len(lags):
+        raise ValueError('Invalid detector context windows.')
+    return lags
+
+
 class Model:
+    lags = ()
+
     def __init__(self, data):
         self.feature_version = data['feature_version']
         if self.feature_version not in (1, 2, FEATURE_VERSION):
@@ -159,9 +184,11 @@ class TreeModel:
         self.aggregate = trees.get('aggregate', 'sum')
         if self.aggregate not in ('sum', 'mean'):
             raise ValueError('Unknown tree aggregation.')
+        # Optional context: features of windows this many hops earlier (see stack_lags).
+        self.lags = model_lags(data)
         nodes = len(self.feature)
         if (self.columns.ndim != 1 or not len(self.columns)
-                or np.any((self.columns < 0) | (self.columns >= FEATURE_COUNT))
+                or np.any((self.columns < 0) | (self.columns >= FEATURE_COUNT * (1 + len(self.lags))))
                 or any(len(a) != nodes for a in (self.split, self.left, self.right, self.leaf, self.value))
                 or np.any((self.feature < 0) | (self.feature >= len(self.columns)))
                 or np.any(~self.leaf & ((self.left < 0) | (self.left >= nodes) | (self.right < 0) | (self.right >= nodes)))
@@ -203,6 +230,7 @@ class AgreementModel:
         self.mic = Model(data['mic'])
         self.imu = Model(data['imu'])
         self.feature_version = self.joint.feature_version
+        self.lags = self.joint.lags   # the sensor checks only read the current window's columns
         self.threshold = self.joint.threshold
         self.refractory = self.joint.refractory
         for model, columns in ((self.mic, MIC_COLUMNS), (self.imu, IMU_COLUMNS)):
@@ -225,7 +253,8 @@ def load_model(path=None):
     return AgreementModel(data)
 
 
-RECOMMENDED_MODEL = 'mixed_optimal_35_65.json'
+# Trees that also see the two earlier windows (0.2 and 0.4 s back); see experiments/public_domain_gap.
+RECOMMENDED_MODEL = 'mixed_context_35_65.json'
 
 
 def model_label(path):
@@ -243,6 +272,8 @@ def model_label(path):
     if 'public_share' in training:
         public = round(100 * training['public_share'])
         kind = 'trees' if 'tree' in training.get('model', '') else 'logistic'
+        if (training.get('settings') or {}).get('lags'):
+            kind += ' + context'
         label = f'Mixed {public}/{100 - public} public/wearable · {kind}'
         return label + (' (recommended)' if path.name == RECOMMENDED_MODEL else '')
     return path.stem.replace('_', ' ')
@@ -255,7 +286,7 @@ def available_models(folder=None):
     if (folder / MODEL_PATH.name).is_file():
         found.append(folder / MODEL_PATH.name)
     mixed = sorted((folder / 'mixed').glob('mixed_*.json'),
-                   key=lambda p: ('logistic' in p.stem, 'optimal' not in p.stem, p.stem))
+                   key=lambda p: (p.name != RECOMMENDED_MODEL, 'logistic' in p.stem, 'optimal' not in p.stem, p.stem))
     found += mixed
     # Other swallow detectors saved next to wearable.json (events.json is the cough/talking model).
     found += sorted(p for p in folder.glob('*.json') if p.name not in (MODEL_PATH.name, 'evaluation.json', 'events.json'))
@@ -353,6 +384,8 @@ class LiveDetector:
                                        start_bias=SWALLOW_START_BIAS, end_bias=SWALLOW_END_BIAS)
         self.intervals = []   # completed (start, end, peak); the caller drains this list
         self.signal_valid = None
+        self.lags = tuple(getattr(model, 'lags', ()))
+        self.history = []     # recent feature rows (None = unusable window), newest last
 
     def update(self, mic, imu, origin, duration):
         detections = []
@@ -364,7 +397,11 @@ class LiveDetector:
             features = window_features(mic, imu, origin + seconds,
                                        feature_version=self.model.feature_version, history_start=origin)
             self.signal_valid = features is not None
-            score = float(self.model.score(features)) if self.signal_valid else 0.
+            if self.lags:
+                self.history = (self.history + [features])[-(max(self.lags) + 1):]
+                earlier = [self.history[-1 - lag] if lag < len(self.history) else None for lag in self.lags]
+                features = None if features is None or any(row is None for row in earlier) else np.concatenate([features, *earlier])
+            score = float(self.model.score(features)) if features is not None else 0.
             fired = self.trigger.update(seconds, score)
             if fired:
                 detections.append((seconds, score))

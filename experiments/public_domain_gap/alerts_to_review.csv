@@ -1,0 +1,71 @@
+session,alert_time_s,score,labelled_cough_or_talking_within_3s
+P01/S02_dry_swallow,7.1,0.83,
+P01/S02_dry_swallow,29.1,0.92,
+P01/S03_mixed,23.3,0.91,
+P01/S03_mixed,32.7,0.94,
+P01/S06_dry_swallow,24.9,0.93,
+P01/S06_dry_swallow,92.9,0.88,
+P01/S07_mixed,4.4,0.9,
+P01/S08_mixed,57.7,0.85,talking 58.6-60.5
+P02/S02_dry_swallow,1.3,0.88,
+P02/S02_dry_swallow,23.5,0.92,
+P02/S02_dry_swallow,33.9,0.74,
+P02/S02_dry_swallow,46.5,0.84,
+P02/S02_dry_swallow,76.6,0.86,
+P02/S02_dry_swallow,79.5,0.72,
+P02/S02_dry_swallow,89.5,0.97,
+P02/S02_dry_swallow,91.5,0.84,
+P02/S02_dry_swallow,101.4,0.85,
+P02/S02_dry_swallow,106.5,0.77,
+P02/S02_dry_swallow,109.7,0.9,
+P02/S02_dry_swallow,111.3,0.78,
+P02/S02_dry_swallow,117.7,0.87,
+P02/S02_dry_swallow,149.3,0.74,
+P02/S04_dry_swallow,97.4,0.92,
+P02/S04_dry_swallow,157.4,0.98,
+P02/S04_dry_swallow,167.6,0.97,
+P02/S04_dry_swallow,177.1,0.95,
+P02/S04_dry_swallow,178.8,0.87,
+P02/S06_mixed,4.5,0.73,
+P02/S06_mixed,7.1,0.75,
+P02/S06_mixed,26.7,0.89,
+P02/S06_mixed,42.0,0.77,
+P02/S06_mixed,45.3,0.8,
+P02/S06_mixed,56.2,0.86,
+P02/S07_mixed,20.1,0.92,
+P02/S07_mixed,115.8,0.82,cough 112.0-113.6; cough 117.4-117.9
+P02/S07_mixed,118.8,0.79,cough 117.4-117.9
+P02/S07_mixed,130.4,0.9,cough 128.6-129.4
+P02/S07_mixed,132.1,0.98,cough 128.6-129.4; cough 133.8-134.5
+P02/S07_mixed,135.5,0.7,cough 133.8-134.5
+P02/S07_mixed,137.9,0.93,
+P02/S07_mixed,140.8,0.95,cough 142.3-143.1
+P02/S07_mixed,144.2,0.88,cough 142.3-143.1
+P02/S07_mixed,157.9,0.91,cough 160.4-161.2
+P02/S07_mixed,160.1,0.94,cough 160.4-161.2
+P02/S07_mixed,162.1,0.87,cough 160.4-161.2
+P02/S07_mixed,167.6,0.96,cough 167.5-168.3
+P02/S07_mixed,172.7,0.93,
+P03/S02_dry_swallow,44.5,0.83,
+P03/S02_dry_swallow,142.9,0.92,
+P03/S03_dry_swallow,39.9,0.95,
+P03/S03_dry_swallow,41.6,0.9,
+P03/S04_mixed,35.0,0.83,talking 36.6-38.0
+P03/S05_dry_swallow,28.4,0.9,
+P03/S05_dry_swallow,48.0,0.94,
+P03/S05_dry_swallow,90.9,0.87,
+P03/S07_talking,31.6,0.88,talking 28.6-31.6
+P03/S08_mixed,1.6,0.92,
+P03/S08_mixed,4.8,0.86,cough 5.2-6.1
+P03/S08_mixed,7.3,0.94,cough 5.2-6.1
+P03/S08_mixed,18.6,0.86,talking 15.0-17.4
+P03/S08_mixed,20.3,0.87,talking 15.0-17.4
+P03/S08_mixed,23.4,0.95,
+P03/S08_mixed,31.9,0.98,cough 34.5-34.9
+P03/S08_mixed,67.5,0.89,cough 63.5-64.7
+P03/S08_mixed,73.4,0.9,
+P03/S08_mixed,75.5,0.93,
+P03/S08_mixed,89.9,0.86,
+P03/S08_mixed,93.3,0.92,
+P03/S08_mixed,99.4,0.96,
+P03/S08_mixed,109.0,0.9,

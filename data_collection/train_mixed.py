@@ -23,13 +23,16 @@ from scipy.optimize import minimize
 from scipy.special import expit
 
 from adapt_public import adapted_public
-from live_detection import FEATURE_VERSION, IMU_COLUMNS, MIC_COLUMNS, AgreementModel, build_model, quadratic_terms
+from live_detection import (FEATURE_VERSION, IMU_COLUMNS, MIC_COLUMNS, AgreementModel, build_model, quadratic_terms,
+                            stack_lags)
 from train_live import (ALL, evaluate, evaluate_scores, grouped_split, pool_folds, reviewed_records,
                         score_records, wearable_records, write_json)
 
 HOME = Path(__file__).resolve().parent
 OUT = HOME / 'models' / 'mixed'
-THRESHOLDS = tuple(np.round(np.arange(.30, .91, .05), 2))
+# Boosted-tree scores bunch up near 1, so the grid is finer at the top (the best threshold
+# used to sit at the old 0.9 maximum).
+THRESHOLDS = tuple(np.round(np.r_[np.arange(.30, .81, .05), .83, .86, .88, .9, .92, .94, .95, .96, .97, .98], 2))
 COOLDOWNS = (.8, 1.2, 1.6)
 SHARES = (0., .2, .35, .5, .65, .8, .9, .95, 1.)
 BASE = dict(quadratic=True, penalty=.015, background_weight=4., reviewed_weight=4.)
@@ -126,11 +129,50 @@ def export_trees(classifier):
                 depth=depth, baseline=float(np.ravel(classifier._baseline_prediction)[0]))
 
 
-def fit_mixed_trees(wearable, public, columns=ALL, public_share=.5, *, threshold=.8, refractory=1.2, seed=0,
-                    **_ignored):
-    """Gradient-boosted trees with the same per-dataset, class-balanced weighting."""
+def with_context(records, lags):
+    """Records whose feature rows also hold the windows ``lags`` hops earlier (see stack_lags).
+
+    Windows without enough clean history are left out of training, as the live detector
+    does not score them either.
+    """
+    if not lags:
+        return records
+    out = []
+    for r in records:
+        features = stack_lags(r['features'], lags)
+        ok = np.isfinite(features).all(axis=1)
+        out.append(dict(r, features=features, trainable=r['trainable'] & ok, clean_trainable=r['clean_trainable'] & ok))
+    return out
+
+
+def merge_trees(parts):
+    """Average several exported boosted models (mean of their logits) into one TreeModel table."""
+    k = len(parts)
+    out = dict(feature=[], split=[], left=[], right=[], leaf=[], value=[], roots=[], depth=0, baseline=0.)
+    for t in parts:
+        offset = len(out['feature'])
+        for key in ('feature', 'split', 'leaf'):
+            out[key] += t[key]
+        out['left'] += [i + offset for i in t['left']]
+        out['right'] += [i + offset for i in t['right']]
+        out['roots'] += [i + offset for i in t['roots']]
+        out['value'] += [v / k for v in t['value']]
+        out['depth'] = max(out['depth'], t['depth'])
+        out['baseline'] += t['baseline'] / k
+    return out
+
+
+def fit_mixed_trees(wearable, public, columns=None, public_share=.5, *, threshold=.8, refractory=1.2, seed=0,
+                    lags=(), members=1, **_ignored):
+    """Gradient-boosted trees with the same per-dataset, class-balanced weighting.
+
+    ``lags``: the records already carry those context windows (``with_context``); the model
+    records them so the app stacks the same history. ``members`` > 1 averages that many
+    models, each splitting on a random 70% of the features (seeds 0..members-1).
+    """
     from sklearn.ensemble import HistGradientBoostingClassifier
-    columns = np.asarray(columns)
+    width = wearable[0]['features'].shape[1] if wearable else public[0]['features'].shape[1]
+    columns = np.arange(width) if columns is None else np.asarray(columns)
     parts = []
     if public_share < 1:
         rows, labels, _, weights = dataset_rows(wearable, columns, 'clean_trainable')
@@ -141,10 +183,18 @@ def fit_mixed_trees(wearable, public, columns=ALL, public_share=.5, *, threshold
     X = np.vstack([p[0] for p in parts])
     y = np.concatenate([p[1] for p in parts])
     w = np.concatenate([p[2] for p in parts])
-    classifier = HistGradientBoostingClassifier(**TREES, random_state=seed, early_stopping=False)
-    classifier.fit(X, y, sample_weight=w / w.mean())
-    return dict(feature_version=FEATURE_VERSION, columns=columns.tolist(), threshold=threshold,
-                refractory=refractory, trees=export_trees(classifier), trees_settings=TREES)
+    settings = dict(TREES, max_features=.7) if members > 1 else TREES
+    exported = []
+    for member in range(members):
+        classifier = HistGradientBoostingClassifier(**settings, random_state=seed + member, early_stopping=False)
+        classifier.fit(X, y, sample_weight=w / w.mean())
+        exported.append(export_trees(classifier))
+    data = dict(feature_version=FEATURE_VERSION, columns=columns.tolist(), threshold=threshold,
+                refractory=refractory, trees=exported[0] if members == 1 else merge_trees(exported),
+                trees_settings=dict(settings, members=members))
+    if lags:
+        data['lags'] = list(lags)
+    return data
 
 
 FOREST = dict(n_estimators=300, max_depth=14, min_samples_leaf=5, max_features='sqrt')
@@ -304,7 +354,8 @@ SENSOR_GATE = (.4, .4)
 def agreement_fit(wearable, public, share, settings, fitter, gate, chosen=None):
     """Joint detector plus logistic microphone-only and IMU-only checks (the app's format)."""
     sensor = dict(BASE, **{k: v for k, v in settings.items() if k in BASE})
-    return dict(joint=fitter(wearable, public, ALL, share, **settings, **(chosen or {})),
+    joint_columns = None if fitter is fit_mixed_trees else ALL   # trees use every context column
+    return dict(joint=fitter(wearable, public, joint_columns, share, **settings, **(chosen or {})),
                 mic=fit_mixed(wearable, public, np.array(MIC_COLUMNS), share, **dict(sensor, threshold=gate[0])),
                 imu=fit_mixed(wearable, public, np.array(IMU_COLUMNS), share, **dict(sensor, threshold=gate[1])))
 
@@ -358,12 +409,21 @@ def main():
     parser.add_argument('--model', choices=tuple(FITTERS), default='logistic')
     parser.add_argument('--no-gate', action='store_true',
                         help='Export without the mic/IMU agreement check (it lowers random-forest accuracy)')
+    parser.add_argument('--lags', type=int, nargs='*', default=[],
+                        help='Trees only: also give the model the windows this many 0.1 s hops earlier, e.g. 2 4')
+    parser.add_argument('--members', type=int, default=1,
+                        help='Trees only: average this many boosted models (each splits on 70%% of the features)')
     args = parser.parse_args()
     fitter = FITTERS[args.model]
     base = BASE if args.model == 'logistic' else {}
-    suffix = '' if args.model == 'logistic' else f'_{args.model}'
+    if args.model == 'trees' and (args.lags or args.members > 1):
+        base = dict(lags=tuple(args.lags), members=args.members)
+    elif args.lags or args.members > 1:
+        parser.error('--lags and --members apply to --model trees only')
+    suffix = ('' if args.model == 'logistic' else f'_{args.model}') + (f'_context{"_".join(map(str, args.lags))}' if args.lags else '')
     started = perf_counter()
-    wearable = list(wearable_records(args.recordings))
+    raw_wearable = list(wearable_records(args.recordings))
+    wearable = with_context(raw_wearable, args.lags)
     participants = sorted({r['participant'] for r in wearable if r['intervals']})
     print('Wearable participants:', participants, flush=True)
 
@@ -372,7 +432,9 @@ def main():
     def public_for(reference_participants):
         key = tuple(reference_participants)
         if key not in cache:
-            cache[key] = adapted_public(args.public_data, [r for r in wearable if r['participant'] in key])[0]
+            # Adaptation statistics come from the plain (current-window) wearable features.
+            adapted = adapted_public(args.public_data, [r for r in raw_wearable if r['participant'] in key])[0]
+            cache[key] = with_context(adapted, args.lags)
         return cache[key]
 
     def run(label, share, settings, source=public_for):

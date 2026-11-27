@@ -111,6 +111,43 @@ class TreeExportTest(unittest.TestCase):
         self.assertEqual(agreement.score(records[0]['features']).shape, (200,))
 
 
+class ContextWindowTest(unittest.TestCase):
+    def test_live_detector_stacks_the_same_earlier_windows_as_training(self):
+        from live_detection import FEATURE_COUNT, LiveDetector, stack_lags
+        mic, imu = adapt_signal(synthetic_public(), PLAN)
+        offline = stack_lags(make_record(mic, imu, [(2., 3.)], wearable=True)['features'], (2, 4))
+
+        class Recorder:
+            feature_version, threshold, refractory, lags = 3, .5, 1., (2, 4)
+            seen = []
+
+            def score(self, features):
+                self.seen.append(np.array(features))
+                return 0.
+
+        model = Recorder()
+        detector = LiveDetector(model)
+        detector.update(mic, imu, 0., 6.)
+        usable = offline[np.isfinite(offline).all(axis=1)]
+        self.assertEqual(usable.shape[1], 3 * FEATURE_COUNT)
+        self.assertGreater(len(usable), 40)
+        np.testing.assert_allclose(np.array(model.seen), usable)
+
+    def test_tree_model_accepts_context_columns_only_with_lags(self):
+        from sklearn.ensemble import HistGradientBoostingClassifier
+        from live_detection import TreeModel
+        from train_mixed import export_trees
+        rng = np.random.default_rng(7)
+        x = rng.normal(size=(600, 87))
+        classifier = HistGradientBoostingClassifier(max_iter=10).fit(x, x[:, 60] > 0)
+        data = dict(feature_version=3, columns=list(range(87)), threshold=.5, refractory=1.,
+                    trees=export_trees(classifier))
+        with self.assertRaises(ValueError):
+            TreeModel(data)
+        model = TreeModel(dict(data, lags=[2, 4]))
+        np.testing.assert_allclose(model.score(x[:50]), classifier.predict_proba(x[:50])[:, 1], atol=1e-9)
+
+
 class ForestExportTest(unittest.TestCase):
     def test_numpy_forest_matches_sklearn_and_loads_in_app(self):
         import json, tempfile

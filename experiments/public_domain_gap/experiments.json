@@ -1,0 +1,4866 @@
+[
+ {
+  "experiment": "base",
+  "public_share": 0.0,
+  "settings": {},
+  "all_sessions": {
+   "tp": 120,
+   "fp": 38,
+   "fn": 39,
+   "precision": 0.7595,
+   "recall": 0.7547,
+   "f1": 0.7571,
+   "extra_per_minute": 1.1177
+  },
+  "original_14_sessions": {
+   "tp": 117,
+   "fp": 24,
+   "fn": 37,
+   "precision": 0.8298,
+   "recall": 0.7597,
+   "f1": 0.7932,
+   "extra_per_minute": 0.8571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 7,
+    "fn": 11,
+    "precision": 0.8542,
+    "recall": 0.7885,
+    "f1": 0.82,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 47,
+    "fp": 22,
+    "fn": 28,
+    "precision": 0.6812,
+    "recall": 0.6267,
+    "f1": 0.6528,
+    "extra_per_minute": 1.2222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "lags",
+  "public_share": 0.0,
+  "settings": {
+   "lags": [
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 127,
+   "fp": 45,
+   "fn": 32,
+   "precision": 0.7384,
+   "recall": 0.7987,
+   "f1": 0.7674,
+   "extra_per_minute": 1.3235
+  },
+  "original_14_sessions": {
+   "tp": 124,
+   "fp": 24,
+   "fn": 30,
+   "precision": 0.8378,
+   "recall": 0.8052,
+   "f1": 0.8212,
+   "extra_per_minute": 0.8571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 4,
+    "fn": 12,
+    "precision": 0.9091,
+    "recall": 0.7692,
+    "f1": 0.8333,
+    "extra_per_minute": 0.5
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 11,
+    "fn": 0,
+    "precision": 0.7442,
+    "recall": 1.0,
+    "f1": 0.8533,
+    "extra_per_minute": 1.375
+   },
+   "P03": {
+    "tp": 55,
+    "fp": 30,
+    "fn": 20,
+    "precision": 0.6471,
+    "recall": 0.7333,
+    "f1": 0.6875,
+    "extra_per_minute": 1.6667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.7,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.35,
+  "settings": {
+   "public_shift": -0.1,
+   "public_end_shift": -0.1
+  },
+  "all_sessions": {
+   "tp": 134,
+   "fp": 30,
+   "fn": 25,
+   "precision": 0.8171,
+   "recall": 0.8428,
+   "f1": 0.8297,
+   "extra_per_minute": 0.8824
+  },
+  "original_14_sessions": {
+   "tp": 131,
+   "fp": 22,
+   "fn": 23,
+   "precision": 0.8562,
+   "recall": 0.8506,
+   "f1": 0.8534,
+   "extra_per_minute": 0.7857
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 44,
+    "fp": 10,
+    "fn": 8,
+    "precision": 0.8148,
+    "recall": 0.8462,
+    "f1": 0.8302,
+    "extra_per_minute": 1.25
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 58,
+    "fp": 13,
+    "fn": 17,
+    "precision": 0.8169,
+    "recall": 0.7733,
+    "f1": 0.7945,
+    "extra_per_minute": 0.7222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "base",
+  "public_share": 0.2,
+  "settings": {},
+  "all_sessions": {
+   "tp": 138,
+   "fp": 43,
+   "fn": 21,
+   "precision": 0.7624,
+   "recall": 0.8679,
+   "f1": 0.8118,
+   "extra_per_minute": 1.2647
+  },
+  "original_14_sessions": {
+   "tp": 135,
+   "fp": 23,
+   "fn": 19,
+   "precision": 0.8544,
+   "recall": 0.8766,
+   "f1": 0.8654,
+   "extra_per_minute": 0.8214
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 43,
+    "fp": 7,
+    "fn": 9,
+    "precision": 0.86,
+    "recall": 0.8269,
+    "f1": 0.8431,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 63,
+    "fp": 29,
+    "fn": 12,
+    "precision": 0.6848,
+    "recall": 0.84,
+    "f1": 0.7545,
+    "extra_per_minute": 1.6111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.35,
+  "settings": {
+   "public_shift": -0.2,
+   "public_end_shift": -0.2
+  },
+  "all_sessions": {
+   "tp": 131,
+   "fp": 26,
+   "fn": 28,
+   "precision": 0.8344,
+   "recall": 0.8239,
+   "f1": 0.8291,
+   "extra_per_minute": 0.7647
+  },
+  "original_14_sessions": {
+   "tp": 128,
+   "fp": 19,
+   "fn": 26,
+   "precision": 0.8707,
+   "recall": 0.8312,
+   "f1": 0.8505,
+   "extra_per_minute": 0.6786
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 8,
+    "fn": 12,
+    "precision": 0.8333,
+    "recall": 0.7692,
+    "f1": 0.8,
+    "extra_per_minute": 1.0
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 59,
+    "fp": 9,
+    "fn": 16,
+    "precision": 0.8676,
+    "recall": 0.7867,
+    "f1": 0.8252,
+    "extra_per_minute": 0.5
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "base",
+  "public_share": 0.35,
+  "settings": {},
+  "all_sessions": {
+   "tp": 141,
+   "fp": 45,
+   "fn": 18,
+   "precision": 0.7581,
+   "recall": 0.8868,
+   "f1": 0.8174,
+   "extra_per_minute": 1.3235
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 23,
+   "fn": 16,
+   "precision": 0.8571,
+   "recall": 0.8961,
+   "f1": 0.8762,
+   "extra_per_minute": 0.8214
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 44,
+    "fp": 8,
+    "fn": 8,
+    "precision": 0.8462,
+    "recall": 0.8462,
+    "f1": 0.8462,
+    "extra_per_minute": 1.0
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 65,
+    "fp": 28,
+    "fn": 10,
+    "precision": 0.6989,
+    "recall": 0.8667,
+    "f1": 0.7738,
+    "extra_per_minute": 1.5556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "lags",
+  "public_share": 0.35,
+  "settings": {
+   "lags": [
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 134,
+   "fp": 28,
+   "fn": 25,
+   "precision": 0.8272,
+   "recall": 0.8428,
+   "f1": 0.8349,
+   "extra_per_minute": 0.8235
+  },
+  "original_14_sessions": {
+   "tp": 131,
+   "fp": 18,
+   "fn": 23,
+   "precision": 0.8792,
+   "recall": 0.8506,
+   "f1": 0.8647,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 6,
+    "fn": 12,
+    "precision": 0.8696,
+    "recall": 0.7692,
+    "f1": 0.8163,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 62,
+    "fp": 13,
+    "fn": 13,
+    "precision": 0.8267,
+    "recall": 0.8267,
+    "f1": 0.8267,
+    "extra_per_minute": 0.7222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.35,
+  "settings": {
+   "public_shift": -0.3,
+   "public_end_shift": -0.3
+  },
+  "all_sessions": {
+   "tp": 134,
+   "fp": 38,
+   "fn": 25,
+   "precision": 0.7791,
+   "recall": 0.8428,
+   "f1": 0.8097,
+   "extra_per_minute": 1.1177
+  },
+  "original_14_sessions": {
+   "tp": 131,
+   "fp": 20,
+   "fn": 23,
+   "precision": 0.8675,
+   "recall": 0.8506,
+   "f1": 0.859,
+   "extra_per_minute": 0.7143
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 38,
+    "fp": 7,
+    "fn": 14,
+    "precision": 0.8444,
+    "recall": 0.7308,
+    "f1": 0.7835,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 64,
+    "fp": 22,
+    "fn": 11,
+    "precision": 0.7442,
+    "recall": 0.8533,
+    "f1": 0.795,
+    "extra_per_minute": 1.2222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "base",
+  "public_share": 0.5,
+  "settings": {},
+  "all_sessions": {
+   "tp": 141,
+   "fp": 49,
+   "fn": 18,
+   "precision": 0.7421,
+   "recall": 0.8868,
+   "f1": 0.808,
+   "extra_per_minute": 1.4412
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 30,
+   "fn": 16,
+   "precision": 0.8214,
+   "recall": 0.8961,
+   "f1": 0.8571,
+   "extra_per_minute": 1.0714
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 46,
+    "fp": 12,
+    "fn": 6,
+    "precision": 0.7931,
+    "recall": 0.8846,
+    "f1": 0.8364,
+    "extra_per_minute": 1.5
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 63,
+    "fp": 27,
+    "fn": 12,
+    "precision": 0.7,
+    "recall": 0.84,
+    "f1": 0.7636,
+    "extra_per_minute": 1.5
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.75,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.35,
+  "settings": {
+   "public_shift": -0.2,
+   "public_end_shift": 0.0
+  },
+  "all_sessions": {
+   "tp": 133,
+   "fp": 27,
+   "fn": 26,
+   "precision": 0.8313,
+   "recall": 0.8365,
+   "f1": 0.8339,
+   "extra_per_minute": 0.7941
+  },
+  "original_14_sessions": {
+   "tp": 130,
+   "fp": 19,
+   "fn": 24,
+   "precision": 0.8725,
+   "recall": 0.8442,
+   "f1": 0.8581,
+   "extra_per_minute": 0.6786
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 44,
+    "fp": 9,
+    "fn": 8,
+    "precision": 0.8302,
+    "recall": 0.8462,
+    "f1": 0.8381,
+    "extra_per_minute": 1.125
+   },
+   "P02": {
+    "tp": 31,
+    "fp": 7,
+    "fn": 1,
+    "precision": 0.8158,
+    "recall": 0.9688,
+    "f1": 0.8857,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 58,
+    "fp": 11,
+    "fn": 17,
+    "precision": 0.8406,
+    "recall": 0.7733,
+    "f1": 0.8056,
+    "extra_per_minute": 0.6111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "lags",
+  "public_share": 0.5,
+  "settings": {
+   "lags": [
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 140,
+   "fp": 38,
+   "fn": 19,
+   "precision": 0.7865,
+   "recall": 0.8805,
+   "f1": 0.8309,
+   "extra_per_minute": 1.1177
+  },
+  "original_14_sessions": {
+   "tp": 137,
+   "fp": 19,
+   "fn": 17,
+   "precision": 0.8782,
+   "recall": 0.8896,
+   "f1": 0.8839,
+   "extra_per_minute": 0.6786
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 5,
+    "fn": 13,
+    "precision": 0.8864,
+    "recall": 0.75,
+    "f1": 0.8125,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 26,
+    "fn": 6,
+    "precision": 0.7263,
+    "recall": 0.92,
+    "f1": 0.8118,
+    "extra_per_minute": 1.4445
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "base",
+  "public_share": 0.65,
+  "settings": {},
+  "all_sessions": {
+   "tp": 141,
+   "fp": 53,
+   "fn": 18,
+   "precision": 0.7268,
+   "recall": 0.8868,
+   "f1": 0.7989,
+   "extra_per_minute": 1.5588
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 24,
+   "fn": 16,
+   "precision": 0.8519,
+   "recall": 0.8961,
+   "f1": 0.8734,
+   "extra_per_minute": 0.8571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 42,
+    "fp": 7,
+    "fn": 10,
+    "precision": 0.8571,
+    "recall": 0.8077,
+    "f1": 0.8317,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 67,
+    "fp": 37,
+    "fn": 8,
+    "precision": 0.6442,
+    "recall": 0.8933,
+    "f1": 0.7486,
+    "extra_per_minute": 2.0556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.5,
+  "settings": {
+   "public_shift": -0.1,
+   "public_end_shift": -0.1
+  },
+  "all_sessions": {
+   "tp": 136,
+   "fp": 40,
+   "fn": 23,
+   "precision": 0.7727,
+   "recall": 0.8553,
+   "f1": 0.8119,
+   "extra_per_minute": 1.1765
+  },
+  "original_14_sessions": {
+   "tp": 133,
+   "fp": 20,
+   "fn": 21,
+   "precision": 0.8693,
+   "recall": 0.8636,
+   "f1": 0.8664,
+   "extra_per_minute": 0.7143
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 8,
+    "fn": 13,
+    "precision": 0.8298,
+    "recall": 0.75,
+    "f1": 0.7879,
+    "extra_per_minute": 1.0
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 65,
+    "fp": 25,
+    "fn": 10,
+    "precision": 0.7222,
+    "recall": 0.8667,
+    "f1": 0.7879,
+    "extra_per_minute": 1.3889
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "lags",
+  "public_share": 0.0,
+  "settings": {
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 140,
+   "fp": 43,
+   "fn": 19,
+   "precision": 0.765,
+   "recall": 0.8805,
+   "f1": 0.8187,
+   "extra_per_minute": 1.2647
+  },
+  "original_14_sessions": {
+   "tp": 137,
+   "fp": 28,
+   "fn": 17,
+   "precision": 0.8303,
+   "recall": 0.8896,
+   "f1": 0.8589,
+   "extra_per_minute": 1.0
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 10,
+    "fn": 11,
+    "precision": 0.8039,
+    "recall": 0.7885,
+    "f1": 0.7961,
+    "extra_per_minute": 1.25
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 67,
+    "fp": 23,
+    "fn": 8,
+    "precision": 0.7444,
+    "recall": 0.8933,
+    "f1": 0.8121,
+    "extra_per_minute": 1.2778
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.7,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.7,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.75,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "base",
+  "public_share": 0.8,
+  "settings": {},
+  "all_sessions": {
+   "tp": 141,
+   "fp": 68,
+   "fn": 18,
+   "precision": 0.6746,
+   "recall": 0.8868,
+   "f1": 0.7663,
+   "extra_per_minute": 2.0
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 34,
+   "fn": 16,
+   "precision": 0.8023,
+   "recall": 0.8961,
+   "f1": 0.8466,
+   "extra_per_minute": 1.2143
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 45,
+    "fp": 10,
+    "fn": 7,
+    "precision": 0.8182,
+    "recall": 0.8654,
+    "f1": 0.8411,
+    "extra_per_minute": 1.25
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 64,
+    "fp": 48,
+    "fn": 11,
+    "precision": 0.5714,
+    "recall": 0.8533,
+    "f1": 0.6845,
+    "extra_per_minute": 2.6667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.75,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.5,
+  "settings": {
+   "public_shift": -0.2,
+   "public_end_shift": -0.2
+  },
+  "all_sessions": {
+   "tp": 133,
+   "fp": 60,
+   "fn": 26,
+   "precision": 0.6891,
+   "recall": 0.8365,
+   "f1": 0.7557,
+   "extra_per_minute": 1.7647
+  },
+  "original_14_sessions": {
+   "tp": 130,
+   "fp": 29,
+   "fn": 24,
+   "precision": 0.8176,
+   "recall": 0.8442,
+   "f1": 0.8307,
+   "extra_per_minute": 1.0357
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 37,
+    "fp": 6,
+    "fn": 15,
+    "precision": 0.8605,
+    "recall": 0.7115,
+    "f1": 0.7789,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 31,
+    "fp": 6,
+    "fn": 1,
+    "precision": 0.8378,
+    "recall": 0.9688,
+    "f1": 0.8986,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 65,
+    "fp": 48,
+    "fn": 10,
+    "precision": 0.5752,
+    "recall": 0.8667,
+    "f1": 0.6915,
+    "extra_per_minute": 2.6667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "classshare",
+  "public_share": 0.5,
+  "settings": {
+   "pos_share": 0.5,
+   "neg_share": 0.2
+  },
+  "all_sessions": {
+   "tp": 133,
+   "fp": 42,
+   "fn": 26,
+   "precision": 0.76,
+   "recall": 0.8365,
+   "f1": 0.7964,
+   "extra_per_minute": 1.2353
+  },
+  "original_14_sessions": {
+   "tp": 130,
+   "fp": 17,
+   "fn": 24,
+   "precision": 0.8844,
+   "recall": 0.8442,
+   "f1": 0.8638,
+   "extra_per_minute": 0.6071
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 37,
+    "fp": 3,
+    "fn": 15,
+    "precision": 0.925,
+    "recall": 0.7115,
+    "f1": 0.8043,
+    "extra_per_minute": 0.375
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 64,
+    "fp": 30,
+    "fn": 11,
+    "precision": 0.6809,
+    "recall": 0.8533,
+    "f1": 0.7574,
+    "extra_per_minute": 1.6667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.5,
+  "settings": {
+   "public_shift": -0.3,
+   "public_end_shift": -0.3
+  },
+  "all_sessions": {
+   "tp": 134,
+   "fp": 34,
+   "fn": 25,
+   "precision": 0.7976,
+   "recall": 0.8428,
+   "f1": 0.8196,
+   "extra_per_minute": 1.0
+  },
+  "original_14_sessions": {
+   "tp": 131,
+   "fp": 22,
+   "fn": 23,
+   "precision": 0.8562,
+   "recall": 0.8506,
+   "f1": 0.8534,
+   "extra_per_minute": 0.7857
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 8,
+    "fn": 12,
+    "precision": 0.8333,
+    "recall": 0.7692,
+    "f1": 0.8,
+    "extra_per_minute": 1.0
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 62,
+    "fp": 19,
+    "fn": 13,
+    "precision": 0.7654,
+    "recall": 0.8267,
+    "f1": 0.7949,
+    "extra_per_minute": 1.0556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "classshare",
+  "public_share": 0.5,
+  "settings": {
+   "pos_share": 0.7,
+   "neg_share": 0.35
+  },
+  "all_sessions": {
+   "tp": 124,
+   "fp": 35,
+   "fn": 35,
+   "precision": 0.7799,
+   "recall": 0.7799,
+   "f1": 0.7799,
+   "extra_per_minute": 1.0294
+  },
+  "original_14_sessions": {
+   "tp": 121,
+   "fp": 18,
+   "fn": 33,
+   "precision": 0.8705,
+   "recall": 0.7857,
+   "f1": 0.8259,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 28,
+    "fp": 1,
+    "fn": 24,
+    "precision": 0.9655,
+    "recall": 0.5385,
+    "f1": 0.6914,
+    "extra_per_minute": 0.125
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 13,
+    "fn": 0,
+    "precision": 0.7111,
+    "recall": 1.0,
+    "f1": 0.8312,
+    "extra_per_minute": 1.625
+   },
+   "P03": {
+    "tp": 64,
+    "fp": 21,
+    "fn": 11,
+    "precision": 0.7529,
+    "recall": 0.8533,
+    "f1": 0.8,
+    "extra_per_minute": 1.1667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "lags",
+  "public_share": 0.35,
+  "settings": {
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 143,
+   "fp": 33,
+   "fn": 16,
+   "precision": 0.8125,
+   "recall": 0.8994,
+   "f1": 0.8537,
+   "extra_per_minute": 0.9706
+  },
+  "original_14_sessions": {
+   "tp": 140,
+   "fp": 17,
+   "fn": 14,
+   "precision": 0.8917,
+   "recall": 0.9091,
+   "f1": 0.9003,
+   "extra_per_minute": 0.6071
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 6,
+    "fn": 11,
+    "precision": 0.8723,
+    "recall": 0.7885,
+    "f1": 0.8283,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 70,
+    "fp": 21,
+    "fn": 5,
+    "precision": 0.7692,
+    "recall": 0.9333,
+    "f1": 0.8434,
+    "extra_per_minute": 1.1667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "shift",
+  "public_share": 0.5,
+  "settings": {
+   "public_shift": -0.2,
+   "public_end_shift": 0.0
+  },
+  "all_sessions": {
+   "tp": 128,
+   "fp": 25,
+   "fn": 31,
+   "precision": 0.8366,
+   "recall": 0.805,
+   "f1": 0.8205,
+   "extra_per_minute": 0.7353
+  },
+  "original_14_sessions": {
+   "tp": 125,
+   "fp": 18,
+   "fn": 29,
+   "precision": 0.8741,
+   "recall": 0.8117,
+   "f1": 0.8418,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 6,
+    "fn": 13,
+    "precision": 0.8667,
+    "recall": 0.75,
+    "f1": 0.8041,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 57,
+    "fp": 13,
+    "fn": 18,
+    "precision": 0.8143,
+    "recall": 0.76,
+    "f1": 0.7862,
+    "extra_per_minute": 0.7222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "classshare",
+  "public_share": 0.5,
+  "settings": {
+   "pos_share": 0.35,
+   "neg_share": 0.5
+  },
+  "all_sessions": {
+   "tp": 138,
+   "fp": 42,
+   "fn": 21,
+   "precision": 0.7667,
+   "recall": 0.8679,
+   "f1": 0.8142,
+   "extra_per_minute": 1.2353
+  },
+  "original_14_sessions": {
+   "tp": 135,
+   "fp": 26,
+   "fn": 19,
+   "precision": 0.8385,
+   "recall": 0.8766,
+   "f1": 0.8571,
+   "extra_per_minute": 0.9286
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 45,
+    "fp": 10,
+    "fn": 7,
+    "precision": 0.8182,
+    "recall": 0.8654,
+    "f1": 0.8411,
+    "extra_per_minute": 1.25
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 61,
+    "fp": 23,
+    "fn": 14,
+    "precision": 0.7262,
+    "recall": 0.8133,
+    "f1": 0.7673,
+    "extra_per_minute": 1.2778
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "quantile",
+  "public_share": 0.35,
+  "settings": {
+   "align_method": "quantile",
+   "align_strength": 0.5
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 53,
+   "fn": 20,
+   "precision": 0.724,
+   "recall": 0.8742,
+   "f1": 0.792,
+   "extra_per_minute": 1.5588
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 22,
+   "fn": 18,
+   "precision": 0.8608,
+   "recall": 0.8831,
+   "f1": 0.8718,
+   "extra_per_minute": 0.7857
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 6,
+    "fn": 12,
+    "precision": 0.8696,
+    "recall": 0.7692,
+    "f1": 0.8163,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 67,
+    "fp": 38,
+    "fn": 8,
+    "precision": 0.6381,
+    "recall": 0.8933,
+    "f1": 0.7444,
+    "extra_per_minute": 2.1111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "classshare",
+  "public_share": 0.5,
+  "settings": {
+   "pos_share": 0.2,
+   "neg_share": 0.5
+  },
+  "all_sessions": {
+   "tp": 130,
+   "fp": 39,
+   "fn": 29,
+   "precision": 0.7692,
+   "recall": 0.8176,
+   "f1": 0.7927,
+   "extra_per_minute": 1.1471
+  },
+  "original_14_sessions": {
+   "tp": 127,
+   "fp": 30,
+   "fn": 27,
+   "precision": 0.8089,
+   "recall": 0.8247,
+   "f1": 0.8167,
+   "extra_per_minute": 1.0714
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 43,
+    "fp": 13,
+    "fn": 9,
+    "precision": 0.7679,
+    "recall": 0.8269,
+    "f1": 0.7963,
+    "extra_per_minute": 1.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 55,
+    "fp": 16,
+    "fn": 20,
+    "precision": 0.7746,
+    "recall": 0.7333,
+    "f1": 0.7534,
+    "extra_per_minute": 0.8889
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.7,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.65,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "quantile",
+  "public_share": 0.35,
+  "settings": {
+   "align_method": "quantile",
+   "align_strength": 1.0
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 55,
+   "fn": 20,
+   "precision": 0.7165,
+   "recall": 0.8742,
+   "f1": 0.7875,
+   "extra_per_minute": 1.6177
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 29,
+   "fn": 18,
+   "precision": 0.8242,
+   "recall": 0.8831,
+   "f1": 0.8527,
+   "extra_per_minute": 1.0357
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 6,
+    "fn": 11,
+    "precision": 0.8723,
+    "recall": 0.7885,
+    "f1": 0.8283,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 13,
+    "fn": 0,
+    "precision": 0.7111,
+    "recall": 1.0,
+    "f1": 0.8312,
+    "extra_per_minute": 1.625
+   },
+   "P03": {
+    "tp": 66,
+    "fp": 36,
+    "fn": 9,
+    "precision": 0.6471,
+    "recall": 0.88,
+    "f1": 0.7458,
+    "extra_per_minute": 2.0
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "trigger",
+  "public_share": 0.0,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 120,
+   "fp": 38,
+   "fn": 39,
+   "precision": 0.7595,
+   "recall": 0.7547,
+   "f1": 0.7571,
+   "extra_per_minute": 1.1177
+  },
+  "original_14_sessions": {
+   "tp": 117,
+   "fp": 24,
+   "fn": 37,
+   "precision": 0.8298,
+   "recall": 0.7597,
+   "f1": 0.7932,
+   "extra_per_minute": 0.8571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 7,
+    "fn": 11,
+    "precision": 0.8542,
+    "recall": 0.7885,
+    "f1": 0.82,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 47,
+    "fp": 22,
+    "fn": 28,
+    "precision": 0.6812,
+    "recall": 0.6267,
+    "f1": 0.6528,
+    "extra_per_minute": 1.2222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.2,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "lags",
+  "public_share": 0.5,
+  "settings": {
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 141,
+   "fp": 34,
+   "fn": 18,
+   "precision": 0.8057,
+   "recall": 0.8868,
+   "f1": 0.8443,
+   "extra_per_minute": 1.0
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 21,
+   "fn": 16,
+   "precision": 0.8679,
+   "recall": 0.8961,
+   "f1": 0.8818,
+   "extra_per_minute": 0.75
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 7,
+    "fn": 12,
+    "precision": 0.8511,
+    "recall": 0.7692,
+    "f1": 0.8081,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 20,
+    "fn": 6,
+    "precision": 0.7753,
+    "recall": 0.92,
+    "f1": 0.8415,
+    "extra_per_minute": 1.1111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "quantile",
+  "public_share": 0.5,
+  "settings": {
+   "align_method": "quantile",
+   "align_strength": 0.5
+  },
+  "all_sessions": {
+   "tp": 138,
+   "fp": 68,
+   "fn": 21,
+   "precision": 0.6699,
+   "recall": 0.8679,
+   "f1": 0.7562,
+   "extra_per_minute": 2.0
+  },
+  "original_14_sessions": {
+   "tp": 135,
+   "fp": 28,
+   "fn": 19,
+   "precision": 0.8282,
+   "recall": 0.8766,
+   "f1": 0.8517,
+   "extra_per_minute": 1.0
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 7,
+    "fn": 13,
+    "precision": 0.8478,
+    "recall": 0.75,
+    "f1": 0.7959,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 67,
+    "fp": 51,
+    "fn": 8,
+    "precision": 0.5678,
+    "recall": 0.8933,
+    "f1": 0.6943,
+    "extra_per_minute": 2.8334
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "trigger",
+  "public_share": 0.2,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 138,
+   "fp": 43,
+   "fn": 21,
+   "precision": 0.7624,
+   "recall": 0.8679,
+   "f1": 0.8118,
+   "extra_per_minute": 1.2647
+  },
+  "original_14_sessions": {
+   "tp": 135,
+   "fp": 23,
+   "fn": 19,
+   "precision": 0.8544,
+   "recall": 0.8766,
+   "f1": 0.8654,
+   "extra_per_minute": 0.8214
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 43,
+    "fp": 7,
+    "fn": 9,
+    "precision": 0.86,
+    "recall": 0.8269,
+    "f1": 0.8431,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 63,
+    "fp": 29,
+    "fn": 12,
+    "precision": 0.6848,
+    "recall": 0.84,
+    "f1": 0.7545,
+    "extra_per_minute": 1.6111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.6,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "finetune",
+  "public_share": 1.0,
+  "settings": {
+   "finetune": 100
+  },
+  "all_sessions": {
+   "tp": 130,
+   "fp": 54,
+   "fn": 29,
+   "precision": 0.7065,
+   "recall": 0.8176,
+   "f1": 0.758,
+   "extra_per_minute": 1.5882
+  },
+  "original_14_sessions": {
+   "tp": 127,
+   "fp": 27,
+   "fn": 27,
+   "precision": 0.8247,
+   "recall": 0.8247,
+   "f1": 0.8247,
+   "extra_per_minute": 0.9643
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 7,
+    "fn": 12,
+    "precision": 0.8511,
+    "recall": 0.7692,
+    "f1": 0.8081,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 58,
+    "fp": 37,
+    "fn": 17,
+    "precision": 0.6105,
+    "recall": 0.7733,
+    "f1": 0.6824,
+    "extra_per_minute": 2.0556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.7,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "iw",
+  "public_share": 0.35,
+  "settings": {
+   "iw_power": 0.5
+  },
+  "all_sessions": {
+   "tp": 131,
+   "fp": 38,
+   "fn": 28,
+   "precision": 0.7751,
+   "recall": 0.8239,
+   "f1": 0.7988,
+   "extra_per_minute": 1.1177
+  },
+  "original_14_sessions": {
+   "tp": 128,
+   "fp": 27,
+   "fn": 26,
+   "precision": 0.8258,
+   "recall": 0.8312,
+   "f1": 0.8285,
+   "extra_per_minute": 0.9643
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 6,
+    "fn": 11,
+    "precision": 0.8723,
+    "recall": 0.7885,
+    "f1": 0.8283,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 14,
+    "fn": 0,
+    "precision": 0.6957,
+    "recall": 1.0,
+    "f1": 0.8205,
+    "extra_per_minute": 1.75
+   },
+   "P03": {
+    "tp": 58,
+    "fp": 18,
+    "fn": 17,
+    "precision": 0.7632,
+    "recall": 0.7733,
+    "f1": 0.7682,
+    "extra_per_minute": 1.0
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.7,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "trigger",
+  "public_share": 0.35,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 141,
+   "fp": 42,
+   "fn": 18,
+   "precision": 0.7705,
+   "recall": 0.8868,
+   "f1": 0.8246,
+   "extra_per_minute": 1.2353
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 20,
+   "fn": 16,
+   "precision": 0.8734,
+   "recall": 0.8961,
+   "f1": 0.8846,
+   "extra_per_minute": 0.7143
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 44,
+    "fp": 8,
+    "fn": 8,
+    "precision": 0.8462,
+    "recall": 0.8462,
+    "f1": 0.8462,
+    "extra_per_minute": 1.0
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 65,
+    "fp": 28,
+    "fn": 10,
+    "precision": 0.6989,
+    "recall": 0.8667,
+    "f1": 0.7738,
+    "extra_per_minute": 1.5556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.9,
+    "refractory": 1.6,
+    "windows": 1
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "quantile",
+  "public_share": 0.5,
+  "settings": {
+   "align_method": "quantile",
+   "align_strength": 1.0
+  },
+  "all_sessions": {
+   "tp": 143,
+   "fp": 66,
+   "fn": 16,
+   "precision": 0.6842,
+   "recall": 0.8994,
+   "f1": 0.7772,
+   "extra_per_minute": 1.9412
+  },
+  "original_14_sessions": {
+   "tp": 140,
+   "fp": 40,
+   "fn": 14,
+   "precision": 0.7778,
+   "recall": 0.9091,
+   "f1": 0.8383,
+   "extra_per_minute": 1.4286
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 46,
+    "fp": 15,
+    "fn": 6,
+    "precision": 0.7541,
+    "recall": 0.8846,
+    "f1": 0.8142,
+    "extra_per_minute": 1.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 65,
+    "fp": 41,
+    "fn": 10,
+    "precision": 0.6132,
+    "recall": 0.8667,
+    "f1": 0.7182,
+    "extra_per_minute": 2.2778
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "finetune",
+  "public_share": 1.0,
+  "settings": {
+   "finetune": 300
+  },
+  "all_sessions": {
+   "tp": 126,
+   "fp": 31,
+   "fn": 33,
+   "precision": 0.8025,
+   "recall": 0.7925,
+   "f1": 0.7975,
+   "extra_per_minute": 0.9118
+  },
+  "original_14_sessions": {
+   "tp": 123,
+   "fp": 19,
+   "fn": 31,
+   "precision": 0.8662,
+   "recall": 0.7987,
+   "f1": 0.8311,
+   "extra_per_minute": 0.6786
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 6,
+    "fn": 11,
+    "precision": 0.8723,
+    "recall": 0.7885,
+    "f1": 0.8283,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 53,
+    "fp": 18,
+    "fn": 22,
+    "precision": 0.7465,
+    "recall": 0.7067,
+    "f1": 0.726,
+    "extra_per_minute": 1.0
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "trigger",
+  "public_share": 0.5,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 45,
+   "fn": 20,
+   "precision": 0.7554,
+   "recall": 0.8742,
+   "f1": 0.8105,
+   "extra_per_minute": 1.3235
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 29,
+   "fn": 18,
+   "precision": 0.8242,
+   "recall": 0.8831,
+   "f1": 0.8527,
+   "extra_per_minute": 1.0357
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 46,
+    "fp": 12,
+    "fn": 6,
+    "precision": 0.7931,
+    "recall": 0.8846,
+    "f1": 0.8364,
+    "extra_per_minute": 1.5
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 61,
+    "fp": 23,
+    "fn": 14,
+    "precision": 0.7262,
+    "recall": 0.8133,
+    "f1": 0.7673,
+    "extra_per_minute": 1.2778
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.75,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.75,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6,
+    "windows": 1
+   }
+  }
+ },
+ {
+  "experiment": "reviewed",
+  "public_share": 0.35,
+  "settings": {
+   "reviewed_weight": 4.0
+  },
+  "all_sessions": {
+   "tp": 142,
+   "fp": 45,
+   "fn": 17,
+   "precision": 0.7594,
+   "recall": 0.8931,
+   "f1": 0.8208,
+   "extra_per_minute": 1.3235
+  },
+  "original_14_sessions": {
+   "tp": 139,
+   "fp": 24,
+   "fn": 15,
+   "precision": 0.8528,
+   "recall": 0.9026,
+   "f1": 0.877,
+   "extra_per_minute": 0.8571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 44,
+    "fp": 10,
+    "fn": 8,
+    "precision": 0.8148,
+    "recall": 0.8462,
+    "f1": 0.8302,
+    "extra_per_minute": 1.25
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 66,
+    "fp": 26,
+    "fn": 9,
+    "precision": 0.7174,
+    "recall": 0.88,
+    "f1": 0.7904,
+    "extra_per_minute": 1.4445
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "iw",
+  "public_share": 0.5,
+  "settings": {
+   "iw_power": 0.5
+  },
+  "all_sessions": {
+   "tp": 135,
+   "fp": 35,
+   "fn": 24,
+   "precision": 0.7941,
+   "recall": 0.8491,
+   "f1": 0.8207,
+   "extra_per_minute": 1.0294
+  },
+  "original_14_sessions": {
+   "tp": 132,
+   "fp": 25,
+   "fn": 22,
+   "precision": 0.8408,
+   "recall": 0.8571,
+   "f1": 0.8489,
+   "extra_per_minute": 0.8929
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 45,
+    "fp": 9,
+    "fn": 7,
+    "precision": 0.8333,
+    "recall": 0.8654,
+    "f1": 0.8491,
+    "extra_per_minute": 1.125
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 58,
+    "fp": 17,
+    "fn": 17,
+    "precision": 0.7733,
+    "recall": 0.7733,
+    "f1": 0.7733,
+    "extra_per_minute": 0.9445
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "trigger",
+  "public_share": 0.65,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ]
+  },
+  "all_sessions": {
+   "tp": 141,
+   "fp": 53,
+   "fn": 18,
+   "precision": 0.7268,
+   "recall": 0.8868,
+   "f1": 0.7989,
+   "extra_per_minute": 1.5588
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 24,
+   "fn": 16,
+   "precision": 0.8519,
+   "recall": 0.8961,
+   "f1": 0.8734,
+   "extra_per_minute": 0.8571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 42,
+    "fp": 7,
+    "fn": 10,
+    "precision": 0.8571,
+    "recall": 0.8077,
+    "f1": 0.8317,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 67,
+    "fp": 37,
+    "fn": 8,
+    "precision": 0.6442,
+    "recall": 0.8933,
+    "f1": 0.7486,
+    "extra_per_minute": 2.0556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 1.2,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "reviewed",
+  "public_share": 0.35,
+  "settings": {
+   "reviewed_weight": 10.0
+  },
+  "all_sessions": {
+   "tp": 137,
+   "fp": 42,
+   "fn": 22,
+   "precision": 0.7654,
+   "recall": 0.8616,
+   "f1": 0.8107,
+   "extra_per_minute": 1.2353
+  },
+  "original_14_sessions": {
+   "tp": 134,
+   "fp": 28,
+   "fn": 20,
+   "precision": 0.8272,
+   "recall": 0.8701,
+   "f1": 0.8481,
+   "extra_per_minute": 1.0
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 46,
+    "fp": 12,
+    "fn": 6,
+    "precision": 0.7931,
+    "recall": 0.8846,
+    "f1": 0.8364,
+    "extra_per_minute": 1.5
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 59,
+    "fp": 21,
+    "fn": 16,
+    "precision": 0.7375,
+    "recall": 0.7867,
+    "f1": 0.7613,
+    "extra_per_minute": 1.1667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "trigger_shift",
+  "public_share": 0.35,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ],
+   "public_shift": -0.2,
+   "public_end_shift": 0.0
+  },
+  "all_sessions": {
+   "tp": 133,
+   "fp": 27,
+   "fn": 26,
+   "precision": 0.8313,
+   "recall": 0.8365,
+   "f1": 0.8339,
+   "extra_per_minute": 0.7941
+  },
+  "original_14_sessions": {
+   "tp": 130,
+   "fp": 19,
+   "fn": 24,
+   "precision": 0.8725,
+   "recall": 0.8442,
+   "f1": 0.8581,
+   "extra_per_minute": 0.6786
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 44,
+    "fp": 9,
+    "fn": 8,
+    "precision": 0.8302,
+    "recall": 0.8462,
+    "f1": 0.8381,
+    "extra_per_minute": 1.125
+   },
+   "P02": {
+    "tp": 31,
+    "fp": 7,
+    "fn": 1,
+    "precision": 0.8158,
+    "recall": 0.9688,
+    "f1": 0.8857,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 58,
+    "fp": 11,
+    "fn": 17,
+    "precision": 0.8406,
+    "recall": 0.7733,
+    "f1": 0.8056,
+    "extra_per_minute": 0.6111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.9,
+    "refractory": 1.6,
+    "windows": 1
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "reviewed",
+  "public_share": 0.5,
+  "settings": {
+   "reviewed_weight": 4.0
+  },
+  "all_sessions": {
+   "tp": 145,
+   "fp": 56,
+   "fn": 14,
+   "precision": 0.7214,
+   "recall": 0.9119,
+   "f1": 0.8056,
+   "extra_per_minute": 1.6471
+  },
+  "original_14_sessions": {
+   "tp": 142,
+   "fp": 28,
+   "fn": 12,
+   "precision": 0.8353,
+   "recall": 0.9221,
+   "f1": 0.8765,
+   "extra_per_minute": 1.0
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 44,
+    "fp": 10,
+    "fn": 8,
+    "precision": 0.8148,
+    "recall": 0.8462,
+    "f1": 0.8302,
+    "extra_per_minute": 1.25
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 36,
+    "fn": 6,
+    "precision": 0.6571,
+    "recall": 0.92,
+    "f1": 0.7667,
+    "extra_per_minute": 2.0
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   }
+  }
+ },
+ {
+  "experiment": "iw",
+  "public_share": 0.35,
+  "settings": {
+   "iw_power": 1.0
+  },
+  "all_sessions": {
+   "tp": 136,
+   "fp": 37,
+   "fn": 23,
+   "precision": 0.7861,
+   "recall": 0.8553,
+   "f1": 0.8193,
+   "extra_per_minute": 1.0882
+  },
+  "original_14_sessions": {
+   "tp": 133,
+   "fp": 18,
+   "fn": 21,
+   "precision": 0.8808,
+   "recall": 0.8636,
+   "f1": 0.8721,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 6,
+    "fn": 11,
+    "precision": 0.8723,
+    "recall": 0.7885,
+    "f1": 0.8283,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 63,
+    "fp": 25,
+    "fn": 12,
+    "precision": 0.7159,
+    "recall": 0.84,
+    "f1": 0.773,
+    "extra_per_minute": 1.3889
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "trigger_shift",
+  "public_share": 0.5,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ],
+   "public_shift": -0.2,
+   "public_end_shift": 0.0
+  },
+  "all_sessions": {
+   "tp": 128,
+   "fp": 25,
+   "fn": 31,
+   "precision": 0.8366,
+   "recall": 0.805,
+   "f1": 0.8205,
+   "extra_per_minute": 0.7353
+  },
+  "original_14_sessions": {
+   "tp": 125,
+   "fp": 18,
+   "fn": 29,
+   "precision": 0.8741,
+   "recall": 0.8117,
+   "f1": 0.8418,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 6,
+    "fn": 13,
+    "precision": 0.8667,
+    "recall": 0.75,
+    "f1": 0.8041,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 57,
+    "fp": 13,
+    "fn": 18,
+    "precision": 0.8143,
+    "recall": 0.76,
+    "f1": 0.7862,
+    "extra_per_minute": 0.7222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.6,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "reviewed",
+  "public_share": 0.5,
+  "settings": {
+   "reviewed_weight": 10.0
+  },
+  "all_sessions": {
+   "tp": 144,
+   "fp": 51,
+   "fn": 15,
+   "precision": 0.7385,
+   "recall": 0.9057,
+   "f1": 0.8136,
+   "extra_per_minute": 1.5
+  },
+  "original_14_sessions": {
+   "tp": 141,
+   "fp": 29,
+   "fn": 13,
+   "precision": 0.8294,
+   "recall": 0.9156,
+   "f1": 0.8704,
+   "extra_per_minute": 1.0357
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 46,
+    "fp": 11,
+    "fn": 6,
+    "precision": 0.807,
+    "recall": 0.8846,
+    "f1": 0.844,
+    "extra_per_minute": 1.375
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 66,
+    "fp": 30,
+    "fn": 9,
+    "precision": 0.6875,
+    "recall": 0.88,
+    "f1": 0.7719,
+    "extra_per_minute": 1.6667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "iw",
+  "public_share": 0.5,
+  "settings": {
+   "iw_power": 1.0
+  },
+  "all_sessions": {
+   "tp": 133,
+   "fp": 39,
+   "fn": 26,
+   "precision": 0.7733,
+   "recall": 0.8365,
+   "f1": 0.8036,
+   "extra_per_minute": 1.1471
+  },
+  "original_14_sessions": {
+   "tp": 130,
+   "fp": 24,
+   "fn": 24,
+   "precision": 0.8442,
+   "recall": 0.8442,
+   "f1": 0.8442,
+   "extra_per_minute": 0.8571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 6,
+    "fn": 13,
+    "precision": 0.8667,
+    "recall": 0.75,
+    "f1": 0.8041,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 11,
+    "fn": 0,
+    "precision": 0.7442,
+    "recall": 1.0,
+    "f1": 0.8533,
+    "extra_per_minute": 1.375
+   },
+   "P03": {
+    "tp": 62,
+    "fp": 22,
+    "fn": 13,
+    "precision": 0.7381,
+    "recall": 0.8267,
+    "f1": 0.7799,
+    "extra_per_minute": 1.2222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.9,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "lagsA",
+  "public_share": 0.2,
+  "settings": {
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 136,
+   "fp": 36,
+   "fn": 23,
+   "precision": 0.7907,
+   "recall": 0.8553,
+   "f1": 0.8218,
+   "extra_per_minute": 1.0588
+  },
+  "original_14_sessions": {
+   "tp": 133,
+   "fp": 17,
+   "fn": 21,
+   "precision": 0.8867,
+   "recall": 0.8636,
+   "f1": 0.875,
+   "extra_per_minute": 0.6071
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 35,
+    "fp": 2,
+    "fn": 17,
+    "precision": 0.9459,
+    "recall": 0.6731,
+    "f1": 0.7865,
+    "extra_per_minute": 0.25
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 4,
+    "fn": 0,
+    "precision": 0.8889,
+    "recall": 1.0,
+    "f1": 0.9412,
+    "extra_per_minute": 0.5
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 30,
+    "fn": 6,
+    "precision": 0.697,
+    "recall": 0.92,
+    "f1": 0.7931,
+    "extra_per_minute": 1.6667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.9,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.9,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsC",
+  "public_share": 0.35,
+  "settings": {
+   "trees": {
+    "max_iter": 500,
+    "max_leaf_nodes": 31
+   },
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 131,
+   "fp": 57,
+   "fn": 28,
+   "precision": 0.6968,
+   "recall": 0.8239,
+   "f1": 0.755,
+   "extra_per_minute": 1.6765
+  },
+  "original_14_sessions": {
+   "tp": 128,
+   "fp": 30,
+   "fn": 26,
+   "precision": 0.8101,
+   "recall": 0.8312,
+   "f1": 0.8205,
+   "extra_per_minute": 1.0714
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 36,
+    "fp": 5,
+    "fn": 16,
+    "precision": 0.878,
+    "recall": 0.6923,
+    "f1": 0.7742,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 63,
+    "fp": 46,
+    "fn": 12,
+    "precision": 0.578,
+    "recall": 0.84,
+    "f1": 0.6848,
+    "extra_per_minute": 2.5556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.7,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsB",
+  "public_share": 0.2,
+  "settings": {
+   "lags": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 135,
+   "fp": 33,
+   "fn": 24,
+   "precision": 0.8036,
+   "recall": 0.8491,
+   "f1": 0.8257,
+   "extra_per_minute": 0.9706
+  },
+  "original_14_sessions": {
+   "tp": 132,
+   "fp": 17,
+   "fn": 22,
+   "precision": 0.8859,
+   "recall": 0.8571,
+   "f1": 0.8713,
+   "extra_per_minute": 0.6071
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 35,
+    "fp": 5,
+    "fn": 17,
+    "precision": 0.875,
+    "recall": 0.6731,
+    "f1": 0.7609,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 68,
+    "fp": 22,
+    "fn": 7,
+    "precision": 0.7556,
+    "recall": 0.9067,
+    "f1": 0.8242,
+    "extra_per_minute": 1.2222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.9,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsA",
+  "public_share": 0.65,
+  "settings": {
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 44,
+   "fn": 20,
+   "precision": 0.7596,
+   "recall": 0.8742,
+   "f1": 0.8129,
+   "extra_per_minute": 1.2941
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 25,
+   "fn": 18,
+   "precision": 0.8447,
+   "recall": 0.8831,
+   "f1": 0.8635,
+   "extra_per_minute": 0.8929
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 38,
+    "fp": 5,
+    "fn": 14,
+    "precision": 0.8837,
+    "recall": 0.7308,
+    "f1": 0.8,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 32,
+    "fn": 6,
+    "precision": 0.6832,
+    "recall": 0.92,
+    "f1": 0.7841,
+    "extra_per_minute": 1.7778
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsC",
+  "public_share": 0.5,
+  "settings": {
+   "trees": {
+    "max_iter": 500,
+    "max_leaf_nodes": 31
+   },
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 140,
+   "fp": 27,
+   "fn": 19,
+   "precision": 0.8383,
+   "recall": 0.8805,
+   "f1": 0.8589,
+   "extra_per_minute": 0.7941
+  },
+  "original_14_sessions": {
+   "tp": 137,
+   "fp": 18,
+   "fn": 17,
+   "precision": 0.8839,
+   "recall": 0.8896,
+   "f1": 0.8867,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 6,
+    "fn": 13,
+    "precision": 0.8667,
+    "recall": 0.75,
+    "f1": 0.8041,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 15,
+    "fn": 6,
+    "precision": 0.8214,
+    "recall": 0.92,
+    "f1": 0.8679,
+    "extra_per_minute": 0.8333
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsB",
+  "public_share": 0.35,
+  "settings": {
+   "lags": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 141,
+   "fp": 57,
+   "fn": 18,
+   "precision": 0.7121,
+   "recall": 0.8868,
+   "f1": 0.7899,
+   "extra_per_minute": 1.6765
+  },
+  "original_14_sessions": {
+   "tp": 137,
+   "fp": 30,
+   "fn": 17,
+   "precision": 0.8204,
+   "recall": 0.8896,
+   "f1": 0.8536,
+   "extra_per_minute": 1.0714
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 6,
+    "fn": 12,
+    "precision": 0.8696,
+    "recall": 0.7692,
+    "f1": 0.8163,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 45,
+    "fn": 6,
+    "precision": 0.6053,
+    "recall": 0.92,
+    "f1": 0.7302,
+    "extra_per_minute": 2.5
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.75,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsA",
+  "public_share": 0.2,
+  "settings": {
+   "lags": [
+    2,
+    4,
+    6
+   ]
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 43,
+   "fn": 20,
+   "precision": 0.7637,
+   "recall": 0.8742,
+   "f1": 0.8152,
+   "extra_per_minute": 1.2647
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 25,
+   "fn": 18,
+   "precision": 0.8447,
+   "recall": 0.8831,
+   "f1": 0.8635,
+   "extra_per_minute": 0.8929
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 6,
+    "fn": 12,
+    "precision": 0.8696,
+    "recall": 0.7692,
+    "f1": 0.8163,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 67,
+    "fp": 31,
+    "fn": 8,
+    "precision": 0.6837,
+    "recall": 0.8933,
+    "f1": 0.7746,
+    "extra_per_minute": 1.7222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsC",
+  "public_share": 0.35,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ],
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 143,
+   "fp": 33,
+   "fn": 16,
+   "precision": 0.8125,
+   "recall": 0.8994,
+   "f1": 0.8537,
+   "extra_per_minute": 0.9706
+  },
+  "original_14_sessions": {
+   "tp": 140,
+   "fp": 17,
+   "fn": 14,
+   "precision": 0.8917,
+   "recall": 0.9091,
+   "f1": 0.9003,
+   "extra_per_minute": 0.6071
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 6,
+    "fn": 11,
+    "precision": 0.8723,
+    "recall": 0.7885,
+    "f1": 0.8283,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 70,
+    "fp": 21,
+    "fn": 5,
+    "precision": 0.7692,
+    "recall": 0.9333,
+    "f1": 0.8434,
+    "extra_per_minute": 1.1667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 0.8,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "lagsA",
+  "public_share": 0.35,
+  "settings": {
+   "lags": [
+    2,
+    4,
+    6
+   ]
+  },
+  "all_sessions": {
+   "tp": 136,
+   "fp": 51,
+   "fn": 23,
+   "precision": 0.7273,
+   "recall": 0.8553,
+   "f1": 0.7861,
+   "extra_per_minute": 1.5
+  },
+  "original_14_sessions": {
+   "tp": 133,
+   "fp": 28,
+   "fn": 21,
+   "precision": 0.8261,
+   "recall": 0.8636,
+   "f1": 0.8444,
+   "extra_per_minute": 1.0
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 6,
+    "fn": 13,
+    "precision": 0.8667,
+    "recall": 0.75,
+    "f1": 0.8041,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 65,
+    "fp": 39,
+    "fn": 10,
+    "precision": 0.625,
+    "recall": 0.8667,
+    "f1": 0.7263,
+    "extra_per_minute": 2.1667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.2
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.75,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsC",
+  "public_share": 0.5,
+  "settings": {
+   "windows_search": [
+    1,
+    2
+   ],
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 141,
+   "fp": 34,
+   "fn": 18,
+   "precision": 0.8057,
+   "recall": 0.8868,
+   "f1": 0.8443,
+   "extra_per_minute": 1.0
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 21,
+   "fn": 16,
+   "precision": 0.8679,
+   "recall": 0.8961,
+   "f1": 0.8818,
+   "extra_per_minute": 0.75
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 7,
+    "fn": 12,
+    "precision": 0.8511,
+    "recall": 0.7692,
+    "f1": 0.8081,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 20,
+    "fn": 6,
+    "precision": 0.7753,
+    "recall": 0.92,
+    "f1": 0.8415,
+    "extra_per_minute": 1.1111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.9,
+    "refractory": 1.6,
+    "windows": 1
+   },
+   "P03": {
+    "threshold": 0.85,
+    "refractory": 0.8,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "lagsB",
+  "public_share": 0.5,
+  "settings": {
+   "lags": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 135,
+   "fp": 71,
+   "fn": 24,
+   "precision": 0.6553,
+   "recall": 0.8491,
+   "f1": 0.7397,
+   "extra_per_minute": 2.0882
+  },
+  "original_14_sessions": {
+   "tp": 133,
+   "fp": 38,
+   "fn": 21,
+   "precision": 0.7778,
+   "recall": 0.8636,
+   "f1": 0.8185,
+   "extra_per_minute": 1.3571
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 42,
+    "fp": 6,
+    "fn": 10,
+    "precision": 0.875,
+    "recall": 0.8077,
+    "f1": 0.84,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 7,
+    "fn": 0,
+    "precision": 0.8205,
+    "recall": 1.0,
+    "f1": 0.9014,
+    "extra_per_minute": 0.875
+   },
+   "P03": {
+    "tp": 61,
+    "fp": 58,
+    "fn": 14,
+    "precision": 0.5126,
+    "recall": 0.8133,
+    "f1": 0.6289,
+    "extra_per_minute": 3.2222
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.7,
+    "refractory": 1.2
+   }
+  }
+ },
+ {
+  "experiment": "lagsC",
+  "public_share": 0.35,
+  "settings": {
+   "reviewed_weight": 4.0,
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 141,
+   "fp": 48,
+   "fn": 18,
+   "precision": 0.746,
+   "recall": 0.8868,
+   "f1": 0.8103,
+   "extra_per_minute": 1.4118
+  },
+  "original_14_sessions": {
+   "tp": 138,
+   "fp": 27,
+   "fn": 16,
+   "precision": 0.8364,
+   "recall": 0.8961,
+   "f1": 0.8652,
+   "extra_per_minute": 0.9643
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 8,
+    "fn": 11,
+    "precision": 0.8367,
+    "recall": 0.7885,
+    "f1": 0.8119,
+    "extra_per_minute": 1.0
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 5,
+    "fn": 0,
+    "precision": 0.8649,
+    "recall": 1.0,
+    "f1": 0.9275,
+    "extra_per_minute": 0.625
+   },
+   "P03": {
+    "tp": 68,
+    "fp": 35,
+    "fn": 7,
+    "precision": 0.6602,
+    "recall": 0.9067,
+    "f1": 0.764,
+    "extra_per_minute": 1.9445
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsB",
+  "public_share": 0.35,
+  "settings": {
+   "lags": [
+    3,
+    6
+   ]
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 44,
+   "fn": 20,
+   "precision": 0.7596,
+   "recall": 0.8742,
+   "f1": 0.8129,
+   "extra_per_minute": 1.2941
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 21,
+   "fn": 18,
+   "precision": 0.8662,
+   "recall": 0.8831,
+   "f1": 0.8746,
+   "extra_per_minute": 0.75
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 5,
+    "fn": 12,
+    "precision": 0.8889,
+    "recall": 0.7692,
+    "f1": 0.8247,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 67,
+    "fp": 33,
+    "fn": 8,
+    "precision": 0.67,
+    "recall": 0.8933,
+    "f1": 0.7657,
+    "extra_per_minute": 1.8333
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 1.6
+   },
+   "P03": {
+    "threshold": 0.75,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "lagsA",
+  "public_share": 0.5,
+  "settings": {
+   "lags": [
+    2,
+    4,
+    6
+   ]
+  },
+  "all_sessions": {
+   "tp": 137,
+   "fp": 50,
+   "fn": 22,
+   "precision": 0.7326,
+   "recall": 0.8616,
+   "f1": 0.7919,
+   "extra_per_minute": 1.4706
+  },
+  "original_14_sessions": {
+   "tp": 134,
+   "fp": 27,
+   "fn": 20,
+   "precision": 0.8323,
+   "recall": 0.8701,
+   "f1": 0.8508,
+   "extra_per_minute": 0.9643
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 40,
+    "fp": 5,
+    "fn": 12,
+    "precision": 0.8889,
+    "recall": 0.7692,
+    "f1": 0.8247,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 65,
+    "fp": 39,
+    "fn": 10,
+    "precision": 0.625,
+    "recall": 0.8667,
+    "f1": 0.7263,
+    "extra_per_minute": 2.1667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P02": {
+    "threshold": 0.85,
+    "refractory": 0.8
+   },
+   "P03": {
+    "threshold": 0.75,
+    "refractory": 0.8
+   }
+  }
+ },
+ {
+  "experiment": "fine",
+  "public_share": 0.2,
+  "settings": {
+   "thresholds": "fine grid up to 0.98"
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 43,
+   "fn": 20,
+   "precision": 0.7637,
+   "recall": 0.8742,
+   "f1": 0.8152,
+   "extra_per_minute": 1.2647
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 23,
+   "fn": 18,
+   "precision": 0.8553,
+   "recall": 0.8831,
+   "f1": 0.869,
+   "extra_per_minute": 0.8214
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 43,
+    "fp": 7,
+    "fn": 9,
+    "precision": 0.86,
+    "recall": 0.8269,
+    "f1": 0.8431,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 64,
+    "fp": 26,
+    "fn": 11,
+    "precision": 0.7111,
+    "recall": 0.8533,
+    "f1": 0.7758,
+    "extra_per_minute": 1.4445
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.83,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.86,
+    "refractory": 1.6,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "fine",
+  "public_share": 0.35,
+  "settings": {
+   "thresholds": "fine grid up to 0.98"
+  },
+  "all_sessions": {
+   "tp": 137,
+   "fp": 34,
+   "fn": 22,
+   "precision": 0.8012,
+   "recall": 0.8616,
+   "f1": 0.8303,
+   "extra_per_minute": 1.0
+  },
+  "original_14_sessions": {
+   "tp": 134,
+   "fp": 18,
+   "fn": 20,
+   "precision": 0.8816,
+   "recall": 0.8701,
+   "f1": 0.8758,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 41,
+    "fp": 6,
+    "fn": 11,
+    "precision": 0.8723,
+    "recall": 0.7885,
+    "f1": 0.8283,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 8,
+    "fn": 0,
+    "precision": 0.8,
+    "recall": 1.0,
+    "f1": 0.8889,
+    "extra_per_minute": 1.0
+   },
+   "P03": {
+    "tp": 64,
+    "fp": 20,
+    "fn": 11,
+    "precision": 0.7619,
+    "recall": 0.8533,
+    "f1": 0.805,
+    "extra_per_minute": 1.1111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.83,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.83,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.88,
+    "refractory": 1.2,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "fine",
+  "public_share": 0.5,
+  "settings": {
+   "thresholds": "fine grid up to 0.98"
+  },
+  "all_sessions": {
+   "tp": 136,
+   "fp": 41,
+   "fn": 23,
+   "precision": 0.7684,
+   "recall": 0.8553,
+   "f1": 0.8095,
+   "extra_per_minute": 1.2059
+  },
+  "original_14_sessions": {
+   "tp": 133,
+   "fp": 23,
+   "fn": 21,
+   "precision": 0.8526,
+   "recall": 0.8636,
+   "f1": 0.8581,
+   "extra_per_minute": 0.8214
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 42,
+    "fp": 7,
+    "fn": 10,
+    "precision": 0.8571,
+    "recall": 0.8077,
+    "f1": 0.8317,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 10,
+    "fn": 0,
+    "precision": 0.7619,
+    "recall": 1.0,
+    "f1": 0.8649,
+    "extra_per_minute": 1.25
+   },
+   "P03": {
+    "tp": 62,
+    "fp": 24,
+    "fn": 13,
+    "precision": 0.7209,
+    "recall": 0.8267,
+    "f1": 0.7702,
+    "extra_per_minute": 1.3333
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.83,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.75,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.86,
+    "refractory": 1.2,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "fine",
+  "public_share": 0.2,
+  "settings": {
+   "thresholds": "fine grid up to 0.98",
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 138,
+   "fp": 41,
+   "fn": 21,
+   "precision": 0.7709,
+   "recall": 0.8679,
+   "f1": 0.8166,
+   "extra_per_minute": 1.2059
+  },
+  "original_14_sessions": {
+   "tp": 135,
+   "fp": 22,
+   "fn": 19,
+   "precision": 0.8599,
+   "recall": 0.8766,
+   "f1": 0.8682,
+   "extra_per_minute": 0.7857
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 37,
+    "fp": 5,
+    "fn": 15,
+    "precision": 0.881,
+    "recall": 0.7115,
+    "f1": 0.7872,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 30,
+    "fn": 6,
+    "precision": 0.697,
+    "recall": 0.92,
+    "f1": 0.7931,
+    "extra_per_minute": 1.6667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.88,
+    "refractory": 1.2,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.86,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 0.8,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "ens_share",
+  "public_share": 0.35,
+  "settings": {
+   "thresholds": "fine grid up to 0.98",
+   "members": [
+    {
+     "share": 0.2
+    },
+    {
+     "share": 0.35
+    },
+    {
+     "share": 0.5
+    }
+   ],
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 139,
+   "fp": 41,
+   "fn": 20,
+   "precision": 0.7722,
+   "recall": 0.8742,
+   "f1": 0.8201,
+   "extra_per_minute": 1.2059
+  },
+  "original_14_sessions": {
+   "tp": 136,
+   "fp": 22,
+   "fn": 18,
+   "precision": 0.8608,
+   "recall": 0.8831,
+   "f1": 0.8718,
+   "extra_per_minute": 0.7857
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 38,
+    "fp": 6,
+    "fn": 14,
+    "precision": 0.8636,
+    "recall": 0.7308,
+    "f1": 0.7917,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 29,
+    "fn": 6,
+    "precision": 0.7041,
+    "recall": 0.92,
+    "f1": 0.7977,
+    "extra_per_minute": 1.6111
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.86,
+    "refractory": 0.8,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.86,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.8,
+    "refractory": 0.8,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "fine",
+  "public_share": 0.35,
+  "settings": {
+   "thresholds": "fine grid up to 0.98",
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 143,
+   "fp": 31,
+   "fn": 16,
+   "precision": 0.8218,
+   "recall": 0.8994,
+   "f1": 0.8589,
+   "extra_per_minute": 0.9118
+  },
+  "original_14_sessions": {
+   "tp": 140,
+   "fp": 18,
+   "fn": 14,
+   "precision": 0.8861,
+   "recall": 0.9091,
+   "f1": 0.8974,
+   "extra_per_minute": 0.6429
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 42,
+    "fp": 6,
+    "fn": 10,
+    "precision": 0.875,
+    "recall": 0.8077,
+    "f1": 0.84,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 19,
+    "fn": 6,
+    "precision": 0.7841,
+    "recall": 0.92,
+    "f1": 0.8466,
+    "extra_per_minute": 1.0556
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.83,
+    "refractory": 0.8,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.86,
+    "refractory": 1.2,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "fine",
+  "public_share": 0.5,
+  "settings": {
+   "thresholds": "fine grid up to 0.98",
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 140,
+   "fp": 37,
+   "fn": 19,
+   "precision": 0.791,
+   "recall": 0.8805,
+   "f1": 0.8333,
+   "extra_per_minute": 1.0882
+  },
+  "original_14_sessions": {
+   "tp": 137,
+   "fp": 19,
+   "fn": 17,
+   "precision": 0.8782,
+   "recall": 0.8896,
+   "f1": 0.8839,
+   "extra_per_minute": 0.6786
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 7,
+    "fn": 13,
+    "precision": 0.8478,
+    "recall": 0.75,
+    "f1": 0.7959,
+    "extra_per_minute": 0.875
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 5,
+    "fn": 0,
+    "precision": 0.8649,
+    "recall": 1.0,
+    "f1": 0.9275,
+    "extra_per_minute": 0.625
+   },
+   "P03": {
+    "tp": 69,
+    "fp": 25,
+    "fn": 6,
+    "precision": 0.734,
+    "recall": 0.92,
+    "f1": 0.8166,
+    "extra_per_minute": 1.3889
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.86,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.88,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.83,
+    "refractory": 0.8,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "ens_share",
+  "public_share": 0.35,
+  "settings": {
+   "thresholds": "fine grid up to 0.98",
+   "members": [
+    {
+     "share": 0.2
+    },
+    {
+     "share": 0.35
+    },
+    {
+     "share": 0.5
+    }
+   ]
+  },
+  "all_sessions": {
+   "tp": 137,
+   "fp": 36,
+   "fn": 22,
+   "precision": 0.7919,
+   "recall": 0.8616,
+   "f1": 0.8253,
+   "extra_per_minute": 1.0588
+  },
+  "original_14_sessions": {
+   "tp": 134,
+   "fp": 21,
+   "fn": 20,
+   "precision": 0.8645,
+   "recall": 0.8701,
+   "f1": 0.8673,
+   "extra_per_minute": 0.75
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 43,
+    "fp": 6,
+    "fn": 9,
+    "precision": 0.8776,
+    "recall": 0.8269,
+    "f1": 0.8515,
+    "extra_per_minute": 0.75
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 9,
+    "fn": 0,
+    "precision": 0.7805,
+    "recall": 1.0,
+    "f1": 0.8767,
+    "extra_per_minute": 1.125
+   },
+   "P03": {
+    "tp": 62,
+    "fp": 21,
+    "fn": 13,
+    "precision": 0.747,
+    "recall": 0.8267,
+    "f1": 0.7848,
+    "extra_per_minute": 1.1667
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.83,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.8,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.88,
+    "refractory": 1.2,
+    "windows": 2
+   }
+  }
+ },
+ {
+  "experiment": "ens_seed",
+  "public_share": 0.2,
+  "settings": {
+   "thresholds": "fine grid up to 0.98",
+   "members": [
+    {
+     "seed": 0,
+     "trees": {
+      "max_features": 0.7
+     }
+    },
+    {
+     "seed": 1,
+     "trees": {
+      "max_features": 0.7
+     }
+    },
+    {
+     "seed": 2,
+     "trees": {
+      "max_features": 0.7
+     }
+    },
+    {
+     "seed": 3,
+     "trees": {
+      "max_features": 0.7
+     }
+    },
+    {
+     "seed": 4,
+     "trees": {
+      "max_features": 0.7
+     }
+    }
+   ],
+   "lags": [
+    2,
+    4
+   ]
+  },
+  "all_sessions": {
+   "tp": 137,
+   "fp": 53,
+   "fn": 22,
+   "precision": 0.7211,
+   "recall": 0.8616,
+   "f1": 0.7851,
+   "extra_per_minute": 1.5588
+  },
+  "original_14_sessions": {
+   "tp": 134,
+   "fp": 26,
+   "fn": 20,
+   "precision": 0.8375,
+   "recall": 0.8701,
+   "f1": 0.8535,
+   "extra_per_minute": 0.9286
+  },
+  "by_participant": {
+   "P01": {
+    "tp": 39,
+    "fp": 5,
+    "fn": 13,
+    "precision": 0.8864,
+    "recall": 0.75,
+    "f1": 0.8125,
+    "extra_per_minute": 0.625
+   },
+   "P02": {
+    "tp": 32,
+    "fp": 6,
+    "fn": 0,
+    "precision": 0.8421,
+    "recall": 1.0,
+    "f1": 0.9143,
+    "extra_per_minute": 0.75
+   },
+   "P03": {
+    "tp": 66,
+    "fp": 42,
+    "fn": 9,
+    "precision": 0.6111,
+    "recall": 0.88,
+    "f1": 0.7213,
+    "extra_per_minute": 2.3333
+   }
+  },
+  "chosen": {
+   "P01": {
+    "threshold": 0.88,
+    "refractory": 1.2,
+    "windows": 2
+   },
+   "P02": {
+    "threshold": 0.86,
+    "refractory": 1.6,
+    "windows": 2
+   },
+   "P03": {
+    "threshold": 0.75,
+    "refractory": 1.2,
+    "windows": 2
+   }
+  }
+ }
+]
