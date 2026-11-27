@@ -1,0 +1,5 @@
+time_s,event,model_score
+3.900,swallow,0.826682
+7.700,swallow,0.882418
+13.300,swallow,0.972080
+18.400,swallow,0.857596

@@ -1,0 +1,26 @@
+{
+  "activity": "mixed",
+  "requested_duration_s": 120.0,
+  "device_origin_s": 66.62220366699829,
+  "mic_rate_hz": 44100.0,
+  "imu_rate_hz": 833.0,
+  "port": "/dev/cu.usbmodem216097801",
+  "simulated": false,
+  "status": "stopped",
+  "protocol": "V1",
+  "time_note": "Common device clock; observer markers include USB and human reaction delay.",
+  "display_filter": "Mic 20\u20132000 Hz; acceleration 0.5\u2013100 Hz; raw CSV unchanged.",
+  "live_detector": "Mixed 35/65 public/wearable \u00b7 trees (recommended)",
+  "live_detector_file": "mixed_optimal_35_65.json",
+  "live_event_detector_file": "events.json",
+  "note": "",
+  "samples": {
+    "mic": 2130427,
+    "imu": 43704
+  },
+  "saved_duration_s": 48.30899301327382,
+  "stream_end_s": {
+    "mic": 48.30899301327382,
+    "imu": 48.30821333300172
+  }
+}

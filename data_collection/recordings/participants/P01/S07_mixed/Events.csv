@@ -1,0 +1,11 @@
+record_type,activity,time_s,start_s,end_s,notes
+marker,mixed,2.927656,,,
+marker,mixed,7.827585,,,
+marker,mixed,12.910240,,,
+marker,mixed,17.888713,,,
+marker,mixed,25.622262,,,
+marker,mixed,36.029059,,,
+marker,mixed,45.805360,,,
+label,dry_swallow,,7.346900,8.469700,
+label,dry_swallow,,12.310200,13.510200,
+label,dry_swallow,,17.408000,18.762400,
