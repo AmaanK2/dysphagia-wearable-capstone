@@ -1,0 +1,17 @@
+time_s,event,model_score
+5.000,swallow,0.888333
+7.000,swallow,0.922413
+12.000,swallow,0.933401
+19.000,swallow,0.957220
+24.200,swallow,0.935591
+30.100,swallow,0.937436
+39.800,cough,0.941751
+43.100,cough,0.880547
+51.000,swallow,0.887742
+56.200,swallow,0.834539
+61.200,swallow,0.801182
+63.700,talking,0.987021
+75.800,talking,0.991420
+82.600,talking,0.991662
+100.700,talking,0.839801
+115.300,talking,0.945536
