@@ -22,7 +22,7 @@ import pyqtgraph as pg
 from device import Acquisition, ports, filter_sos
 from live_detection import RECOMMENDED_MODEL, available_models
 from swallow_metrics import session_events, water_test
-from session import EVENT_FIELDS, safe_name, save_events
+from session import EVENT_FIELDS, fully_labelled, safe_name, save_events, save_fully_labelled
 
 HOME = Path(__file__).resolve().parent
 ACTIVITIES = {'Dry swallow': 'dry_swallow', 'Talking': 'talking', 'Mixed activities': 'mixed',
@@ -331,6 +331,28 @@ class Review(W.QWidget):
         self.notes.setPlaceholderText('Optional review notes')
         form.addRow('Notes', self.notes)
         side.addLayout(form)
+        complete = W.QLabel('Fully labelled in this session')
+        complete.setObjectName('heading')
+        side.addWidget(complete)
+        complete_hint = W.QLabel('Tick a type only when every one of them in the recording has a label. '
+                                 'Training and scoring treat unlabelled time as "not this event" only for ticked types.')
+        complete_hint.setWordWrap(True)
+        complete_hint.setObjectName('muted')
+        side.addWidget(complete_hint)
+        complete_row = W.QGridLayout()
+        self.complete = {}
+        for i, (kind, text) in enumerate((('swallow', 'Swallows'), ('cough', 'Coughs'),
+                                          ('talking', 'Talking'), ('throat_clear', 'Throat clears'))):
+            box = W.QCheckBox(text)
+            box.toggled.connect(self.save_complete)
+            box.setEnabled(False)
+            complete_row.addWidget(box, i // 2, i % 2)
+            self.complete[kind] = box
+        side.addLayout(complete_row)
+        self.complete_status = W.QLabel('')
+        self.complete_status.setWordWrap(True)
+        self.complete_status.setObjectName('muted')
+        side.addWidget(self.complete_status)
         self.save_button = button('Save event', self.save, True)
         self.delete_button = button('Delete selected label', self.delete)
         side.addWidget(self.save_button)
@@ -381,6 +403,27 @@ class Review(W.QWidget):
         self.region.show()
         self.imu_region.show()
         self.save_button.setEnabled(True)
+        self.show_complete()
+
+    def show_complete(self):
+        types, confirmed = fully_labelled(self.folder, self.events)
+        for kind, box in self.complete.items():
+            box.blockSignals(True)
+            box.setChecked(kind in types)
+            box.setEnabled(True)
+            box.blockSignals(False)
+        self.complete_status.setText('Saved in Session.json.' if confirmed else
+                                     'Not confirmed yet: ticks show the default (swallows only in dry-swallow '
+                                     'sessions). Change them to save.')
+
+    def save_complete(self):
+        if not self.folder:
+            return
+        try:
+            save_fully_labelled(self.folder, [kind for kind, box in self.complete.items() if box.isChecked()])
+            self.complete_status.setText('Saved in Session.json.')
+        except (OSError, ValueError) as error:
+            message(self, error)
 
     def redraw(self):
         if self.folder is None:

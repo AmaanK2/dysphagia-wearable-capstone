@@ -27,7 +27,7 @@ Every score below is measured on a wearable participant the model never trained 
 | Detector | Result |
 | --- | --- |
 | Swallows, wearable data only | 76% event F1, ~1.6 false alerts/min (original 14 sessions) |
-| **Swallows, wearable + adapted public data, with context (35/65, recommended)** | **90% event F1 on the original 14 sessions (was 88%); 77% on all 24 sessions (was 75%), 1.25 false alerts/min.** The newer sessions add many coughs and unlabelled stretches. [Study](experiments/public_domain_gap/README.md) |
+| **Swallows, wearable + adapted public data, with context (35/65, recommended)** | **92% event F1 with the exported model's tuned threshold, 0.74 false alerts/min; 85% nested** (plain 35/65 trees: 90% tuned, 87.5% nested). All 24 sessions, 201 swallows, scored only where swallows were fully labelled. [Study](experiments/public_domain_gap/README.md) |
 | Swallows, live in the app on new sessions | 37 of 38 swallows caught, 5 false alerts in 4 minutes |
 | Event intervals (start/end) | Median overlap with labelled swallows 0.65 (start ±0.15 s, end ±0.22 s); coughs 0.84, talking 0.86 |
 | Cough / talking / throat clear | 9/14 talking bouts and 3/5 coughs caught, ~1.1 false alerts/min; 81% accuracy on public test speakers. [Details](experiments/event_detection/README.md) |

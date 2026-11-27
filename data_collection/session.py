@@ -107,6 +107,60 @@ def save_events(path, rows):
     temporary.replace(path)
 
 
+# Event types that can be marked "fully labelled" for a session, and the activity names that
+# count as each. A type is fully labelled when every occurrence in the session has a label,
+# so unlabelled time in that session can be treated as "not this event".
+LABEL_TYPES = {
+    'swallow': {'dry_swallow', 'swallow', 'water_swallow'},
+    'cough': {'cough', 'coughing'},
+    'talking': {'talking', 'speech'},
+    'throat_clear': {'throat_clear'},
+}
+
+
+def label_type(activity):
+    return next((kind for kind, names in LABEL_TYPES.items() if activity in names), None)
+
+
+def fully_labelled(folder, events=None):
+    """(types, confirmed) for a session folder.
+
+    ``Session.json`` field ``fully_labelled`` lists the event types whose every occurrence was
+    labelled. Until someone sets it in the Review tab (``confirmed`` False), a session defaults to:
+    swallows only in dry-swallow sessions, where swallowing was the task (in other sessions only
+    the planned, marked swallows were labelled), and coughs, talking and throat clears wherever
+    they have at least one label.
+    """
+    folder = Path(folder)
+    try:
+        metadata = json.loads((folder / 'Session.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        metadata = {}
+    if isinstance(metadata.get('fully_labelled'), list):
+        return {t for t in metadata['fully_labelled'] if t in LABEL_TYPES}, True
+    if events is None:
+        try:
+            with (folder / 'Events.csv').open(newline='', encoding='utf-8') as file:
+                events = list(csv.DictReader(file))
+        except OSError:
+            events = []
+    present = {label_type(row['activity']) for row in events if row.get('record_type') == 'label'} - {None}
+    activity = metadata.get('activity') or folder.name.split('_', 1)[-1]
+    if activity != 'dry_swallow':
+        present.discard('swallow')
+    return present, False
+
+
+def save_fully_labelled(folder, types):
+    """Store the fully labelled event types in Session.json (atomic replace)."""
+    path = Path(folder) / 'Session.json'
+    metadata = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    metadata['fully_labelled'] = sorted(t for t in types if t in LABEL_TYPES)
+    temporary = path.with_suffix('.json.tmp')
+    temporary.write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
+    temporary.replace(path)
+
+
 class Session:
     def __init__(self, folder, activity, duration, origin, rates, port, demo=False):
         if not math.isfinite(duration) or not 0 < duration <= 1800:

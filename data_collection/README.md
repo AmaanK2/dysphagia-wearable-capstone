@@ -31,6 +31,9 @@ To see live detection without the device, replay a saved session in real time. I
    - Each event type has its own colour. An alert first appears as a line; once the event ends, its full interval is shaded and its duration is added to the log. Both settings lock during a recording.
 5. **Water swallow test:** enter the water volume, press **Space** when the cup touches the lips (and optionally when drinking ends), and keep recording ~60 s afterwards. When the recording is saved, the app reports swallow count, ml/s, ml and seconds per swallow, and coughs, and saves `WaterTest.json`. [Details](../experiments/swallow_metrics/README.md)
 6. **Review tab:** open a session, drag the selection over each event, choose its activity and click **Save event**. Mark **Uncertain** when unsure. Reviewed labels are what training uses.
+   - **Fully labelled in this session:** tick an event type only when every occurrence of it in the recording has a label. The choice is saved in `Session.json` (`fully_labelled`).
+   - Unlabelled time counts as "no swallow" for training and scoring only in sessions where **Swallows** is ticked. In other sessions only the labelled swallows and labelled coughs/talking are used.
+   - Until you set it, dry-swallow sessions count swallows as fully labelled, and other sessions count only the types they have labels for, excluding swallows.
 
 Sessions are saved to `recordings/participants/<code>/Sxx_<activity>/`. Numbering continues across a participant's visits, and existing folders are never overwritten.
 

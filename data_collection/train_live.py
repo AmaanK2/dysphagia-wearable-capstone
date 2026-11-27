@@ -13,6 +13,7 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.special import expit
 
+from session import fully_labelled
 from live_detection import (FEATURE_COUNT, FEATURE_VERSION, HOP, IMU_COLUMNS, MIC_COLUMNS, MODEL_PATH, REFRACTORY, THRESHOLD, WINDOW,
                             AgreementModel, Model, Trigger, agreement_scores, quadratic_terms, stack_lags,
                             window_features)
@@ -42,7 +43,13 @@ TUNING_VARIANTS = (
 DEPLOYED_REFRACTORY = 1.2
 
 
-def make_record(mic, imu, intervals, uncertain=(), *, wearable=True, reviewed_background=(), ambiguous=()):
+def make_record(mic, imu, intervals, uncertain=(), *, wearable=True, reviewed_background=(), ambiguous=(),
+                swallows_complete=True):
+    """Windows, features and labels for one recording.
+
+    ``swallows_complete`` False means not every swallow was labelled: only labelled swallows
+    and labelled non-swallow events (``reviewed_background``) are used for training.
+    """
     intervals = [tuple(bounds) for bounds in intervals]
     duration = min(mic[-1, 0], imu[-1, 0])
     times = np.arange(round(WINDOW / HOP), int(duration / HOP) + 1) * HOP
@@ -68,9 +75,12 @@ def make_record(mic, imu, intervals, uncertain=(), *, wearable=True, reviewed_ba
     for marker in uncertain:
         trainable &= labels | (np.abs(centers - marker) > 1.)
         clean_trainable &= labels | background | (np.abs(centers - marker) > 1.)
+    if not swallows_complete:
+        trainable &= labels | background
+        clean_trainable &= labels | background
     return dict(times=times, features=features, labels=labels, trainable=trainable,
                 intervals=intervals, duration=duration, reviewed_background=background,
-                clean_trainable=clean_trainable)
+                clean_trainable=clean_trainable, swallows_complete=swallows_complete)
 
 
 def wearable_records(root):
@@ -100,7 +110,8 @@ def wearable_records(root):
         ambiguous = [(a, b) for a, b, label, flagged in intervals
                      if flagged or label not in LABELS | BACKGROUND_LABELS]
         record = make_record(mic, imu, swallows, uncertain,
-                             reviewed_background=[(a, b) for a, b, _ in confounders], ambiguous=ambiguous)
+                             reviewed_background=[(a, b) for a, b, _ in confounders], ambiguous=ambiguous,
+                             swallows_complete='swallow' in fully_labelled(folder, rows)[0])
         yield dict(record, participant=folder.parent.name, annotations=[label for _, _, label in reviewed],
                    confounders=confounders, session=str(folder.relative_to(root)))
 
@@ -196,14 +207,21 @@ def evaluate_scores(records, threshold, refractory=REFRACTORY):
     confounder_alerts = Counter()
     for record in records:
         scores, usable = record['scores'], record['usable']
+        complete = record.get('swallows_complete', True)
+        known = [(a, b) for a, b, _ in record.get('confounders', [])]
         predicted = scores >= threshold
         truth = record['labels']
-        correct += int((predicted == truth).sum())
+        # Where swallows were not fully labelled, only labelled swallows and labelled
+        # non-swallow events (cough, talking...) are known; other time can hide a real swallow.
+        centres = record['times'] - WINDOW / 2
+        eligible = np.ones(len(truth), bool) if complete else truth | np.any(
+            [(centres >= a) & (centres <= b) for a, b in known] or [np.zeros(len(truth), bool)], axis=0)
+        correct += int((predicted == truth)[eligible].sum())
         positive_correct += int((predicted & truth).sum())
-        windows += len(truth)
+        windows += int(eligible.sum())
         positives += int(truth.sum())
-        seconds += record['duration']
-        gated_seconds += (~usable).sum() * HOP
+        seconds += record['duration'] if complete else sum(b - a for a, b in known)
+        gated_seconds += (~usable & eligible).sum() * HOP
         trigger = Trigger(threshold, refractory)
         unmatched = list(record['intervals'])
         for t, score in zip(record['times'], scores):
@@ -215,7 +233,7 @@ def evaluate_scores(records, threshold, refractory=REFRACTORY):
                 delays.append(round(float(t - match[0]), 6))
                 tp += 1
                 during += int(t <= match[1])
-            else:
+            elif complete or any(a <= t <= b for a, b in known):
                 fp += 1
                 confounder_alerts.update({label for a, b, label in record.get('confounders', []) if a <= t <= b})
         fn += len(unmatched)
@@ -229,7 +247,7 @@ def summarize(tp, fp, fn, during, correct, positive_correct, windows, positives,
                 windows=windows, positive_windows=positives, seconds=round(seconds, 3),
                 gated_seconds=round(gated_seconds, 3), delays_s=delays,
                 precision=tp / max(1, tp + fp), recall=tp / max(1, tp + fn),
-                f1=2 * tp / max(1, 2 * tp + fp + fn), extra_per_minute=60 * fp / seconds,
+                f1=2 * tp / max(1, 2 * tp + fp + fn), extra_per_minute=60 * fp / seconds if seconds else 0.,
                 median_detection_delay_s=float(np.median(delays)) if delays else None,
                 window_accuracy=correct / windows,
                 background_window_accuracy=1 - positives / windows,

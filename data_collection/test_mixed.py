@@ -148,6 +148,55 @@ class ContextWindowTest(unittest.TestCase):
         np.testing.assert_allclose(model.score(x[:50]), classifier.predict_proba(x[:50])[:, 1], atol=1e-9)
 
 
+class FullyLabelledTest(unittest.TestCase):
+    def session(self, root, name, labels, metadata=None):
+        import csv, json
+        from pathlib import Path
+        from session import EVENT_FIELDS
+        folder = Path(root) / name
+        folder.mkdir(parents=True)
+        (folder / 'Session.json').write_text(json.dumps(metadata or {}))
+        with (folder / 'Events.csv').open('w', newline='') as file:
+            writer = csv.DictWriter(file, EVENT_FIELDS)
+            writer.writeheader()
+            for activity in labels:
+                writer.writerow(dict(record_type='label', activity=activity, time_s='', start_s='1', end_s='2', notes=''))
+        return folder
+
+    def test_defaults_and_saved_choice(self):
+        import tempfile
+        from session import fully_labelled, save_fully_labelled
+        with tempfile.TemporaryDirectory() as root:
+            dry = self.session(root, 'S01_dry_swallow', ['dry_swallow'])
+            mixed = self.session(root, 'S02_mixed', ['dry_swallow', 'cough'], dict(activity='mixed'))
+            self.assertEqual(fully_labelled(dry), ({'swallow'}, False))
+            self.assertEqual(fully_labelled(mixed), ({'cough'}, False))
+            save_fully_labelled(mixed, ['cough', 'swallow'])
+            self.assertEqual(fully_labelled(mixed), ({'cough', 'swallow'}, True))
+
+    def test_incomplete_swallows_only_train_and_score_on_known_time(self):
+        from unittest.mock import patch
+        from live_detection import FEATURE_COUNT
+        from train_live import evaluate_scores
+        mic = np.array([[0., 0.], [10., 0.]])
+        imu = np.array([[0., 0., 0., 0.], [10., 0., 0., 0.]])
+        with patch('train_live.window_features', return_value=np.zeros(FEATURE_COUNT)):
+            record = make_record(mic, imu, [(1., 1.6)], reviewed_background=[(4., 6.)], swallows_complete=False)
+        index = {round(t, 1): i for i, t in enumerate(record['times'])}
+        self.assertTrue(record['trainable'][index[1.5]])      # labelled swallow
+        self.assertTrue(record['trainable'][index[5.5]])      # inside labelled cough/talking
+        self.assertFalse(record['trainable'][index[8.5]])     # unlabelled: may hide a swallow
+        scores = np.zeros(len(record['times']))
+        for t in (1.4, 1.5, 5.0, 5.1, 8.5, 8.6):              # one hit, one known false alert, one unknown
+            scores[index[t]] = 1.
+        known = dict(record, scores=scores, usable=np.ones(len(scores), bool), confounders=[(4., 6., 'cough')])
+        row = evaluate_scores([known], .5, 1.)
+        self.assertEqual((row['tp'], row['fp'], row['fn']), (1, 1, 0))
+        self.assertAlmostEqual(row['extra_per_minute'], 60 / 2.)
+        row = evaluate_scores([dict(known, swallows_complete=True)], .5, 1.)
+        self.assertEqual(row['fp'], 2)
+
+
 class ForestExportTest(unittest.TestCase):
     def test_numpy_forest_matches_sklearn_and_loads_in_app(self):
         import json, tempfile

@@ -15,7 +15,7 @@ These swallow detectors are trained on our wearable recordings plus the public P
 | `mixed_80_20.json` | 80 / 20 | 82.2% | 84.7% | 81% | 88% | 1.11 |
 | `mixed_optimal_35_65.json` | 35 / 65 | **86.2%** | **89.7%** | **86%** | **94%** | **0.82** |
 
-> **Superseded:** `mixed_context_35_65.json` is now the recommended model: the same 35/65 mix, but the trees also see the two earlier windows. It scores 90% vs 88% nested F1 on the original 14 sessions and 77% vs 75% on all 24 sessions. See [the public-data gap study](../public_domain_gap/README.md). The numbers in the table above were measured on the 14 sessions available at the time.
+> **Superseded:** the table above was measured on the 14 sessions available at the time. Both 35/65 models (`mixed_optimal_35_65.json` and the recommended `mixed_context_35_65.json`, which also sees the two earlier windows) have since been retrained on all 24 sessions, using only fully labelled time. See [the public-data gap study](../public_domain_gap/README.md), section 4.
 
 - **Nested F1:** the alert threshold is chosen without the test participant. Treat this as the realistic estimate for a new wearer.
 - **Tuned-threshold F1:** what the exported model achieves with the mic/IMU agreement check and a threshold chosen on the same pooled folds. It is slightly optimistic.

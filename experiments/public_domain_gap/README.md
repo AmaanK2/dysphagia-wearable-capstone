@@ -83,7 +83,7 @@ The final comparison was re-run with `train_mixed.py` on all 24 sessions recorde
 
 20% and 50% public weight were lower for both models, so **35% public / 65% ours is still the best ratio**. Raw output: `data_collection/models/mixed/evaluation_trees*.json`.
 
-**Label-aware scoring.** Sessions were labelled one event type at a time. In P02/S05 and P03/S06, S07 and S09 only coughs or talking were labelled, so an alert there may be a real swallow. Re-scored so those sessions only count alerts inside a labelled cough or talking bout (the threshold is also chosen this way), with the finer threshold grid:
+**Label-aware scoring (first pass; superseded by section 4).** Sessions were labelled one event type at a time. In P02/S05 and P03/S06, S07 and S09 only coughs or talking were labelled, so an alert there may be a real swallow. Re-scored so those sessions only count alerts inside a labelled cough or talking bout (the threshold is also chosen this way), with the finer threshold grid:
 
 | Public weight | 20% | 35% | 50% |
 | --- | --- | --- | --- |
@@ -98,10 +98,32 @@ On all 24 sessions the two models are effectively tied: the gap is within the 3â
 
 In the frozen set, the alerts in unlabelled stretches look like weak swallows. Both independent models score 97% of them at 0.5 or above, against 14% of random background windows. But they are much quieter: their mic energy rises 0.56 log units above the session median, against 1.42 for labelled swallows. They could be spontaneous swallows that were never labelled (people swallow between planned events and after coughing) or small throat movements.
 
-## 4. Why 90%+ isn't reachable yet, and what would get there
+## 4. Scoring only where swallows were fully labelled (current method)
+
+Labels match the observer's Space presses one to one in almost every session: only planned events were labelled. Each session now records which event types are fully labelled (`fully_labelled` in `Session.json`, set in the Review tab). Until it is set, swallows count as fully labelled only in dry-swallow sessions.
+
+In other sessions, training uses only the labelled swallows and the labelled coughs and talking. Scoring counts every labelled swallow (missed or caught), but counts false alerts only inside labelled coughs and talking. The alert threshold is chosen the same way.
+
+All 24 sessions, 201 swallows:
+
+| Model | Public weight | Nested F1 | Precision | Recall | False alerts/min | Exported model, tuned threshold |
+| --- | --- | --- | --- | --- | --- | --- |
+| Trees | 20% | **88.4** | 85.9 | 91.0 | 1.11 | |
+| Trees | 35% | 87.5 | 87.9 | 87.1 | 0.89 | 89.7 (0.85 false alerts/min) |
+| Trees | 50% | 86.0 | 85.0 | 87.1 | 1.15 | |
+| Trees + context | 20% | 86.3 | 79.8 | 94.0 | 1.78 | |
+| Trees + context | 35% | 84.7 | 78.4 | 92.0 | 1.89 | **92.2** (P 90.4, R 94.0, 0.74 false alerts/min) |
+| Trees + context | 50% | 85.9 | 82.6 | 89.6 | 1.41 | |
+
+- **Nested F1:** the threshold for each person is chosen from the other two.
+- **Tuned threshold:** what the app model achieves with the mic/IMU agreement check and a threshold chosen on all three people's held-out scores. It is somewhat optimistic.
+
+The context model ranks windows better: with the best threshold in hindsight it scores 92.0% vs 89.7% for plain trees. Its threshold transfers less well between people, though; P01 drops to 81.5% nested at 35%. The app uses the threshold tuned on all three people. Raw output: `data_collection/models/mixed/evaluation_trees*.json`.
+
+## 5. What would raise accuracy further
 
 - **The public data isn't the bottleneck any more.** On its own it gets close to our-data performance, and none of these methods made it add more above ~35â€“50% weight.
-- **Label completeness is the bottleneck.** If even half of the unlabelled-gap alerts are real swallows, F1 on the original sessions is already above 90%. Check those times in the Review tab, and in new sessions label every swallow, not just the planned ones.
+- **Label completeness.** Label every swallow in mixed sessions (`alerts_to_review.csv` lists likely spots) and tick **Swallows** in the Review tab; those sessions then count fully for training and scoring.
 - **More people.** Each person is a third of the test, and P01's newest sessions show how much one person's day-to-day variation moves the score.
 
 ## Reproduce
